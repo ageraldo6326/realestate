@@ -1,0 +1,453 @@
+/* ============================================================
+   Alis CRM — Estilos personalizados del panel administrativo
+   ============================================================ */
+
+/* --- Variables de color --- */
+:root {
+    --alis-primary: #2563eb;
+    --alis-primary-dark: #1d4ed8;
+    --alis-sidebar-bg: #1e293b;
+    --alis-sidebar-hover: #334155;
+    --alis-sidebar-active: #2563eb;
+    --alis-text-muted: #94a3b8;
+    --alis-border: #e2e8f0;
+    --alis-surface: #f8fafc;
+}
+
+/* --- Tipografía base --- */
+body {
+    font-family: 'Inter', 'Source Sans Pro', sans-serif;
+    background-color: #f1f5f9;
+    color: #1e293b;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.main-sidebar {
+    background-color: var(--alis-sidebar-bg) !important;
+    box-shadow: 2px 0 8px rgba(0,0,0,.15);
+}
+
+.brand-link {
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    padding: 1rem 1.25rem !important;
+    background-color: #0f172a !important;
+}
+
+.brand-link .brand-text {
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    letter-spacing: .5px;
+    color: #fff !important;
+}
+
+.brand-link img.brand-image {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 8px !important;
+    background: #fff;
+    padding: 3px;
+}
+
+/* User panel */
+.user-panel {
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+    padding: .75rem 1rem !important;
+}
+
+.user-panel .info a {
+    color: #cbd5e1 !important;
+    font-size: .85rem;
+    font-weight: 500;
+}
+
+.user-panel .image img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
+/* Sidebar menu sections header */
+.nav-sidebar .nav-header {
+    font-size: .65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.2px;
+    color: var(--alis-text-muted) !important;
+    padding: 1rem 1rem .35rem !important;
+    text-transform: uppercase;
+}
+
+/* Nav items */
+.nav-sidebar > .nav-item > .nav-link {
+    border-radius: 6px !important;
+    margin: 1px 8px !important;
+    padding: .55rem .75rem !important;
+    color: #cbd5e1 !important;
+    transition: background .15s, color .15s;
+    font-size: .82rem;
+    font-weight: 500;
+}
+
+.nav-sidebar > .nav-item > .nav-link:hover {
+    background-color: var(--alis-sidebar-hover) !important;
+    color: #fff !important;
+}
+
+.nav-sidebar > .nav-item > .nav-link.active {
+    background-color: var(--alis-sidebar-active) !important;
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(37,99,235,.4);
+}
+
+/* Elimina el fondo negro hardcoded en bg-black */
+.nav-link.bg-black {
+    background-color: transparent !important;
+    color: #94a3b8 !important;
+    font-size: .7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .8px !important;
+    text-transform: uppercase;
+    margin-top: .5rem !important;
+    margin-bottom: 0 !important;
+    cursor: default;
+    pointer-events: none;
+    padding: .5rem 1rem .25rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-radius: 0 !important;
+}
+
+/* Subitems del treeview */
+.nav-treeview > .nav-item > .nav-link {
+    border-radius: 6px !important;
+    margin: 1px 8px !important;
+    padding: .4rem .75rem !important;
+    color: #94a3b8 !important;
+    font-size: .8rem;
+    transition: background .15s, color .15s;
+}
+
+.nav-treeview > .nav-item > .nav-link:hover {
+    background-color: var(--alis-sidebar-hover) !important;
+    color: #e2e8f0 !important;
+}
+
+.nav-treeview > .nav-item > .nav-link.active {
+    background-color: rgba(37,99,235,.25) !important;
+    color: #93c5fd !important;
+}
+
+.report-count-badge {
+    background: rgba(255, 255, 255, 0.16);
+    color: #e2e8f0;
+    font-size: .66rem;
+    font-weight: 700;
+    min-width: 1.35rem;
+    padding: .2rem .42rem;
+}
+
+/* ============================================================
+   NAVBAR SUPERIOR
+   ============================================================ */
+.main-header.navbar {
+    min-height: 56px;
+    background: #fff !important;
+    border-bottom: 1px solid var(--alis-border) !important;
+}
+
+.main-header .navbar-nav .nav-link {
+    color: #475569 !important;
+    font-size: .85rem;
+    padding: .5rem .65rem;
+    border-radius: 6px;
+    transition: background .15s;
+}
+
+.main-header .navbar-nav .nav-link:hover {
+    background: #f1f5f9;
+    color: var(--alis-primary) !important;
+}
+
+/* Breadcrumb en navbar */
+.main-header .breadcrumb {
+    font-size: .78rem;
+}
+
+.main-header .breadcrumb-item + .breadcrumb-item::before {
+    content: "›";
+    color: #94a3b8;
+}
+
+.main-header .breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+}
+
+.main-header .breadcrumb-item.active {
+    color: var(--alis-primary);
+    font-weight: 500;
+}
+
+/* Dropdown perfil */
+.dropdown-menu.shadow-sm {
+    border: 1px solid var(--alis-border) !important;
+    border-radius: 10px !important;
+}
+
+.dropdown-item {
+    font-size: .83rem;
+    border-radius: 6px;
+    margin: 1px 6px;
+    width: calc(100% - 12px);
+    transition: background .12s;
+}
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content-wrapper {
+    background-color: #f1f5f9 !important;
+}
+
+.content-header h1 {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    color: #1e293b;
+}
+
+/* ============================================================
+   CARDS MODERNAS
+   ============================================================ */
+.card {
+    border: none !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
+    background: #fff;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--alis-border) !important;
+    background: #fff !important;
+    border-radius: 10px 10px 0 0 !important;
+    padding: .85rem 1.25rem !important;
+    font-weight: 600;
+    font-size: .9rem;
+    color: #1e293b;
+}
+
+/* ============================================================
+   TABLAS
+   ============================================================ */
+.table thead th {
+    background: #f8fafc;
+    border-bottom: 2px solid var(--alis-border) !important;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #64748b;
+    padding: .65rem 1rem;
+}
+
+.table td {
+    vertical-align: middle !important;
+    font-size: .85rem;
+    color: #1e293b;
+    padding: .6rem 1rem;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn {
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    font-size: .82rem !important;
+    transition: all .15s !important;
+}
+
+.btn-primary {
+    background-color: var(--alis-primary) !important;
+    border-color: var(--alis-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--alis-primary-dark) !important;
+    border-color: var(--alis-primary-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37,99,235,.3) !important;
+}
+
+.btn-sm {
+    padding: .25rem .6rem !important;
+    font-size: .78rem !important;
+}
+
+/* ============================================================
+   SMALL BOXES (stat cards dashboard)
+   ============================================================ */
+.small-box {
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+.small-box h3 {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+}
+
+/* ============================================================
+   FORMULARIOS
+   ============================================================ */
+.form-control {
+    border-radius: 6px !important;
+    border: 1px solid #cbd5e1 !important;
+    font-size: .85rem !important;
+    padding: .45rem .75rem !important;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.form-control:focus {
+    border-color: var(--alis-primary) !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15) !important;
+}
+
+label {
+    font-size: .82rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: .3rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.main-footer {
+    background: #fff !important;
+    border-top: 1px solid var(--alis-border) !important;
+    padding: .6rem 1.25rem !important;
+    font-size: .78rem;
+    color: #94a3b8;
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+    font-size: .7rem !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+    padding: .25em .5em !important;
+}
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+.font-weight-500 { font-weight: 500 !important; }
+.font-weight-600 { font-weight: 600 !important; }
+.font-weight-700 { font-weight: 700 !important; }
+.text-xs { font-size: .72rem !important; }
+.text-2xs { font-size: .65rem !important; }
+
+/* ============================================================
+   REPORTES
+   ============================================================ */
+.report-page {
+    padding-top: .75rem;
+    padding-bottom: 1rem;
+}
+
+.report-shell {
+    border-radius: 14px;
+    border: 1px solid #dbe6f3;
+    background: linear-gradient(145deg, #f8fbff 0%, #ffffff 75%);
+    box-shadow: 0 10px 20px rgba(15, 23, 42, .05);
+    margin-bottom: 1rem;
+}
+
+.report-shell__header {
+    padding: 1rem 1.1rem .65rem;
+    border-bottom: 1px solid #e8eef7;
+}
+
+.report-shell__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.report-shell__subtitle {
+    margin: .35rem 0 0;
+    color: #64748b;
+    font-size: .82rem;
+}
+
+.report-shell__body {
+    padding: 1rem 1.1rem 1.1rem;
+}
+
+.report-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: .85rem;
+}
+
+.report-toolbar__item {
+    min-width: 240px;
+    max-width: 340px;
+}
+
+.report-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: .65rem;
+    margin-bottom: .9rem;
+}
+
+.report-kpi {
+    border: 1px solid #e5edf8;
+    border-radius: 10px;
+    background: #fff;
+    padding: .65rem .75rem;
+}
+
+.report-kpi__label {
+    margin: 0;
+    color: #64748b;
+    font-size: .73rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.report-kpi__value {
+    margin: .28rem 0 0;
+    color: #0f172a;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.report-chart-wrap {
+    border-radius: 12px;
+    border: 1px solid #dfe9f6;
+    background: #ffffff;
+    padding: .9rem;
+    min-height: 300px;
+}
+
+.report-empty {
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 1rem;
+    background: #f8fafc;
+    color: #64748b;
+    text-align: center;
+    font-size: .84rem;
+}
