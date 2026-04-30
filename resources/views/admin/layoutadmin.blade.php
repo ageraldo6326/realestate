@@ -57,11 +57,17 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     @php
         $userPhotoPath = Auth::user()->foto ?? null;
-        $userPhotoUrl = $userPhotoPath
-            ? (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])
-                ? $userPhotoPath
-                : url('/assets/' . ltrim($userPhotoPath, '/')))
-            : asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+        $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+
+        if ($userPhotoPath) {
+            if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
+                $userPhotoUrl = $userPhotoPath;
+            } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
+                $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
+            } else {
+                $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
+            }
+        }
     @endphp
     <div class="wrapper">
 
@@ -198,7 +204,11 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.select2').select2();
+            $('select.select2').each(function() {
+                if (!$(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2();
+                }
+            });
         });
     </script>
 
@@ -226,9 +236,42 @@
         window.AdminCkeditor = (() => {
             const instances = new Map();
 
+            const isEditorStale = (selector, editor) => {
+                if (!editor) {
+                    return true;
+                }
+
+                const currentTextarea = document.querySelector(selector);
+                const sourceElement = editor.sourceElement || null;
+
+                // Si el textarea fue reemplazado por Livewire o ya no existe en el DOM,
+                // la instancia previa no sirve y debe recrearse.
+                if (!currentTextarea || !sourceElement) {
+                    return true;
+                }
+
+                if (!sourceElement.isConnected) {
+                    return true;
+                }
+
+                return sourceElement !== currentTextarea;
+            };
+
             const ensure = async (selector, onChange) => {
                 if (instances.has(selector)) {
-                    return instances.get(selector);
+                    const existingEditor = instances.get(selector);
+
+                    if (!isEditorStale(selector, existingEditor)) {
+                        return existingEditor;
+                    }
+
+                    try {
+                        await existingEditor.destroy();
+                    } catch (error) {
+                        console.warn('No se pudo destruir instancia CKEditor obsoleta:', error);
+                    }
+
+                    instances.delete(selector);
                 }
 
                 if (typeof ClassicEditor === 'undefined') {

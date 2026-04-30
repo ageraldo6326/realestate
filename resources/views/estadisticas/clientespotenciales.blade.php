@@ -5,9 +5,3 @@
         @livewire('clientespotenciales')
     </div>
 @endsection
-
-
-
-
-
-

@@ -5,7 +5,8 @@
         <div class="report-shell">
             <div class="report-shell__header">
                 <h1 class="report-shell__title">Tareas por categoria</h1>
-                <p class="report-shell__subtitle">Distribucion de tareas por tipo para detectar carga operativa del equipo.</p>
+                <p class="report-shell__subtitle">Distribucion de tareas por tipo para detectar carga operativa del equipo.
+                </p>
             </div>
 
             <div class="report-shell__body">
@@ -14,11 +15,15 @@
                         <div class="report-toolbar__item">
                             <label for="periodo">Periodo</label>
                             <select class="form-control" name="periodo" id="periodo">
-                                <option @if ($periodo == 'Ultimos 30 dias' || $periodo == '') selected @endif value="Ultimos 30 dias">Ultimos 30 dias</option>
-                                <option @if ($periodo == 'Esta semana') selected @endif value="Esta semana">Esta semana</option>
-                                <option @if ($periodo == 'La semana pasada') selected @endif value="La semana pasada">La semana pasada</option>
+                                <option @if ($periodo == 'Ultimos 30 dias' || $periodo == '') selected @endif value="Ultimos 30 dias">Ultimos 30
+                                    dias</option>
+                                <option @if ($periodo == 'Esta semana') selected @endif value="Esta semana">Esta semana
+                                </option>
+                                <option @if ($periodo == 'La semana pasada') selected @endif value="La semana pasada">La semana
+                                    pasada</option>
                                 <option @if ($periodo == 'Este mes') selected @endif value="Este mes">Este mes</option>
-                                <option @if ($periodo == 'Mes pasado') selected @endif value="Mes pasado">Mes pasado</option>
+                                <option @if ($periodo == 'Mes pasado') selected @endif value="Mes pasado">Mes pasado
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -50,12 +55,12 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        (function () {
+        (function() {
             const periodSelect = document.getElementById('periodo');
             const form = document.getElementById('tareasporcategorias');
             const canvas = document.getElementById('tareasCategoriasChart');
             if (periodSelect && form) {
-                periodSelect.addEventListener('change', function () {
+                periodSelect.addEventListener('change', function() {
                     form.submit();
                 });
             }

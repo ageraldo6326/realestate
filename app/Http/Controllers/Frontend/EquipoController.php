@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\User;
-use App\Models\Inmobiliaria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\InmobiliariaService;
 
 class EquipoController extends Controller
 {
@@ -19,9 +18,9 @@ class EquipoController extends Controller
     {
         //
 
-        $usuarios =  DB::table('users')->where("Mostrar",1)->orderBy('orden', 'asc')->paginate(9);
+        $usuarios =  DB::table('users')->where("Mostrar",1)->whereNull('deleted_at')->orderBy('orden', 'asc')->paginate(9);
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
         return view("frontend.equipo",compact("usuarios","inmobiliaria"));
         

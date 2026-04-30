@@ -7,9 +7,9 @@ use Livewire\Component;
 use App\Models\Clientes;
 use App\Models\Propiedad;
 use App\Models\Venta;
-use Illuminate\Auth\Events\Validated;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
+use App\Services\CatalogoService;
 
 class CrearVentas extends Component
 {
@@ -29,7 +29,7 @@ class CrearVentas extends Component
     public function render()
     {
         $criterio = $this->criterio;
-        $usuarios = User::all();
+        $usuarios = CatalogoService::asesoresActivos();
         $propiedades = Propiedad::query();
 
         if($this->criterio!="") {

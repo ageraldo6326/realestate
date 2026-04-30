@@ -20,11 +20,12 @@ class DisponiblePara extends Component
 
     public function render()
     {
-        if ($criterio="") {
-            $disponiblespara = Disponible_para::all();
-        } else {
-            $disponiblespara = Disponible_para::where('disponible_para','like',"%$this->criterio%")->paginate(6);
-        }
+        $disponiblespara = Disponible_para::query()
+            ->when($this->criterio !== '', function ($query) {
+                $query->where('disponible_para', 'like', '%' . $this->criterio . '%');
+            })
+            ->orderBy('disponible_para')
+            ->paginate(12);
 
         return view('livewire.disponible-para',compact('disponiblespara'));
     }

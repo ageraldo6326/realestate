@@ -1,7 +1,8 @@
 @extends('layout.layout-landing')
 
 @section('seo_title', 'Nuestro Equipo — ' . ($inmo->titulo ?? 'Portal Inmobiliario'))
-@section('seo_description', 'Conoce a nuestros agentes inmobiliarios expertos. Estamos listos para ayudarte en cada
+@section('seo_description',
+    'Conoce a nuestros agentes inmobiliarios expertos. Estamos listos para ayudarte en cada
     paso.')
 
 @section('extra_styles')
@@ -175,6 +176,25 @@
         </div>
     </section>
 
+    @php
+        $agentPlaceholder = 'https://dummyimage.com/640x640/edf2f7/6b7280&text=Sin+foto';
+        $resolveAgentPhoto = function ($foto) {
+            if (!$foto) {
+                return 'https://dummyimage.com/640x640/edf2f7/6b7280&text=Sin+foto';
+            }
+
+            if (\Illuminate\Support\Str::startsWith($foto, ['http://', 'https://', '//', 'data:'])) {
+                return $foto;
+            }
+
+            if (\Illuminate\Support\Str::startsWith($foto, ['/assets/', 'assets/', '/img/', 'img/'])) {
+                return asset(ltrim($foto, '/'));
+            }
+
+            return asset('assets/' . ltrim($foto, '/'));
+        };
+    @endphp
+
     <section class="team-section">
         <div class="container">
             <div class="text-center mb-5">
@@ -189,7 +209,8 @@
                             <div class="agent-img-wrap">
                                 <a href="{{ route('propiedadesPorAgente', $usuario->id) }}"
                                     aria-label="{{ $usuario->name }}">
-                                    <img loading="lazy" src="{{ asset('assets/' . $usuario->foto) }}"
+                                    <img loading="lazy" src="{{ $resolveAgentPhoto($usuario->foto ?? null) }}"
+                                        onerror="this.onerror=null;this.src='{{ $agentPlaceholder }}';"
                                         alt="Agente {{ $usuario->name }}" title="{{ $usuario->name }}">
                                 </a>
                             </div>

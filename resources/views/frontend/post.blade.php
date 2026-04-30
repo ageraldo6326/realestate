@@ -38,6 +38,10 @@
 
 @section('content')
 
+@php
+    $postPlaceholder = asset('assets/post-1.jpg');
+@endphp
+
 <section class="page-hero" aria-label="Artículo">
     <div class="container">
         <h1 class="page-hero-title">{{ $post->titulo }}</h1>
@@ -56,13 +60,12 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <article class="post-card">
-                    @if($post->foto)
                     <img class="post-hero-img"
                          loading="eager"
-                         src="{{ asset('assets/'.$post->foto) }}"
+                        src="{{ !empty($post->foto) ? asset('assets/'.$post->foto) : $postPlaceholder }}"
+                        onerror="this.onerror=null;this.src='{{ $postPlaceholder }}';"
                          alt="{{ $post->titulo }}"
                          title="{{ $post->titulo }}">
-                    @endif
                     <div class="post-body">
                         <div class="post-meta">
                             <span class="post-meta-item">

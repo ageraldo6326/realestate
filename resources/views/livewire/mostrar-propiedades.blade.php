@@ -1,11 +1,11 @@
 <div>
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
 
-    <form method="GET" action="{{ route("propiedades.index") }}">
+    <form method="GET" action="{{ route('propiedades.index') }}">
         @csrf
         <div class="input-group my-3">
             <input type="text" class="form-control" wire:model='criterio' name="criterio"
-                placeholder="Buscar por ID, titulo o zona">
+                placeholder="Buscar por ID, titulo, ciudad, provincia, sector o barrio">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="submit" name="buscar" value="buscar">Buscar</button>
             </div>
@@ -37,26 +37,33 @@
 
                 <tbody>
 
-                    @foreach ( $propiedades as $propiedad)
-                    <tr>
-                        <th scope="row">{{ $propiedad->id}}</th>
-                        <td><img src="{{ $propiedad->foto_portada}}" class="img-thumbnail " height="50rem" width="100rem"
-                                alt=""></td>
-                        <td>{{ $propiedad->titulo}}</td>
-                        <td class="d-none d-md-table-cell">{{ $propiedad->zona}}</td>
-                        <td class="d-none d-md-table-cell">{{ $propiedad->clicks}}</td>
-                        <td class="d-none d-md-table-cell">{{ $propiedad->created_at}}</td>
-                        <td>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <form method="GET" action="{{ route("editarpendientescualquiera",$propiedad->id)}}">
-                                        {{-- @csrf --}}
-                                        <button type="submit" class="btn btn-primary btn-sm btn-block m-1 float-right">Editar</button>
-                                    </form>
+                    @foreach ($propiedades as $propiedad)
+                        <tr>
+                            <th scope="row">{{ $propiedad->id }}</th>
+                            <td><img src="{{ $propiedad->foto_portada }}" class="img-thumbnail " height="50rem"
+                                    width="100rem" alt=""></td>
+                            <td>{{ $propiedad->titulo }}</td>
+                            <td class="d-none d-md-table-cell">
+                                {{ $propiedad->ciudad ?: 'Santo Domingo' }}, {{ $propiedad->provincia_nombre }}
+                                @if ($propiedad->barrio_nombre || $propiedad->sector_nombre)
+                                    - {{ $propiedad->barrio_nombre ?: $propiedad->sector_nombre }}
+                                @endif
+                            </td>
+                            <td class="d-none d-md-table-cell">{{ $propiedad->clicks }}</td>
+                            <td class="d-none d-md-table-cell">{{ $propiedad->created_at }}</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <form method="GET"
+                                            action="{{ route('editarpendientescualquiera', $propiedad->id) }}">
+                                            {{-- @csrf --}}
+                                            <button type="submit"
+                                                class="btn btn-primary btn-sm btn-block m-1 float-right">Editar</button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

@@ -1,0 +1,5794 @@
+[
+    {
+        "provincia_id": 1,
+        "sector": "Amiama Gómez"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Arroyo Colorado"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Arroyo Corozo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Arroyo Salado"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Azua de Compostela"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Barreras"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Barro Arriba"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Barro en Medio"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Bastidas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Boquerón"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Canoa"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Caracoles"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Caña Castillo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Cañada Cimarrona"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Clavellina"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Doña Emma Balaguer Viuda Vallejo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Duvergé"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Carrizal"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Cruce"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Cruce de Las Yayas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Córbano (El Córvano)"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Francés"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Limón"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Majagual"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Memiso"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Montazo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Naranjito"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Nuevo Curro"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Puerto"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "El Rosario"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Estebanía"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Ganadero"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Guayabal"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Guayacanal"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Hatillo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Hato Nuevo Cortés"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Kilómetro 15"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Kilómetro 7"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Kilómetro 8"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Altagracia"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Cabuya"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Cabuyita"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Ceiba Nueva"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Ceiba Vieja"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La China"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Cucarita"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "La Siembra"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Barías-La Estancia"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Cañitas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Charcas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Guanábanas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Lagunas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Lomas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Terreras"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Las Yayas de Viajama"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Barrancones"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Fríos"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Guayuyos"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Jovillos"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Naranjos"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Quemados"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Toros"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Los Tramojos"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Magüeyal"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Monte Bonito"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Monte Río"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Mordán"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Orégano Chiquito"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Orégano Grande"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Padre Las Casas"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Palmar de Ocoa"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Peralta"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Periquito"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Proyecto 2-C"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Proyecto 4"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Proyecto D-1 Ganadero"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Pueblo Viejo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Puerto"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Puerto Viejo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Ranchería"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Rancho del Pino"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Río Grande"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Sabana Yegua"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Sabana de Miguel Martín"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Sajanoa"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Tábara Abajo"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Tábara Arriba"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Viajama"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Viejo Sabana Yegua"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Villa Corazón de Jesús"
+    },
+    {
+        "provincia_id": 1,
+        "sector": "Villarpando"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Arroyo Dulce"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Arroyo Grande"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Baoruco"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Bombita"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Buena Vista"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Cabral"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Caletón"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Canoa"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Arroyo"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Cachón"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Higuito"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Higüero"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Maniel"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Naranjal"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Peñón"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Pino"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "El Platón"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Enriquillo"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Fondo Negro"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Fondo de Agustín"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Fundación"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Guayuyal"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Habanero"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Jaquimeyes"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Juan Esteban"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Altagracia"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Cu"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Filipina"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Guázara"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Hoya"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "La Lanza Arriba"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Las Auyamas"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Las Minas"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Las Palmas"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Las Salinas"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Lemba"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Leonardo"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Los Arroyos"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Los Callejones"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Los Charquitos"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Los Patos"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Los Saladillos"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Manuel Díaz"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Ojeda"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Palo Alto"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Paraíso"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Payaso"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Pescadería"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Peñón Arriba"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Polo"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Quita Coraza"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "San Rafael"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Santa Cruz de Barahona"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Tierra Blanca"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Vicente Noble"
+    },
+    {
+        "provincia_id": 3,
+        "sector": "Villa Central"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Capotillo"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Cayuco"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Cañongo"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Chacuey"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Clavellina"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Cruz de Cabrera"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Dajabón"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Aguacate"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Cajuil"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Carrizal"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Pino"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Plan"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "El Rodeo"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Hipólito Billini"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Ceiba"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Gorra"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Jagua Abajo"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Luisa"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Peñita Abajo"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Piña"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Pocilga"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "La Vigía"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Loma de Cabrera"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Los Cerezos"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Manuel Bueno"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Monte Grande"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Partido"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Partido Arriba"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Pinar Claro"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Plan I"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Restauración"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Sabana Larga"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Santiago de La Cruz"
+    },
+    {
+        "provincia_id": 4,
+        "sector": "Vaca Gorda"
+    },
+    {
+        "provincia_id": 5,
+        "sector": "Santo Domingo de Guzmán"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Acicate"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Agua Santa del Yuna"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Arenoso"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Barraquito"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Bomba de Cenoví"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Bomba de Yaiba"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Buena Vista"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Callejón de Tilo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Caobete"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Castillo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Ceiba de Los Pájaros"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Cenoví"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Cerrejón"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Chiringo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Ciénaga Vieja"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Colón"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Cristo Rey de Guaraguao"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Cruz de Cenoví"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Cuaba Abajo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Culata Abajo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Demajagual"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Dichoso"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "El Abanico"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "El Aguacate"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "El Caimito"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "El Hato"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "El Venao"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Eugenio María de Hostos"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Guaraguao"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Génimo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Güiza"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Hoyo Jaya"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Hoyo de Jaya"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Jaya"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Jina Clara"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Jobobán"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Juana Díaz"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Bajada"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Culata"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Enea"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Garza"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Guama"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Isleta"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Joya"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Malena"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Mesa"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Peña"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Pista"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Piña"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "La Reforma"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Laguna de Coto"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Las Carreras"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Las Coles"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Las Guáranas"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Las Guázumas"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Las Taranas"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Loma de Jaya"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Bacilios"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Bejucos"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Cachones"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Haitiles"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Indios"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Lanos"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Peynado"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Platanitos"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Los Rivera"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "María Fernández"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Naranjo Dulce"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Paraguay"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Patao"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Pimentel"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Pontón"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Porquero"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Presidente Don Antonio Guzmán Fernández"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Ramonal"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Rincón Hondo"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Rincón de los Genao"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Sabana Grande"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "San Felipe Arriba"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "San Francisco de Macorís"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Villa Riva"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Yabacoa"
+    },
+    {
+        "provincia_id": 6,
+        "sector": "Yaiba Abajo"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Anamá"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Arroyo Grande"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Campiña"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Candelaria"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "El Cedro"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "El Cercado"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "El Cuey"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "El Morro"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "El Pintado"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Guaraguao"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Isabelita"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "La Culebra"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "La Gina"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "La Higuera"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Las Cuchillas"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Las Lisas"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Magarín"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Mata de Palma"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Miches"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Pedro Sánchez"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Santa Cruz de El Seibo"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Santa Lucía"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Vicentillo"
+    },
+    {
+        "provincia_id": 7,
+        "sector": "Yabón"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Angostura"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Aniceto Martínez"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Billiguín"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Blanco"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Bánica"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Cabeza de la Sabana"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Comendador"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "El Cantón"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "El Fondo"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "El Hoyo"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "El Llano"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "El Pino"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guanito"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guaroa"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guayabal"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guayabo"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guayajayuco"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Guazumal"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Higüerito"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Hondo Valle"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Isidro Martínez"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Juan Felipe"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Juan Santiago"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Juan de La Cruz"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "La Meseta"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "La Palma"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "La Sahonada"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "La Sierrecita"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Las Cañitas"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Las Lagunas"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Las Patillas"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Los Guineos"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Los Rinconcitos"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Los Yareyes"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Macasía"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Monte Mayor"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Nicolás (Joca)"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Pedro Santana"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Pinzón"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Potro Blanco"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Potroso"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Puello"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Rancho de Pedro"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Rancho de la Guardia"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Rastrillo"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Reboso"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Río Limpio"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Sabana Cruz"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Sabana Higüero"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Sabana Larga"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Sabana de la Loma"
+    },
+    {
+        "provincia_id": 8,
+        "sector": "Tabacal"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Alto de Los Pozos (Villa Cafetalera)"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Batey Ginebra"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Bejuco Blanco"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Boca Férrea Abajo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Bonagua Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Camarones"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Canca Reparación"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Canca la Reyna"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Cayetano Germosén o Guanábano"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Caño Dulce"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Cuero Duro"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Aguacate Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Algarrobo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Caimito"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Higüerito"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Higüero"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Jobo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Pico"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "El Salitre"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Gaspar Hernández"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Jagua Clara"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Jamao Al Norte"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Jamao al Sur"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Joba Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "José Contreras"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Juan López"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Juan López Abajo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Juan López Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Cantera"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Ceiba de Madera"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Filipina"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Gran Canaria"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Guama (De Guanábano)"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Ortega"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "La Piragua"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Las Caobas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Las Guázumas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Las Lagunas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Las Lagunas Abajo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Las Tres Ceibas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Llenas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Los Amaceyes Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Los Brazos"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Los Robles"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Los Vargas"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Magante"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Moca"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Monte de la Jagua"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Ojo de Agua"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Palma Herrada"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Paso de Moca"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Puesto Grande"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Rancho de los Plátanos"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Reparadero"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Rincón de Veragua"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "San Francisco Abajo"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "San José (Antiguo Licey al Medio)"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "San Luis"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "San Víctor"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "San Víctor Arriba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Santa Cruz de Tenerife"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Santa Rosa"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Sarambamba"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Veragua"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Vereda al Medio"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Villa Magante"
+    },
+    {
+        "provincia_id": 9,
+        "sector": "Zafarraya"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Arenitas"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Don López"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "El Centro"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "El Mamón"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "El Valle"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Elupina Cordero de Las Cañitas"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Guayabo Dulce"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Hato Mayor del Rey"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Higuamo"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Jalonga"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Las Claras"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Las Espinas"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Maguá"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Manchado"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Mata Palacio"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Paso Cibao"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Rincón Fogón"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Sabana de La Mar"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "San Rafael"
+    },
+    {
+        "provincia_id": 10,
+        "sector": "Yerba Buena"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Blanco"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Blanco Arriba"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Boba Arriba"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Canete"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "El Placer"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Gran Parada"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Jamao Adentro"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Jamao Afuera"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Jayabo Afuera"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "La Ceiba"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Los Cacaos"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Los Limones"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Montellano"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Palmarito"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Paso Hondo"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Salcedo"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "San José"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Santa Ana"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Tenares"
+    },
+    {
+        "provincia_id": 11,
+        "sector": "Villa Tapia"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Angostura"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Arroyo Blanco"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Bartolomé"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Batey 10"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Batey 7"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Batey 8"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Batey 9"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Boca de Cachón"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Cabeza de Río"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Colonia Japón"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Cristóbal"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Duvergé"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "El Limón"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "El Maniel"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Guayabal"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Jimaní"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "La Colonia"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "La Descubierta"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "La Florida"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Las Baitoas"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Los Bolos"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Los Pinos"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Mella"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Mortero"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Postrer Río"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Puerto Escondido"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Raíz Picada"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Tierra Nueva"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Vengan a Ver"
+    },
+    {
+        "provincia_id": 12,
+        "sector": "Ángel Félix"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Bayahíbe"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Bejucal"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Boca de Yuma"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Cañada Honda"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Cruz de Isleño"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Duyey"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "El Barrero"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "El Bonao"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "El Salado"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Gato"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Jina Jaragua"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Juanillo"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "La Otra Banda"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "La Piñita"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Las Guamas"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Las Lagunas de Nisibón"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Los Ríos"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Mata Chalupe"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Salvaleón de Higüey"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "San Rafael del Yuma"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Santana"
+    },
+    {
+        "provincia_id": 13,
+        "sector": "Verón"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Aletón"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Caleta"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Cumayasa"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Guaymate"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Higüeral"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Isla Saona"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "La Romana"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Sabana"
+    },
+    {
+        "provincia_id": 14,
+        "sector": "Villa Hermosa"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Arroyo Frío"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Arroyo Hondo Arriba"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Bacui"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Bacuí Arriba"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Barranca"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Bayacanes"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Berruguete"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Bonagua"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Buena Vista"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Burende"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Concepción de La Vega"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Constanza"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Corocito"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Cruce de Barranca"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Cutupú"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Badén"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Convento"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Mamey"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Naranjal"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Ranchito"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "El Río"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Estancita"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Guarey"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Hatillo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jagua Gorda"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jamo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jarabacoa"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jima Abajo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jima Arriba"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Jumunuco"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Junumucú"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Altagracia"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Cabirmota"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Ceibita"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Descubierta"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Frontera"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Jina Hueca"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Llanada"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Penda"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Rosa"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "La Sabina"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Las Cabuyas"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Las Canas"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Las Palomas"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Las Yerbas"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Licey"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Los Cerros"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Los Corozos"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Los Dajaos"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Los Hoyos"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Maldonado"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Manabao"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Mirador"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Palero"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Paso Bajito"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Pedregal"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Piedra Blanca"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Piedra Blanca del Salto"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Pinar Quemado"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Pontón"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Pueblo Viejo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Rincón"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Río Verde Abajo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Río Verde Arriba"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Sabana Rey"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Sabaneta"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "San Bartolo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Tireo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Tireo Abajo"
+    },
+    {
+        "provincia_id": 15,
+        "sector": "Villa Sabina"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Abreu"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Arroyo Salado"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Arroyo al Medio"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Baoba del Piñal"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Boba"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Cabrera"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Caño Azul Colorado"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Caño de los Naranjos"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Ceja del Jobo"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Cruce de Rincón"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Factor"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Guayabo"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Jamo"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Papayo"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Pozo"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "El Yayal"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "La Capilla"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "La Entrada"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "La Jagüita"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Las Córcobas"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Las Gordas"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Cacaos"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Indios"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Jengibres"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Limones"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Pajones"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Los Yayales"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Madre Vieja"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Mata Bonita"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Mata Puerco"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Nagua"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Nagua Rural"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Payita"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Río Jagua"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Río San Juan"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "San Isidro"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "San José de Matanzas"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "San Rafael"
+    },
+    {
+        "provincia_id": 16,
+        "sector": "Telanza"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Arroyo Toro - Masipedro"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Arroyo Vuelta"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Boca de Juma"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Bonao"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Cruce de Blanco"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El 77"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El Coco"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El Cruce"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El Ocho"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El Verde"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "El Zumbador"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Jayaco"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Jayaco Abajo"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Jima"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Juan Adrián"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Juma Bejucal"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "La Ceiba"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "La Colonia"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "La Cueva"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "La Minita"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "La Yautía"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Los Arroces"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Los Bleos"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Los Martínez"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Los Plátanos"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Los Quemados"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Maimón"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Palero"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Piedra Blanca"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Rincón de Yuboa"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Sabana del Puerto"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "San Isidro"
+    },
+    {
+        "provincia_id": 17,
+        "sector": "Villa de Sonador"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Antón Sánchez"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Batey La Tarana"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Batey Sabana Larga"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Bayaguana"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Boyá"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Cabeza de Toro"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Camarón"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Centro Penzo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Chirino"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Cojobal"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Comatillo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Consuelo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Cruz Morillo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Cuaba"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Don Juan"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "El Bosque"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "El Cacique"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "El Dián"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "El Mamey"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "El Ranchito"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Francisquito"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Frías"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Gonzalo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Guázuma"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Hato Arriba"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Hidalgo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Juan Sánchez"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La China"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Cola"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Estancia"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Jina"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Luisa"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Maya"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Placeta"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "La Yautía"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Los Botados"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Los Jobillos"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Los Limones"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Los Mapolos"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Majagual"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Monte Plata"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Pantoa"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Payabo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Peralvillo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Reparadero"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Río Arriba"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Río Boyá"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Sabana Grande"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Sabana Grande de Boyá"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Sabana de Payabo"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "San Antonio"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "San Francisco"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "San Juan de Buena Vista"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Trinidad"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Yabacao"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Yamasá"
+    },
+    {
+        "provincia_id": 18,
+        "sector": "Yuvina"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Baitoal"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Botoncillo"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Cana Chapetón"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Carbonera"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Carnero"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Castañuelas"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Castañuelas (Lozano)"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Cerro Gordo"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Clavellina"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Copey"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Doña Antonia"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Ahogado"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Copey"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Duro"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Papayo"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Rincón"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "El Vigiador"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Gozuela"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Guayubín"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Hatillo Palma"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Hato Viejo"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Hato del Medio Arriba"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Juan Gómez"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "La Caída"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "La Guajaca"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "La Horca"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "La Pinta"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "La Recta de Sanita"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Las Aguas"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Las Matas de Santa Cruz"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Las Peñas"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Loma de Castañuelas"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Los Amaceyes"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Los Conucos"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Los Derramaderos"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Magdalena"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Martín García"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Palo Verde"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Pepillo Salcedo o Manzanillo"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Piloto"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Sabana Cruz"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "San Fernando de Monte Cristi"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Santa Cruz"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Santa María"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Villa Elisa"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Villa García"
+    },
+    {
+        "provincia_id": 19,
+        "sector": "Villa Vásquez"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Aguas Negras"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Altagracia"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Cabo Rojo"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Juancho"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "La Altagracia"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "La Colonia Villa Esperanza"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Las Mercedes"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Los Arroyos"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Los Tres Charcos"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Mencía"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Oviedo"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Pedernales"
+    },
+    {
+        "provincia_id": 20,
+        "sector": "Ávila"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Arroyo Hondo"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Arroyo Salado"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Baní"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Boca Canasta"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Catalina"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Don Gregorio"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Carretón"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Cañafístol"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Limonal"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Llano"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Palmarito"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Recodo"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "El Roblegar"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Escondido"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Fundación de Peravia"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Galión (Galeón)"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Gualey"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Honduras"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "La Cabria"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "La Iguana"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "La Montería"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Las Barías"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Las Calderas"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Las Carreras"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Las Tablas"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Los Cateyes"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Los Jobitos"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Los Ranchitos"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Los Tumbaos"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Lucas Díaz"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Mata Gorda"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Matanzas"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Monte Llano"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Nizao"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Paya"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Paya Rural"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Pizarrete"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Quijá Quieta"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Río Arriba"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Sabana Buey"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "San José"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Santana"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Valdesia"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Villa Fundación"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Villa Güera"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Villa Sombrero"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Villa Sombrero Rural"
+    },
+    {
+        "provincia_id": 21,
+        "sector": "Yiyo Gómez"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Altamira"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Arroyo Amargo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Arroyo de Leche"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Barrancón"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Belloso"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Boca Nueva"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Cabarete"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Cabia"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Cambiaso"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Candelón"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Cangrejo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Caonao"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Caraballo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Cerro de Navas"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Don Gregorio"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "El Cupey"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "El Estrecho Abajo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "El Estrecho de Luperón Omar Bross"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "El Higo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "El Mamey"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Escalera"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Estero Hondo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Fundación"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Gualete"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Guananico"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Gurabito de Yaroa"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Guzmancito"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Higüero"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Hoya Grande"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Imbert"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Altagracia"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Balsa"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Cabirma"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Catalina"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Goleta"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Isabela"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Jaiba"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "La Sabana"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Laguna Grande"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Las Avispas"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Las Canas"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Cantabillos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Ciruelos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Hidalgos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Llanos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Mameyes"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Pilones"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Los Tejada"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Luperón"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Madre Vieja"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Maggiolo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Maimón"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Marmolejos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Martín Alonzo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Mozaví"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Navas"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Palmar Grande"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Paradero"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Pescado Bobo Arriba"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Pérez"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Quebrada Honda"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Ranchito de los Vargas"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Rancho Arriba"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Rancho Manuel"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Rancho Viejo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Río Grande"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Río Grande Abajo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Río Grande Al Medio"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Río Grande Arriba"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Saballo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Sabana Grande"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Sabaneta de Cangrejos"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Sabaneta de Yásica"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "San Cristóbal"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "San Felipe de Puerto Plata"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Sosúa"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Tubagua"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Unijica"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Villa General Benito Martínez"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Villa Isabela"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Villa Montellano"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Vista Alegre"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Yásica Abajo"
+    },
+    {
+        "provincia_id": 22,
+        "sector": "Yásica Arriba"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Acosta"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Agua Sabrosa"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Agua Santa del Yuna"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Arroyo Barril"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Botao"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Catey"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Cosón"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Jamito"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Limón"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "El Naranjito"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Honduras"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Juana Vicenta"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "La Barbacoa"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "La Guásuma"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "La Majagua"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "La Pascuala"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Las Galeras"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Las Garitas"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Las Terrenas"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Los Cacaos"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Los Tocones"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Majagual"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Morón"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Rincón"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Santa Bárbara de Samaná"
+    },
+    {
+        "provincia_id": 23,
+        "sector": "Sánchez"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Bajos de Haina"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Barcequillo Industrial"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Boca de Nigua"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Borbón"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Básima"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Calderón"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Cambita El Pueblecito"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Cambita Garabitos"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Cambita Sterling"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Castaño"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Catarey"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Dasa"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Doña Ana"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Aguacero"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Cajuilito"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Caobal"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Carril"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Cidral"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Cidral (La Represa)"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Guineo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Pedrero"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Tablazo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "El Toro"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Haina"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Hatillo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Hato Damas"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Hojas Anchas"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Humachón"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Ingenio Nuevo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Jamey"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Juan Barón"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Cerca"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Colonia"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Cuchilla"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Pared"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Sabana"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "La Sierra"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Las Gallardas"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Llanada Grande"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Loma Verde"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Barrancones los Frías"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Brujanes"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Cacaos"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Manantiales"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Mogotes"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Montones"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Los Naranjos"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Malpáez"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Maná de Haina"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Maná de Yaguate"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Mata Naranjo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Medina"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Najayo Abajo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Najayo Arriba"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Najayo en Medio"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Piedra Blanca Norte"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Pino Herrado"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Pueblo Nuevo"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Quita Sueño"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Sabana Crande de Palenque"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Sabana Palenque"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Sainaguá"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "San Cristóbal"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "San Francisco"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "San Gregorio de Nigua"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "San José del Puerto"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Santa María"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Villa Altagracia"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Villa María"
+    },
+    {
+        "provincia_id": 24,
+        "sector": "Yaguate"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Arroyo Caña"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "El Cercado"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "El Higuito"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "El Naranjal"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "El Pinar"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "El Rosalito"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "La Horma"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Las Auyamas Arriba"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Las Cumbres"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Los Anones"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Los Corozos"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Los Ranchitos"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Los Tramojos"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Mahoma"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Nizao"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Quita Sueño"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Sabana Larga"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "San José de Ocoa"
+    },
+    {
+        "provincia_id": 25,
+        "sector": "Villa de Rancho Arriba"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Abras las Yayas"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Arroyo Cano"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Arroyo Loro"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Babor Abajo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Batista"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Bohechío"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Buena Vista"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Cardón"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Carpintero"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Carrera de Puerta"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Carrera de Yeguas"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Caña Segura"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Cañada del Café"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Cañafístol"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Chalona"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Cocinera"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Corbanal"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Damián"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Derrumbadero"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Dormidero"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Batey"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Cacheo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Cajuil"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Capá"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Centro"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Cercado"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Cerrito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Hatico"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Kilómetro 9"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Palmar"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Pinar"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "El Rosario"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Escondido"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Gajo de Pedro"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Guanito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Guayabal"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Guazumal"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Hato Nuevo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Hato del Padre"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Higüerito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Jaquimeyes"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Jorjillo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Juan de Herrera"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Juan Álvarez"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Jínova"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Ceiba"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Estancia"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Florida"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Guama"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Higüera"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Loma"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "La Lometa"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Carreras"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Charcas Viejas"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Charcas de Garabito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Charcas de María Nova"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Maguanas-Hato Nuevo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Matas de Farfán"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Las Zanjas"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Loma de Babor"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Arroyos"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Bancos"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Gajitos"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Jobos"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Montasitos"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Montones"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Los Vallaondito (Los Bayahondito)"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Mabrígida"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Matayaya"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Mogollón"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Olivero"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Pasatiempo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Pedro Corto"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Pinar de la Cana"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Pozo Hondo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Pueblo Nuevo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Punta Caña"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Ranchito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Río Arriba del Norte"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Río Arriba del Sur"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Sabana Alta"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Sabaneta"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "San Juan de La Maguana"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Sosa"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Vallecito"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Vallejuelo"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Yabonico"
+    },
+    {
+        "provincia_id": 26,
+        "sector": "Yacahueque"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Alejandro Bass"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Boca del Soco"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Caonabo (Batey Siria)"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Cayacoa"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Consuelo"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "El Conuco"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "El Guayabal"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "El Puerto"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Gautier"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Guayacanes"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Jagual"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "La Punta"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Las Callas"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Los Jíbaros"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Los Lerenes"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Los Montes"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Los Montones"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Magarín"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Malulani"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Pajarito"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Plumita"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Quisqueya"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Ramón Santana"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "San José"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "San José de Los Llanos"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "San Pedro de Macorís"
+    },
+    {
+        "provincia_id": 27,
+        "sector": "Zorra Buena"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Abadesa"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Alto de Casiano"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Angelina"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Atalaya"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Babarí"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Batero"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Caballero"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Cevicos"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Chacuey"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Chacuey Maldonado Arriba"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Cotuí"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Cruce de Angelina"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "El Canal Mayor"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "El Limoncito"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "El Limpio"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Fantino"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Hatillo"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Hernando Alonzo"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Bija"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Cana"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Cruz de Angelina"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Cueva"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Estancia"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Guamita"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Piedra"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Sabana de Comedero"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "La Soledad"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Las Cruces"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Las Lagunas"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Barraquitos"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Caboríes"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Cerros"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Corozos"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Palmaritos"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Pinos"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Los Transformadores"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Padre Fantino"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Platanal"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Quita Sueño"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Sabana Grande"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Sabana Grande Abajo"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Sabana Larga"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Sabana de Caballero"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "San Miguel"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Sierra Prieta"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Tocoa"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Villa La Mata"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Zambrana Abajo"
+    },
+    {
+        "provincia_id": 28,
+        "sector": "Zambrana Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Arenoso"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Baitoa Centro"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Bisonó"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Boca de Maizal"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cagüeyes"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Canabacoa"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Canca Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Canca La Piedra"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Canca Las Aromas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Carlos Díaz"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cañada Bonita"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cañafístol"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cebú"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Celestina"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Colorado"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Corocito"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cruz de Isalguez"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Cuesta Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Damajagua"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Dicayagua Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Diferencia"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Aguacate"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Caimito"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Flúmer"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Ingenio Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Limón"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Papayo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Ranchito Piche"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "El Rubio"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Estancia Nueva"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Estancia del Yaque"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Eugenio Perdomo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Franco Bidó"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Guama"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Guayabal"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Guayacanal"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Guazumal Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Gurabo Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Hatillo San Lorenzo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Hato del Yaque"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Inoa"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jacagua Adentro"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jacagua al Medio"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jagua Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jaiqui Picado"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jamamú"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Janey"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jicomé"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Juncalito"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Juncalito Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Jánico"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Auyama"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Canela"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Ciénaga"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Cruz de María Francisca"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Cuesta"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Delgada"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Guama"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Herradura"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Jabilla"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Lima"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Lomota"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Villa Nueva"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "La Zanja"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Laguna Prieta"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Bocas del Licey"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Charcas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Lagunas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Lavas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Palomas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Palomas Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Piedras"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Placetas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Las Tres Cruces"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Licey Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Licey Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Licey al Medio"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Loma Quemada"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Loma de los Palos"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Loma del Corral"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Amaceyes Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Ciruelos"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Guineos"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Jardines del Limón"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Limones"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Montones Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Pilones"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Los Ranchos"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "López"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Macorís del Limón"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Maguá"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Manacla"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Mata Grande"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Mata del Dajao"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Matanzas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Mejía de Navarrete"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Mesetas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Monte Adentro Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Naranjo Bojón"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Palmar Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Palmar Arriba"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Palo Alto"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Palo Amarillo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Palo Quemado"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pananao"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Parada 7"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pedregal"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pedro García"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pinalito"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pontezuela"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pontezuela al Medio"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Pontoncito"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Puñal"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Quinigua"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Rincón Largo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Rincón Llano"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Sabana Grande de Batey I"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Sabana Iglesia"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Salamanca"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "San Francisco de Jacagua"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "San José Adentro"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "San José Afuera"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "San José de Las Matas"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Santiago Oeste"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Santiago de los Caballeros"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Tamboril"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Villa Bao"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Villa González"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Vuelta Larga"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Yaque Abajo"
+    },
+    {
+        "provincia_id": 29,
+        "sector": "Yerba Buena"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Arroyo Blanco"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Ceiba de Bonet"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Clavijo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Coqui"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "El Dajao"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "El Fundo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "El Mamoncito"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Estancia Vieja"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Gurabo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Inaje"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "La Cacique"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "La Ginita"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "La Lana"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Las Caobas"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Los Cercadillos"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Mata de Jobo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Monción"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Palmarejo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Rodeo"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "San Ignacio de Sabaneta"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "San José"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Toma"
+    },
+    {
+        "provincia_id": 30,
+        "sector": "Villa Los Almácigos"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Batey II"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Bella Vista"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Boca Chica"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Campo Lindo"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Cancino"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Cruce de Boca Chica"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Duquesa"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "El Limón"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "El Naranjo"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "El Pedregal"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "El Toro"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "El Valiente"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Enjuagador"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Estorga"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Frasquito Gómez"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Guanuma"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Hacienda Estrella"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Higüero"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Kilómetro 36B"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Bomba"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Caleta"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Ceiba"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Cuaba"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Estancia"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Guáyiga"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Jagua"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Joya"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Malena"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Polonia"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Victoria"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "La Virgen"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Licey"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Los Aguacates"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Los Alcarrizos"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Los Corozos"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Los García"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Mal Nombre"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Manoguayabo"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Mata Mamón"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Mata de Palma"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Mendoza"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Palmarejito"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Palmarejo Villa Linda"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Pantoja"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Pedro Brand"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Piedra Gorda"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "San Antonio de Guerra"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "San Isidro"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "San Luis"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "San Miguel"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santa Bárbara"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santa Cruz"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santa Rosa"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santo Domingo Este"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santo Domingo Norte"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Santo Domingo Oeste"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Sierra Prieta"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Villa Linda"
+    },
+    {
+        "provincia_id": 31,
+        "sector": "Yacó"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Boca de Mao"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Boruco"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Cruce de Guayacanes"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Damajagua"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Entrada de Mao"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Entrada de Pozo Prieto"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Esperanza"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Guatapanal"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Guayacanes Adentro"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Gurabo Afuera"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Jaibón"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Jaibón o Pueblo Nuevo"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Jicomé"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Jinamagao"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Kilómetro 7"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "La Cabirma"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "La Caya"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "La Cayota"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Laguna Salada"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Loma de Aguacate"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Loma de Guayacanes"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Loma de Maimón"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Loma de Palma Picada"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Los Quemados"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Línea A"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Maimón"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Maizal"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Mao"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Ojo de Agua"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Palo Amarillo"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Paradero"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Peñuela"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Pontón (Villa Henequén)"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Potrero"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Pozo Prieto"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Prestiles"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Pueblo Nuevo"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Ranchete"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "San Roque"
+    },
+    {
+        "provincia_id": 32,
+        "sector": "Ámina"
+    }
+]

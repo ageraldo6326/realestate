@@ -11,7 +11,11 @@
 
 @section('content')
     @php
-        $isAdmin = auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin']);
+        $isAdmin =
+            auth()->check() &&
+            auth()
+                ->user()
+                ->hasAnyRole(['admin', 'superadmin']);
         $extraPhotos = ['foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'];
         $amenities = [
             'lobby' => 'Lobby',
@@ -75,23 +79,23 @@
                     <span class="badge badge-light text-primary px-3 py-2 rounded-pill">{{ $propiedad->referencia }}</span>
                     @if ($isAdmin)
                         <a href="{{ route('asignar') }}" class="btn btn-outline-light">Asignar contacto</a>
-                        <a href="{{ route('import.index') }}" class="btn btn-light text-dark border-0">Importar contactos</a>
+                        <a href="{{ route('import.index') }}" class="btn btn-light text-dark border-0">Importar
+                            contactos</a>
                     @endif
                     <a href="{{ route('propiedades.index') }}" class="btn btn-outline-secondary">Volver al listado</a>
                 </div>
             </div>
         </section>
 
-        @if ($errors->any())
-            <div class="alert alert-danger shadow-sm border-0" role="alert">
-                <strong>Revisa los siguientes campos:</strong>
-                <ul class="mb-0 mt-2 pl-3">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <div id="property-form-errors" class="alert alert-danger shadow-sm border-0 {{ $errors->any() ? '' : 'd-none' }}"
+            role="alert">
+            <strong>Revisa los siguientes campos:</strong>
+            <ul id="property-form-errors-list" class="mb-0 mt-2 pl-3">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
 
         <form action="{{ route('propiedades.update', $propiedad->id) }}" method="POST" enctype="multipart/form-data"
             novalidate>
@@ -129,6 +133,23 @@
                             </div>
 
                             <div class="form-group mb-3">
+                                <label for="ia_instrucciones_propiedad" class="font-weight-bold">Instrucciones para IA
+                                    (opcional)</label>
+                                <input type="text" class="form-control" id="ia_instrucciones_propiedad" maxlength="220"
+                                    placeholder="Ej: tono premium para inversionistas, enfocar rentabilidad y ubicacion">
+                                <small class="form-text text-muted">La IA completara descripcion, descripcion corta y meta
+                                    description usando el contexto del inmueble.</small>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <button type="button" class="btn btn-outline-primary" id="btn-generar-ia-propiedad">
+                                    <span id="ia-propiedad-spinner" class="spinner-border spinner-border-sm mr-1 d-none"
+                                        role="status" aria-hidden="true"></span>
+                                    <span id="ia-propiedad-label">Regenerar textos con IA</span>
+                                </button>
+                            </div>
+
+                            <div class="form-group mb-3">
                                 <label for="descripcion" class="font-weight-bold">Descripcion completa <span
                                         class="text-danger">*</span></label>
                                 <textarea class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion"
@@ -137,8 +158,8 @@
 
                             <div class="form-group mb-0">
                                 <label for="direccion" class="font-weight-bold">Direccion</label>
-                                <textarea class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" maxlength="200"
-                                    rows="3" placeholder="Direccion referencial de la propiedad">{{ old('direccion', $propiedad->direccion) }}</textarea>
+                                <textarea class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion"
+                                    maxlength="200" rows="3" placeholder="Direccion referencial de la propiedad">{{ old('direccion', $propiedad->direccion) }}</textarea>
                                 <small class="form-text text-muted">Maximo 200 caracteres.</small>
                             </div>
                         </div>
@@ -150,29 +171,31 @@
 
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label for="zona_id" class="font-weight-bold">Zona <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-control @error('zona_id') is-invalid @enderror" name="zona_id"
-                                        id="zona_id" required>
-                                        <option value="">Selecciona una zona</option>
-                                        @foreach ($zonas as $zona)
-                                            <option value="{{ $zona->id }}"
-                                                {{ (string) old('zona_id', $propiedad->zona_id) === (string) $zona->id ? 'selected' : '' }}>
-                                                {{ $zona->zona }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6 form-group">
                                     <label for="provincia" class="font-weight-bold">Provincia <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-control @error('provincia') is-invalid @enderror" name="provincia"
-                                        id="provincia" required>
+                                    <select class="form-control select2 @error('provincia') is-invalid @enderror"
+                                        name="provincia" id="provincia" required>
                                         <option value="">Selecciona una provincia</option>
                                         @foreach ($provincias as $provincia)
                                             <option value="{{ $provincia->id }}"
                                                 {{ (string) old('provincia', $propiedad->provincia) === (string) $provincia->id ? 'selected' : '' }}>
                                                 {{ $provincia->provincia }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 form-group">
+                                    <label for="sector_id" class="font-weight-bold">Sector <span
+                                            class="text-danger">*</span></label>
+                                    <select
+                                        class="form-control select2 sector-select2 @error('sector_id') is-invalid @enderror"
+                                        name="sector_id" id="sector_id" required>
+                                        <option value="">Selecciona un sector</option>
+                                        @foreach ($sectores as $sector)
+                                            <option value="{{ $sector->id }}"
+                                                data-provincia="{{ $sector->provincia_id }}"
+                                                {{ (string) old('sector_id', $propiedad->sector_id) === (string) $sector->id ? 'selected' : '' }}>
+                                                {{ $sector->sector }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -341,7 +364,7 @@
                                         {{ old('activa', $propiedad->activa) ? 'checked' : '' }}>
                                     <span>Activa</span>
                                 </label>
-                                @if (optional($inmobiliaria)->aprobacion == 'on' && Auth::user()->rol == 0)
+                                @if ((bool) optional($inmobiliaria)->aprobacion && $isAdmin)
                                     <label class="toggle-chip">
                                         <input type="checkbox" name="aprobada" id="aprobada"
                                             {{ old('aprobada', $propiedad->aprobada) ? 'checked' : '' }}>
@@ -684,7 +707,8 @@
                         return parsedUrl.pathname.split('/').filter(Boolean)[0] || '';
                     }
 
-                    if (hostname === 'youtube.com' || hostname === 'm.youtube.com' || hostname === 'youtube-nocookie.com') {
+                    if (hostname === 'youtube.com' || hostname === 'm.youtube.com' || hostname ===
+                        'youtube-nocookie.com') {
                         if (parsedUrl.pathname === '/watch') {
                             return parsedUrl.searchParams.get('v') || '';
                         }
@@ -740,6 +764,528 @@
                 syncMeta();
             }
 
+            const aiButton = document.getElementById('btn-generar-ia-propiedad');
+            const aiInstructions = document.getElementById('ia_instrucciones_propiedad');
+            const tituloField = document.getElementById('titulo');
+            const descripcionField = document.getElementById('descripcion');
+            const descripcionCortaField = document.getElementById('descripcion_corta');
+            const provinciaSelect = document.getElementById('provincia');
+            const sectorSelect = document.getElementById('sector_id');
+            const monedaSelect = document.getElementById('tipomoneda');
+            const requiredCommercialSelects = [{
+                    id: 'provincia',
+                    label: 'Provincia'
+                },
+                {
+                    id: 'sector_id',
+                    label: 'Sector'
+                },
+                {
+                    id: 'tipomoneda',
+                    label: 'Moneda'
+                },
+                {
+                    id: 'tipo',
+                    label: 'Tipo de propiedad'
+                },
+                {
+                    id: 'disponible_para',
+                    label: 'Disponible para'
+                },
+                {
+                    id: 'estadopropiedad',
+                    label: 'Estado de propiedad'
+                },
+                {
+                    id: 'habitaciones',
+                    label: 'Habitaciones'
+                },
+                {
+                    id: 'banos',
+                    label: 'Banos'
+                },
+                {
+                    id: 'parqueos',
+                    label: 'Parqueos'
+                },
+            ];
+            const nonAmenityToggleIds = new Set(['destacada', 'vendida', 'activa', 'aprobada']);
+
+            const selectedText = (selectId) => {
+                const select = document.getElementById(selectId);
+                if (!select || select.selectedIndex < 0) {
+                    return '';
+                }
+
+                return (select.options[select.selectedIndex]?.text || '').trim();
+            };
+
+            const getSelectedAmenities = () => Array.from(document.querySelectorAll(
+                    '.toggle-chip input[type="checkbox"]:checked'))
+                .filter((item) => !nonAmenityToggleIds.has(item.id))
+                .map((item) => item.parentElement?.innerText?.trim())
+                .filter(Boolean);
+
+            const getSelectTargetHeight = () => Math.max(monedaSelect?.offsetHeight || 0, 38);
+
+            const applyProvinciaSelect2Height = () => {
+                if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !provinciaSelect) {
+                    return;
+                }
+
+                const targetHeight = getSelectTargetHeight();
+                const renderedLineHeight = Math.max(targetHeight - 2, 36);
+                const container = window.jQuery(provinciaSelect).next('.select2-container');
+
+                container.find('.select2-selection--single').css({
+                    height: `${targetHeight}px`
+                });
+                container.find('.select2-selection__rendered').css({
+                    lineHeight: `${renderedLineHeight}px`,
+                    paddingLeft: '12px',
+                    paddingRight: '28px'
+                });
+                container.find('.select2-selection__arrow').css({
+                    height: `${targetHeight}px`
+                });
+            };
+
+            const applySectorSelect2Height = () => {
+                if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !sectorSelect) {
+                    return;
+                }
+
+                const provinciaContainer = window.jQuery(provinciaSelect).next('.select2-container');
+                const provinciaSelection = provinciaContainer.find('.select2-selection--single');
+                const provinciaVisualHeight = provinciaSelection.length ? provinciaSelection.outerHeight() :
+                    getSelectTargetHeight();
+                const container = window.jQuery(sectorSelect).next('.select2-container');
+                const targetHeight = Math.max(Number(provinciaVisualHeight) || 0, 38);
+                const renderedLineHeight = Math.max(targetHeight - 2, 36);
+                container.find('.select2-selection--single').css({
+                    height: `${targetHeight}px`
+                });
+                container.find('.select2-selection__rendered').css({
+                    lineHeight: `${renderedLineHeight}px`,
+                    paddingLeft: '12px',
+                    paddingRight: '28px'
+                });
+                container.find('.select2-selection__arrow').css({
+                    height: `${targetHeight}px`
+                });
+            };
+
+            const refreshSectorOptions = () => {
+                if (!provinciaSelect || !sectorSelect) {
+                    return;
+                }
+
+                const provinciaValue = provinciaSelect.value;
+                const currentValue = sectorSelect.value;
+                let hasCurrent = false;
+
+                Array.from(sectorSelect.options).forEach((option) => {
+                    if (!option.value) {
+                        option.hidden = false;
+                        return;
+                    }
+
+                    const matches = !provinciaValue || option.dataset.provincia === provinciaValue;
+                    option.hidden = !matches;
+                    if (!matches && option.selected) {
+                        option.selected = false;
+                    }
+
+                    if (matches && option.value === currentValue) {
+                        hasCurrent = true;
+                    }
+                });
+
+                if (!hasCurrent) {
+                    sectorSelect.value = '';
+                }
+
+                if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
+                    window.jQuery(sectorSelect).trigger('change.select2');
+                }
+            };
+
+            if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
+                if (!window.jQuery(provinciaSelect).hasClass('select2-hidden-accessible')) {
+                    window.jQuery(provinciaSelect).select2({
+                        width: '100%',
+                        placeholder: 'Selecciona una provincia'
+                    });
+                }
+
+                if (!window.jQuery(sectorSelect).hasClass('select2-hidden-accessible')) {
+                    window.jQuery(sectorSelect).select2({
+                        width: '100%',
+                        placeholder: 'Selecciona un sector'
+                    });
+                }
+
+                applyProvinciaSelect2Height();
+                applySectorSelect2Height();
+                window.jQuery(provinciaSelect).on('change.select2', applySectorSelect2Height);
+            }
+
+            provinciaSelect?.addEventListener('change', () => {
+                refreshSectorOptions();
+            });
+            refreshSectorOptions();
+
+            const validateAiPrerequisites = () => {
+                const missingCommercialSelections = requiredCommercialSelects.filter((field) => {
+                    const select = document.getElementById(field.id);
+                    return !select || !String(select.value || '').trim();
+                });
+
+                const selectedAmenities = getSelectedAmenities();
+
+                if (!missingCommercialSelections.length && selectedAmenities.length > 0) {
+                    return {
+                        ok: true,
+                        selectedAmenities,
+                    };
+                }
+
+                const warnings = [];
+                if (missingCommercialSelections.length) {
+                    warnings.push(
+                        `<strong>Datos comerciales:</strong> ${missingCommercialSelections.map((item) => item.label).join(', ')}`
+                    );
+                }
+
+                if (selectedAmenities.length === 0) {
+                    warnings.push('<strong>Amenidades y estado:</strong> selecciona al menos una amenidad.');
+                }
+
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Completa el contexto antes de usar IA',
+                        html: warnings.join('<br>'),
+                        confirmButtonText: 'Entendido',
+                    });
+                }
+
+                if (missingCommercialSelections.length) {
+                    document.getElementById(missingCommercialSelections[0].id)?.focus();
+                } else {
+                    document.querySelector(
+                        '.toggle-chip input[type="checkbox"]:not(#destacada):not(#vendida):not(#activa):not(#aprobada)'
+                    )?.focus();
+                }
+
+                return {
+                    ok: false,
+                    selectedAmenities,
+                };
+            };
+
+            const getEditorContent = () => {
+                if (window.__propiedadDescripcionEditor) {
+                    return window.__propiedadDescripcionEditor.getData() || '';
+                }
+
+                if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances && CKEDITOR.instances.descripcion) {
+                    return CKEDITOR.instances.descripcion.getData() || '';
+                }
+
+                return descripcionField?.value || '';
+            };
+
+            const setEditorContent = (value) => {
+                if (window.__propiedadDescripcionEditor) {
+                    window.__propiedadDescripcionEditor.setData(value || '');
+                }
+
+                if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances && CKEDITOR.instances.descripcion) {
+                    CKEDITOR.instances.descripcion.setData(value || '');
+                }
+
+                if (descripcionField) {
+                    descripcionField.value = value || '';
+                }
+            };
+
+            if (aiButton) {
+                const endpoint = '{{ route('admin.ai.generate') }}';
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+                aiButton.addEventListener('click', async () => {
+                    const aiPrerequisites = validateAiPrerequisites();
+                    if (!aiPrerequisites.ok) {
+                        return;
+                    }
+
+                    const checkedAmenities = aiPrerequisites.selectedAmenities;
+
+                    const contexto = {
+                        referencia: '{{ $propiedad->referencia }}',
+                        titulo: tituloField?.value || '',
+                        descripcion_actual: getEditorContent(),
+                        descripcion_corta_actual: descripcionCortaField?.value || '',
+                        metadescription_actual: metaVisible?.value || '',
+                        provincia: selectedText('provincia'),
+                        sector: selectedText('sector_id'),
+                        tipo_propiedad: selectedText('tipo'),
+                        disponible_para: selectedText('disponible_para'),
+                        estado: selectedText('estadopropiedad'),
+                        moneda: selectedText('tipomoneda'),
+                        precio: document.getElementById('precio')?.value || '',
+                        habitaciones: document.getElementById('habitaciones')?.value || '',
+                        banos: document.getElementById('banos')?.value || '',
+                        parqueos: document.getElementById('parqueos')?.value || '',
+                        metraje: document.getElementById('metraje')?.value || '',
+                        metraje_construccion: document.getElementById('metraje_construccion')
+                            ?.value || '',
+                        amenidades: checkedAmenities,
+                    };
+
+                    aiButton.disabled = true;
+                    const aiSpinner = document.getElementById('ia-propiedad-spinner');
+                    const aiLabel = document.getElementById('ia-propiedad-label');
+                    if (aiSpinner) aiSpinner.classList.remove('d-none');
+                    if (aiLabel) aiLabel.textContent = 'Generando...';
+
+                    try {
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrf,
+                                'Accept': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                type: 'inmueble',
+                                instrucciones: aiInstructions?.value || '',
+                                contexto,
+                            }),
+                        });
+
+                        const result = await response.json();
+                        if (!response.ok || !result.ok) {
+                            throw new Error(result.message || 'No fue posible generar contenido.');
+                        }
+
+                        const data = result.data || {};
+                        if (data.titulo_sugerido && tituloField && !tituloField.value) {
+                            tituloField.value = data.titulo_sugerido;
+                        }
+
+                        if (data.descripcion) {
+                            setEditorContent(data.descripcion);
+                        }
+
+                        if (data.descripcion_corta && descripcionCortaField) {
+                            descripcionCortaField.value = data.descripcion_corta;
+                        }
+
+                        if (data.metadescription && metaVisible) {
+                            metaVisible.value = data.metadescription;
+                            if (metaHidden) {
+                                metaHidden.value = data.metadescription;
+                            }
+                        }
+
+                        if (window.Swal) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Textos regenerados',
+                                text: 'Puedes ajustar el resultado antes de guardar.',
+                                timer: 1800,
+                                showConfirmButton: false,
+                            });
+                        }
+                    } catch (error) {
+                        if (window.Swal) {
+                            Swal.fire('Error', error.message ||
+                                'No fue posible generar contenido con IA.', 'error');
+                        }
+                    } finally {
+                        aiButton.disabled = false;
+                        if (aiSpinner) aiSpinner.classList.add('d-none');
+                        if (aiLabel) aiLabel.textContent = 'Regenerar textos con IA';
+                    }
+                });
+            }
+
+            const propertyForm = document.querySelector('form[action*="propiedades.update"]') || document
+                .querySelector('form');
+            const coverDropzone = document.getElementById('cover-dropzone');
+
+            const clearClientValidationErrors = () => {
+                document.querySelectorAll('.js-client-invalid').forEach((element) => {
+                    element.classList.remove('is-invalid', 'js-client-invalid');
+                });
+
+                document.querySelectorAll('.js-client-feedback').forEach((element) => {
+                    element.remove();
+                });
+            };
+
+            const showFormErrors = (errors) => {
+                const errorsContainer = document.getElementById('property-form-errors');
+                const errorsList = document.getElementById('property-form-errors-list');
+
+                if (!errorsContainer || !errorsList) {
+                    return;
+                }
+
+                errorsList.innerHTML = '';
+
+                Object.values(errors).flat().forEach((message) => {
+                    const item = document.createElement('li');
+                    item.textContent = message;
+                    errorsList.appendChild(item);
+                });
+
+                errorsContainer.classList.remove('d-none');
+                errorsContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            };
+
+            const setFieldInvalid = (fieldName, message) => {
+                if (!propertyForm) {
+                    return;
+                }
+
+                const field = propertyForm.querySelector(`[name="${fieldName}"]`);
+
+                if (!field) {
+                    return;
+                }
+
+                field.classList.add('is-invalid', 'js-client-invalid');
+
+                const feedback = document.createElement('div');
+                feedback.className = 'invalid-feedback d-block js-client-feedback';
+                feedback.textContent = message;
+                field.insertAdjacentElement('afterend', feedback);
+            };
+
+            const setCoverInvalidState = (isInvalid, message = 'Revisa la portada de la propiedad.') => {
+                if (!coverDropzone) {
+                    return;
+                }
+
+                const feedbackId = 'foto-portada-feedback';
+                const existingFeedback = document.getElementById(feedbackId);
+
+                if (isInvalid) {
+                    coverDropzone.classList.add('is-invalid', 'js-client-invalid');
+
+                    if (!existingFeedback) {
+                        const feedback = document.createElement('div');
+                        feedback.id = feedbackId;
+                        feedback.className = 'invalid-feedback d-block mt-2 js-client-feedback';
+                        feedback.textContent = message;
+                        coverDropzone.parentElement.appendChild(feedback);
+                    }
+                } else {
+                    coverDropzone.classList.remove('is-invalid', 'js-client-invalid');
+                    if (existingFeedback) {
+                        existingFeedback.remove();
+                    }
+                }
+            };
+
+            const submitEditForm = async (event) => {
+                if (!propertyForm) {
+                    return;
+                }
+
+                event.preventDefault();
+                clearClientValidationErrors();
+                setCoverInvalidState(false);
+
+                const errorsContainer = document.getElementById('property-form-errors');
+                if (errorsContainer) {
+                    errorsContainer.classList.add('d-none');
+                }
+
+                if (window.__propiedadDescripcionEditor) {
+                    const descripcionInput = document.getElementById('descripcion');
+                    if (descripcionInput) {
+                        descripcionInput.value = window.__propiedadDescripcionEditor.getData();
+                    }
+                }
+
+                if (metaVisible && metaHidden) {
+                    metaHidden.value = metaVisible.value;
+                }
+
+                const submitButton = propertyForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                }
+
+                try {
+                    const formData = new FormData(propertyForm);
+                    const response = await fetch(propertyForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            Accept: 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    });
+
+                    if (response.ok) {
+                        if (response.redirected && response.url) {
+                            window.location.href = response.url;
+                            return;
+                        }
+
+                        window.location.reload();
+                        return;
+                    }
+
+                    if (response.status === 422) {
+                        const payload = await response.json();
+                        const errors = payload.errors || {};
+
+                        showFormErrors(errors);
+                        Object.entries(errors).forEach(([fieldName, fieldErrors]) => {
+                            if (fieldName === 'foto_portada') {
+                                const coverError = Array.isArray(fieldErrors) && fieldErrors
+                                    .length > 0 ?
+                                    fieldErrors[0] :
+                                    'Revisa la portada de la propiedad.';
+                                setCoverInvalidState(true, coverError);
+                                return;
+                            }
+
+                            if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+                                setFieldInvalid(fieldName, fieldErrors[0]);
+                            }
+                        });
+
+                        return;
+                    }
+
+                    showFormErrors({
+                        general: ['No fue posible actualizar la propiedad. Intenta nuevamente.']
+                    });
+                } catch (error) {
+                    showFormErrors({
+                        general: ['Error de conexion. Revisa tu red e intenta nuevamente.']
+                    });
+                } finally {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                    }
+                }
+            };
+
+            if (propertyForm) {
+                propertyForm.addEventListener('submit', submitEditForm);
+            }
+
             const bindDropzone = ({
                 zoneId,
                 inputId,
@@ -761,7 +1307,7 @@
 
                 zone.addEventListener('click', (event) => {
                     if (event.target.closest('label') || event.target.closest(
-                        'input[type="checkbox"]')) {
+                            'input[type="checkbox"]')) {
                         return;
                     }
                     openPicker();
@@ -872,9 +1418,10 @@
                         }
                     })
                     .then((editor) => {
+                        window.__propiedadDescripcionEditor = editor;
                         editor.editing.view.change((writer) => {
                             writer.setStyle('min-height', '320px', editor.editing.view.document
-                            .getRoot());
+                                .getRoot());
                         });
                     })
                     .catch((error) => {

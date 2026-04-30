@@ -180,11 +180,10 @@
                                     </td>
                                     <td class="text-right">
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-outline-primary btn-sm mr-1"
-                                                wire:click="edit({{ $cliente->id }})" data-toggle="modal"
-                                                data-target="#modalForm">
+                                            <a href="{{ route('clientes.edit', $cliente->id) }}"
+                                                class="btn btn-outline-primary btn-sm mr-1">
                                                 Editar
-                                            </button>
+                                            </a>
                                             <button type="button" class="btn btn-outline-danger btn-sm"
                                                 wire:click="$emit('generarBorrarSweetAlert', {{ $cliente->id }}, 'Borrar Cliente ID ', 'borrarContacto')"
                                                 data-element-id="{{ $cliente->id }}">

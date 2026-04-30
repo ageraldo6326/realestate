@@ -1,53 +1,18 @@
 @extends('admin.layoutadmin')
 
+@section('title', 'Nuevo enfoque')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item">Contenido</li>
+    <li class="breadcrumb-item"><a href="{{ route('enfoques.index') }}">Enfoques</a></li>
+    <li class="breadcrumb-item active">Crear</li>
+@endsection
+
+@section('page_title', 'Nuevo enfoque')
+
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1>ENFOQUE</h1>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif            
-            <form action="{{ route("enfoques.store") }}" method="post" enctype="multipart/form-data">
-                @method("post")
-                @csrf
-                <div class="form-group">
-
-                    <div class="form-group">
-                        <label for="titulo">Titulo</label>
-                        <input type="text" class="form-control" id="titulo" name="titulo" placeholder="titulo"
-                            value="{{ old('titulo') }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="descripcion">Enfoque</label>
-                        <textarea class="form-control" id="enfoque" name="enfoque"
-                            rows="3">{{ old('enfoque') }}</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="foto">Foto</label>
-                        <input type="file" class="form-control-file" name="foto" id="foto" value="{{ old('foto') }}">
-                    </div>                  
-
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-success" name="submit" id="submit" value="Grabar">
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    CKEDITOR.replace('enfoque');
-</script>
-
+    @include('admin.enfoques._form', [
+        'mode' => 'create',
+        'action' => route('enfoques.store'),
+    ])
 @endsection

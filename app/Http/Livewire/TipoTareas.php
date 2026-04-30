@@ -2,29 +2,34 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ToDo;
 use App\Models\ToDoTipo;
+use App\Services\CatalogoService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Throwable;
 
 class TipoTareas extends Component
 {
-
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
+    protected $listeners = ['borrarTipoTarea'];
 
-    public $formTitle = "Estado";
-    public $Id = 0, $todo_tipo, $color, $criterio="";
-
-    protected $rules = ['todo_tipo' => 'required', 'color' => 'required',];
-    protected $listeners = ['close-modal'];
+    public $criterio = '';
 
     public function render()
     {
+        $criterio = trim((string) $this->criterio);
+
         $tipostareas = ToDoTipo::query()
-            ->when($this->criterio !== '', function ($query) {
-                $query->where('todo_tipo', 'like', "%{$this->criterio}%")
-                    ->orWhere('id', $this->criterio);
+            ->when($criterio !== '', function ($query) use ($criterio) {
+                $query->where('todo_tipo', 'like', '%' . $criterio . '%');
+
+                if (is_numeric($criterio)) {
+                    $query->orWhere('id', (int) $criterio);
+                }
             })
             ->orderByDesc('id')
             ->paginate(10);
@@ -32,50 +37,43 @@ class TipoTareas extends Component
         return view('livewire.tipo-tareas', compact('tipostareas'));
     }
 
-    public function updatingCriterio()
+    public function updatingCriterio(): void
     {
         $this->resetPage();
     }
 
-    public function clear() {
-        $this->Id = 0;
-        $this->todo_tipo = "";
-        $this->color = "";
-        $this->resetValidation();
-        $this->dispatchBrowserEvent('close-modal');
+    public function limpiar(): void
+    {
+        $this->criterio = '';
+        $this->resetPage();
     }
 
-    public function store() {
-        $this->validate();
-        $tipostareas = New ToDoTipo();
-        $tipostareas->todo_tipo = $this->todo_tipo;
-        $tipostareas->color = $this->color;
-        $tipostareas->save();
-        $this->clear();
+    public function borrarTipoTarea($id): void
+    {
+        try {
+            $tipoTarea = ToDoTipo::query()->findOrFail((int) $id);
+
+            $tareasVinculadas = ToDo::query()->where('todo_tipo', $tipoTarea->id)->count();
+
+            if ($tareasVinculadas > 0) {
+                session()->flash('error', 'No se puede eliminar porque tiene tareas relacionadas.');
+
+                return;
+            }
+
+            $tipoTarea->delete();
+            CatalogoService::forgetAll();
+
+            session()->flash('status', 'Tipo de tarea eliminado correctamente.');
+            $this->resetPage();
+        } catch (Throwable $exception) {
+            Log::error('todo_types.livewire.delete.failed', [
+                'todo_tipo_id' => (int) $id,
+                'error' => $exception->getMessage(),
+                'deleted_by' => (int) optional(auth()->user())->id,
+            ]);
+
+            session()->flash('error', 'No fue posible eliminar el tipo de tarea. Intenta nuevamente.');
+        }
     }
-
-    public function update($id) {
-        $this->validate();
-        $tipostareas = ToDoTipo::find($id);
-        $tipostareas->todo_tipo = $this->todo_tipo;
-        $tipostareas->color = $this->color;
-        $tipostareas->save();
-        $this->clear();
-    }    
-
-    public function delete($id) {
-        $tipostareas = ToDoTipo::find($id);
-        $tipostareas->delete();
-        $this->clear();
-    }      
-
-
-    public function edit($id) {
-        $tipostareas = ToDoTipo::find($id);
-        $this->Id = $tipostareas->id;
-        $this->todo_tipo = $tipostareas->todo_tipo;
-        $this->color = $tipostareas->color;
-
-    }        
-
 }

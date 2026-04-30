@@ -1,4 +1,8 @@
 <div>
+    @php
+        $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+    @endphp
+
     <!-- SECTION HEADER -->
     <div class="d-flex align-items-center gap-3 mb-4">
         <div>
@@ -13,7 +17,9 @@
                 <article class="prop-card h-100">
                     <div class="card-img-wrap">
                         <a href="{{ route('propiedad', $propiedad->slug) }}" aria-label="{{ $propiedad->titulo }}">
-                            <img loading="lazy" src="{{ asset('../assets/' . $propiedad->foto_portada) }}"
+                            <img loading="lazy"
+                                src="{{ !empty($propiedad->foto_portada) ? asset('assets/' . $propiedad->foto_portada) : $propertyPlaceholder }}"
+                                onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                 alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
                         </a>
                         @php $disp = strtolower($propiedad->disponible_para ?? ''); @endphp

@@ -2,18 +2,14 @@
 
 namespace App\Http\Livewire;
 
-use Throwable;
 use App\Models\ToDo;
-use App\Models\Zonas;
-use App\Models\Estados;
 use Livewire\Component;
 use App\Models\ToDoTipo;
 use App\Models\Clientenota;
 use App\Models\ToDoEstatus;
 use Livewire\WithPagination;
-use App\Models\Inmobiliaria;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Models\Clientes as ModelClientes;
@@ -55,8 +51,11 @@ class Clientes extends Component
     public function render()
     {
         $user = Auth::user();
-        $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
-        $contactOwnershipDays = (int) (optional(Inmobiliaria::query()->first())->dias_propiedad_contactos ?? 90);
+        $roleChecker = 'hasAnyRole';
+        $isAdmin = $user && method_exists($user, $roleChecker)
+            ? $user->{$roleChecker}(['admin', 'superadmin'])
+            : false;
+        $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;
         }
@@ -85,20 +84,20 @@ class Clientes extends Component
 
         $clientes = $query->paginate(9);
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
         $notas = Clientenota::where('id_cliente', '=', $this->Id)->orderby("created_at", "desc")->get();
 
         $tareas = ToDo::where('cliente_id', '=', $this->Id)->orderby("created_at", "desc")->get();
 
         $tipos = ToDoTipo::all();
-        $estatuses = TodoEstatus::all();
+        $estatuses = ToDoEstatus::all();
 
         return view('livewire.clientes', compact("clientes", "zonas", "tipos_propiedades", "estados_propiedad", "notas", "tareas", "tipos", "estatuses"));
     }

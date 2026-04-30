@@ -1,0 +1,165 @@
+Warning: TTY mode is not supported on Windows platform.
+
+  [37;41;1m FAIL [39;49;22m[39m Tests\Feature\UsuariosCrudTest[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario valido[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario sin autenticacion falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario sin rol admin falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con email duplicado falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con email duplicado case insensitive falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con nombre vacio falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con password debil falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con password confirmation no coincide falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mcrear usuario con descripcion corta falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mactualizar usuario valido[22m[39m
+  [31;1mΓ¿»[39;22m[39m [2mactualizar password usuario[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mactualizar usuario no encontrado falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2msuperadmin protegido no puede desactivarse[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2meliminar usuario valido[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2meliminar usuario autenticado falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2meliminar superadmin protegido falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2meliminar usuario no encontrado falla[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mrestaurar usuario eliminado[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2msolo admin puede ver usuarios[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2madmin puede ver usuarios[22m[39m
+  [32;1mΓ£ô[39;22m[39m [2mlistado usuarios paginado[22m[39m
+  [31;1mΓ¿»[39;22m[39m [2memail se guarda en minusculas[22m[39m
+  [31;1mΓ¿»[39;22m[39m [2mcampos booleanos se guardan correctamente[22m[39m
+  [31;1mΓ¿»[39;22m[39m [2mespacios blancos se normalizan[22m[39m
+
+  [2m---[22m
+
+  [31;1mΓÇó Tests\Feature\UsuariosCrudTest [39;22m> [31;1mactualizar password usuario[39;22m
+[39;1m  Failed asserting that two strings are equal.[39;22m
+
+  at [32mD:\xampp3\htdocs\realestate_dev\tests\Feature\UsuariosCrudTest.php[39m:[32m372[39m
+    368Γûò         ];
+    369Γûò 
+    370Γûò         $response = $this->put(route('usuarios.update', $usuario->id), $data);
+    371Γûò 
+  Γ₧£ 372Γûò         $response->assertRedirect(route('usuarios.index'));
+    373Γûò 
+    374Γûò         $usuario->refresh();
+    375Γûò         $this->assertTrue(Hash::check('NewSecurePass789', $usuario->password));
+    376Γûò     }
+
+  [33m1   [39m[39;1mD:\xampp3\htdocs\realestate_dev\vendor\phpunit\phpunit\phpunit[39;22m:[39;1m107[39;22m
+  [37m    PHPUnit\TextUI\Command::main()[39m
+  --- Expected
+  +++ Actual
+  @@ @@
+  -'http://localhost/admin/usuarios'
+  +'http://localhost'
+  [31;1mΓÇó Tests\Feature\UsuariosCrudTest [39;22m> [31;1memail se guarda en minusculas[39;22m
+[39;1m  Failed asserting that a row in the table [users] matches the attributes {
+      "email": "test@example.com"
+  }.
+  
+  Found: [
+      {
+          "id": 112,
+          "name": "Admin Usuario",
+          "email": "admin@test.com",
+          "email_verified_at": "2026-04-27 21:21:06",
+          "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+          "remember_token": "XdJsASwncu",
+          "titulo": null,
+          "metadescription": null,
+          "descripcion": null,
+          "telefono": null,
+          "foto": null,
+          "activo": 1,
+          "rol": 1,
+          "requiere_aprobacion_propiedades": null,
+          "mostrar": 1,
+          "orden": 100,
+          "facebook": null,
+          "instagram": null,
+          "tiktok": null,
+          "whatsapp": null,
+          "deleted_at": null,
+          "created_at": "2026-04-27 21:21:06",
+          "updated_at": "2026-04-27 21:21:06"
+      },
+      {
+          "id": 113,
+          "name": "Asesor Usuario",
+          "email": "asesor@test.com",
+          "email_verified_at": "2026-04-27 21:21:06",
+          "password": "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC\/.og\/at2.uheWG\/igi",
+          "remember_token": "6HZF4bM3aD",
+          "titulo": null,
+          "metadescription": null,
+          "descripcion": null,
+          "telefono": null,
+          "foto": null,
+          "activo": 1,
+          "rol": 0,
+          "requiere_aprobacion_propiedades": null,
+          "mostrar": 1,
+          "orden": 100,
+          "facebook": null,
+          "instagram": null,
+          "tiktok": null,
+          "whatsapp": null,
+          "deleted_at": null,
+          "created_at": "2026-04-27 21:21:06",
+          "updated_at": "2026-04-27 21:21:06"
+      }
+  ].[39;22m
+
+  at [32mD:\xampp3\htdocs\realestate_dev\tests\Feature\UsuariosCrudTest.php[39m:[32m587[39m
+    583Γûò         ];
+    584Γûò 
+    585Γûò         $this->post(route('usuarios.store'), $data);
+    586Γûò 
+  Γ₧£ 587Γûò         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
+    588Γûò     }
+    589Γûò 
+    590Γûò     /**
+    591Γûò      * Test: Campos de rol y mostrar son booleanos/int correctos.
+
+  [33m1   [39m[39;1mD:\xampp3\htdocs\realestate_dev\vendor\phpunit\phpunit\phpunit[39;22m:[39;1m107[39;22m
+  [37m    PHPUnit\TextUI\Command::main()[39m
+
+  [31;1mΓÇó Tests\Feature\UsuariosCrudTest [39;22m> [31;1mcampos booleanos se guardan correctamente[39;22m
+  [41;1m PHPUnit\Framework\ExceptionWrapper [49;22m
+
+[39;1m  Attempt to read property "rol" on null[39;22m
+
+  at [32mD:\xampp3\htdocs\realestate_dev\tests\Feature\UsuariosCrudTest.php[39m:[32m613[39m
+    609Γûò 
+    610Γûò         $this->post(route('usuarios.store'), $data);
+    611Γûò 
+    612Γûò         $usuario = User::where('email', 'test@example.com')->first();
+  Γ₧£ 613Γûò         $this->assertSame(1, $usuario->rol);
+    614Γûò         $this->assertSame(0, $usuario->mostrar);
+    615Γûò         $this->assertSame(true, (bool) $usuario->activo);
+    616Γûò         $this->assertSame(true, (bool) $usuario->requiere_aprobacion_propiedades);
+    617Γûò     }
+
+  [33m1   [39m[39;1mD:\xampp3\htdocs\realestate_dev\vendor\phpunit\phpunit\phpunit[39;22m:[39;1m107[39;22m
+  [37m    PHPUnit\TextUI\Command::main()[39m
+
+  [31;1mΓÇó Tests\Feature\UsuariosCrudTest [39;22m> [31;1mespacios blancos se normalizan[39;22m
+  [41;1m PHPUnit\Framework\ExceptionWrapper [49;22m
+
+[39;1m  Attempt to read property "name" on null[39;22m
+
+  at [32mD:\xampp3\htdocs\realestate_dev\tests\Feature\UsuariosCrudTest.php[39m:[32m643[39m
+    639Γûò 
+    640Γûò         $this->post(route('usuarios.store'), $data);
+    641Γûò 
+    642Γûò         $usuario = User::where('email', 'test@example.com')->first();
+  Γ₧£ 643Γûò         $this->assertEquals('Test User', $usuario->name);
+    644Γûò         $this->assertEquals('+34912345678', $usuario->telefono);
+    645Γûò         $this->assertEquals('Senior Agent', $usuario->titulo);
+    646Γûò     }
+    647Γûò }
+
+  [33m1   [39m[39;1mD:\xampp3\htdocs\realestate_dev\vendor\phpunit\phpunit\phpunit[39;22m:[39;1m107[39;22m
+  [37m    PHPUnit\TextUI\Command::main()[39m
+
+
+  [37;1mTests:  [39;22m[31;1m4 failed[39;22m[39m, [39m[32;1m20 passed[39;22m
+  [37;1mTime:   [39;22m[39m3.39s[39m
+

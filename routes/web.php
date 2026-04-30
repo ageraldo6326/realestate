@@ -45,6 +45,7 @@ use App\Http\Controllers\TareasPorCategoriasController;
 use App\Http\Controllers\Admin\DisponibleParaController;
 use App\Http\Controllers\Admin\MetaController;
 use App\Http\Controllers\Admin\MostrarClienteController;
+use App\Http\Controllers\Admin\AiContentController;
 use App\Http\Controllers\verclientespotencialeslivewire;
 use App\Http\Controllers\Frontend\QuienesSomosController;
 use App\Http\Controllers\Admin\TiposPropiedadesController;
@@ -75,7 +76,13 @@ Route::get('webhook', [MetaController::class, 'register'])->name('webhook');
 
 Route::post('webhook', [MetaController::class, 'handle'])->name('webhookhandle');
 
-Route::get('/sitemap', [Sitemap::class, 'sitemap']);
+// Legacy endpoint retirado: evita exponer contenido incorrecto como sitemap.
+Route::any('/seo/sitemap', function () {
+    return response('', 410);
+});
+
+Route::get('/sitemap.xml', [Sitemap::class, 'sitemap'])->name('sitemap.xml');
+Route::redirect('/sitemap', '/sitemap.xml', 301);
 
 Route::get('/admin/clientes/veropciones/{id}', [ClientesController::class, "veropciones"])->name("veropciones");
 Route::get('/admin/clientes/veropcionesendolares/{id}', [ClientesController::class, "veropcionesendolares"])->name("veropcionesendolares");
@@ -102,7 +109,14 @@ Route::get('/admin/verpropiedades', [PropiedadesController::class, 'verpropiedad
 
 // Opciones para administradores
 
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
+Route::middleware(['auth', 'enforce.superadmin.password.rotation'])->group(function () {
+    Route::get('/admin/security/superadmin/password', [EntrarController::class, 'showSuperadminPasswordRotationForm'])
+        ->name('admin.superadmin.password.edit');
+    Route::post('/admin/security/superadmin/password', [EntrarController::class, 'rotateSuperadminPassword'])
+        ->name('admin.superadmin.password.update');
+});
+
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:admin']], function () {
 
 
 
@@ -125,7 +139,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::put('/admin/updatependientes/{id}', [PropiedadesController::class, 'updatependientes'])->name("updatependientes");
     Route::put('/admin/updatecualquiera/{id}', [PropiedadesController::class, 'updatecualquiera'])->name("updatecualquiera");
 
-    Route::get('/admin/borrarusuario/{id}', [UsuarioController::class, 'borrarusuario'])->name("borrarusuario");
+    Route::delete('/admin/borrarusuario/{id}', [UsuarioController::class, 'borrarusuario'])->name("borrarusuario");
     Route::get('/admin/borrarventa/{id}', [CrearVentasController::class, 'borrarventa'])->name("borrarventa");
 
     Route::get('/consulta/verclientesporasesor/{asesorid}/{fecha_ini}/{fecha_fin}', [VerClientesPorAsesoresController::class, 'index'])->name("verclientesporasesor");
@@ -140,6 +154,8 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('/admin/testimonios', TestimoniosController::class);
     Route::resource('/admin/posts', PostsController::class);
     Route::resource('/admin/enfoques', EnfoquesController::class);
+    Route::match(['post', 'put'], '/admin/inmobiliaria/{id}/restore-default', [EmpresaController::class, 'restoreDefaultTheme'])->name('inmobiliaria.restore-default');
+    Route::match(['post', 'put'], '/admin/inmobiliaria/{id}/restore-previous', [EmpresaController::class, 'restorePreviousTheme'])->name('inmobiliaria.restore-previous');
     Route::resource('/admin/inmobiliaria', EmpresaController::class);
     Route::resource('/admin/zonas', ZonasController::class);
     Route::resource('/admin/tipopropiedades', TiposPropiedadesController::class);
@@ -154,7 +170,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 //  Opciones para asesores
 
-Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:asesor|admin']], function () {
 
     Route::get('/admin/dashboard', function () {
         $user    = Auth::user();
@@ -205,11 +221,17 @@ Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
 
 Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
 
+    Route::post('/admin/ai/generar-contenido', [AiContentController::class, 'generate'])
+        ->middleware('throttle:20,1')
+        ->name('admin.ai.generate');
+
     Route::get('/admin/calendario', [TodoController::class, "calendario"])->name("calendario");
 
     Route::get('/admin/clientes/asignar', [ClientesController::class, 'asignar'])->name("asignar");
 
     Route::resource('/admin/propiedades', PropiedadesController::class);
+    Route::get('/admin/api/sectores', [PropiedadesController::class, 'sectoresPorProvincia'])->name('admin.api.sectores');
+    Route::get('/admin/api/barrios', [PropiedadesController::class, 'barriosPorSector'])->name('admin.api.barrios');
     Route::resource('/admin/todo', TodoController::class);
     Route::resource('/admin/clientes', ClientesController::class)->except(['show']);
 

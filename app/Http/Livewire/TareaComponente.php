@@ -7,9 +7,7 @@ use App\Models\ToDoTipo;
 use App\Models\ToDoEstatus;
 use App\Models\Clientes;
 use App\Models\ToDo;
-use Facade\Ignition\QueryRecorder\Query;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class TareaComponente extends Component
@@ -55,11 +53,15 @@ class TareaComponente extends Component
 
 
         $tipos = ToDoTipo::all();
-        $estatuses = TodoEstatus::all();
+        $estatuses = ToDoEstatus::all();
         $clientes = Clientes::where(function ($query) {
             $query->where('captado_por', Auth::id())
                 ->orWhere('asignado_a', Auth::id());
-        })->get();
+        })
+            ->select('id', 'nombre', 'telefono')
+            ->orderByDesc('id')
+            ->limit(100)
+            ->get();
 
         return view('livewire.tarea-componente', compact('todos', 'tipos', 'clientes', 'estatuses'));
     }
@@ -97,7 +99,7 @@ class TareaComponente extends Component
 
     public function edit($id)
     {
-        $tarea = Todo::find($id);
+        $tarea = ToDo::find($id);
         $this->Id = $tarea->id;
         $this->nombre = $tarea->nombre;
         $this->descripcion = $tarea->descripcion;
@@ -109,7 +111,7 @@ class TareaComponente extends Component
 
     public function update($id)
     {
-        $tarea = Todo::find($id);
+        $tarea = ToDo::find($id);
         $tarea->nombre = $this->nombre;
         $tarea->descripcion = $this->descripcion;
         $tarea->fechaLimite = $this->fechaLimite;
@@ -122,7 +124,7 @@ class TareaComponente extends Component
 
     public function delete($id)
     {
-        $zona = Todo::find($id);
+        $zona = ToDo::find($id);
         $zona->delete();
         $this->clear();
     }

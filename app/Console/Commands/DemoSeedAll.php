@@ -52,6 +52,11 @@ class DemoSeedAll extends Command
           'arguments' => ['--class' => 'Database\\Seeders\\HomeDataSeeder', '--force' => true],
         ],
         [
+          'label' => 'Completando avatares de asesores demo',
+          'command' => 'demo:ensure-advisor-avatars',
+          'arguments' => ['--force' => true],
+        ],
+        [
           'label' => 'Completando imagenes de portada en propiedades',
           'command' => 'properties:ensure-cover-images',
           'arguments' => ['--force' => true],

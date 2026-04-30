@@ -12,4 +12,10 @@ class Zonas extends Model
     protected $fillable = [
         'zona'
     ];
+
+    public function setZonaAttribute($value): void
+    {
+        $normalized = preg_replace('/\s+/u', ' ', trim((string) $value));
+        $this->attributes['zona'] = is_string($normalized) ? $normalized : '';
+    }
 }

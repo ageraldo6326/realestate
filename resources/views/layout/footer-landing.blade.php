@@ -1,3 +1,36 @@
+@php
+    $resolvePublicAssetUrl = static function (?string $path): ?string {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '//'])) {
+            return $path;
+        }
+
+        if (
+            \Illuminate\Support\Str::startsWith($path, [
+                '/img/',
+                'img/',
+                '/assets/',
+                'assets/',
+                '/storage/',
+                'storage/',
+            ])
+        ) {
+            return url('/' . ltrim($path, '/'));
+        }
+
+        return asset('assets/' . ltrim($path, '/'));
+    };
+
+    $companyFooterLogoUrl = $resolvePublicAssetUrl(optional($inmo)->logo);
+    $companyLogoPlaceholder = asset('assets/inmobiliaria/logo.png');
+    $ctaPlaceholder = asset('assets/prop-apto-1.jpg');
+@endphp
+
 <!-- ===================== CTA BANNER ===================== -->
 <section class="cta-banner" aria-label="Publica tu propiedad">
     <div class="container">
@@ -9,7 +42,7 @@
             </div>
             <div class="cta-image">
                 <img src="/img/cta-home.jpg" alt="Publica tu propiedad" loading="lazy"
-                    onerror="this.style.display='none'">
+                    onerror="this.onerror=null;this.src='{{ $ctaPlaceholder }}';">
             </div>
             <div class="cta-action">
                 <a href="{{ route('contactos') }}" class="btn-accent">
@@ -30,17 +63,18 @@
                 <!-- Brand column -->
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-brand">
-                        @if (isset($inmo) && $inmo->logo)
+                        @if ($companyFooterLogoUrl)
                             <a href="{{ route('home') }}" aria-label="Inicio" class="footer-brand-logo-wrap">
-                                <img src="{{ asset('assets/' . $inmo->logo) }}" alt="{{ $inmo->titulo ?? 'Logo' }}"
-                                    class="footer-brand-logo" height="50" loading="lazy">
+                                <img src="{{ $companyFooterLogoUrl }}" alt="{{ optional($inmo)->titulo ?? 'Logo' }}"
+                                    class="footer-brand-logo" height="50" loading="lazy"
+                                    onerror="this.onerror=null;this.src='{{ $companyLogoPlaceholder }}';">
                             </a>
                         @else
-                            <span class="footer-brand-name">{{ $inmo->titulo ?? 'Inmobiliaria' }}</span>
+                            <span class="footer-brand-name">{{ optional($inmo)->titulo ?? 'Inmobiliaria' }}</span>
                         @endif
 
                         <p class="footer-tagline">
-                            {{ $inmo->slogan ?? 'Hacemos realidad el sueño de encontrar el hogar perfecto para ti y tu familia.' }}
+                            {{ optional($inmo)->slogan ?? 'Hacemos realidad el sueño de encontrar el hogar perfecto para ti y tu familia.' }}
                         </p>
 
                         <div class="footer-socials">

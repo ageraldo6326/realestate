@@ -4,175 +4,180 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Post;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\StorePostRequest;
+use App\Http\Requests\Admin\UpdatePostRequest;
+use App\Services\Admin\ContentMediaService;
+use App\Services\CatalogoService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class PostsController extends Controller
 {
-
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $posts = Post::all();
+        $search = trim((string) request('search'));
 
-        return view("admin.posts.index",compact("posts"));
+        $posts = Post::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($nestedQuery) use ($search): void {
+                    $nestedQuery->where('titulo', 'like', '%' . $search . '%')
+                        ->orWhere('contenido', 'like', '%' . $search . '%')
+                        ->orWhere('slug', 'like', '%' . $search . '%')
+                        ->orWhere('id', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderByDesc('id')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('admin.posts.index', compact('posts', 'search'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
-        return view("admin.posts.create");
+        return view('admin.posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StorePostRequest $request, ContentMediaService $mediaService): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+        $uploadedPhoto = $request->file('foto');
 
-        $request->validate([
-            'titulo' => 'required',
-            'contenido' => 'required',
-            'metadescription' => 'required'                
-        ]);
+        try {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $request): void {
+                Post::query()->create([
+                    'titulo' => $validated['titulo'],
+                    'slug' => $this->generateUniqueSlug($validated['titulo']),
+                    'contenido' => $validated['contenido'],
+                    'metadescription' => $validated['metadescription'],
+                    'autor' => (string) optional($request->user())->name,
+                    'activo' => (bool) ($validated['activo'] ?? false),
+                    'foto' => $uploadedPhoto ? $mediaService->storeImageAsWebp($uploadedPhoto, 'post', 1400, 900) : null,
+                ]);
+            });
 
-        $post = New Post();
+            CatalogoService::forgetAll();
 
-        $post->titulo = $request->titulo;
-        $post->slug = Str::slug($request->titulo);
-        $post->contenido = $request->contenido;
-        $post->metadescription = $request->metadescription;
-        $post->autor = Auth::user()->name;
+            return redirect()
+                ->route('posts.index')
+                ->with('status', 'Post registrado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('posts.store.failed', [
+                'titulo' => $validated['titulo'] ?? null,
+                'error' => $exception->getMessage(),
+                'created_by' => (int) optional($request->user())->id,
+            ]);
 
-        if ($request->hasFile('foto')) {
-
-            $urlfoto = $request->file("foto");
-  
-            $post->foto = '/img/post/' . $request->file("foto")->getClientOriginalName(); 
-              
-            $ruta = public_path('/img/post/').$request->file("foto")->getClientOriginalName();
-          
-            copy($urlfoto->getRealPath(),$ruta);
-        }    
-        
-        if ($request->has('activo')) {
-            $post->activo =1;
-        } else {
-            $post->activo=0;
+            return redirect()
+                ->route('posts.create')
+                ->withInput()
+                ->with('error', 'No fue posible guardar el post. Intenta nuevamente.');
         }
 
-        $post->save();
-
-        return redirect()->route("posts.index");
-
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
-        $post = Post::where('id',$id)->first();
-
-        return view("admin.posts.edit", compact("post"));
+        return view('admin.posts.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, Post $post, ContentMediaService $mediaService): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+        $uploadedPhoto = $request->file('foto');
 
+        try {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $post, $mediaService): void {
+                $payload = [
+                    'titulo' => $validated['titulo'],
+                    'slug' => $this->generateUniqueSlug($validated['titulo'], (int) $post->id),
+                    'contenido' => $validated['contenido'],
+                    'metadescription' => $validated['metadescription'],
+                    'activo' => (bool) ($validated['activo'] ?? false),
+                ];
 
-        $request->validate([
-            'titulo' => 'required',
-            'contenido' => 'required',
-            'metadescription' => 'required'                
-        ]);
+                if ($uploadedPhoto) {
+                    $payload['foto'] = $mediaService->storeImageAsWebp($uploadedPhoto, 'post', 1400, 900);
+                }
 
-        $post = Post::where('id',$id)->first();
-              
+                $post->update($payload);
+            });
 
-        $post->titulo = $request->titulo;
-        $post->slug = Str::slug($request->titulo);
-        $post->contenido = $request->contenido;
-        $post->metadescription = $request->metadescription;
+            CatalogoService::forgetAll();
 
-       
+            return redirect()
+                ->route('posts.index')
+                ->with('status', 'Post actualizado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('posts.update.failed', [
+                'post_id' => (int) $post->id,
+                'titulo' => $validated['titulo'] ?? null,
+                'error' => $exception->getMessage(),
+                'updated_by' => (int) optional($request->user())->id,
+            ]);
 
-        if ($request->hasFile('foto')) {
-
-            $urlfoto = $request->file("foto");
-  
-            $post->foto = '/img/post/' . $request->file("foto")->getClientOriginalName(); 
-              
-            $ruta = public_path('/img/post/').$request->file("foto")->getClientOriginalName();
-          
-            copy($urlfoto->getRealPath(),$ruta);
-        }        
-
-        if ($request->has('activo')) {
-            $post->activo = 1;
-        } else {
-            $post->activo = 0;
+            return redirect()
+                ->route('posts.edit', $post)
+                ->withInput()
+                ->with('error', 'No fue posible actualizar el post. Intenta nuevamente.');
         }
- 
-
-        $post->save();
-
-        return redirect()->route("posts.index");        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, Post $post): RedirectResponse
     {
-        //
-        $post = Post::where('id',$id)->first();
-        $post->delete();
+        try {
+            DB::transaction(function () use ($post): void {
+                $post->delete();
+            });
 
-        return redirect()->route("posts.index");
+            CatalogoService::forgetAll();
 
+            return redirect()
+                ->route('posts.index')
+                ->with('status', 'Post eliminado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('posts.delete.failed', [
+                'post_id' => (int) $post->id,
+                'error' => $exception->getMessage(),
+                'deleted_by' => (int) optional($request->user())->id,
+            ]);
+
+            return redirect()
+                ->route('posts.index')
+                ->with('error', 'No fue posible eliminar el post. Intenta nuevamente.');
+        }
+
+    }
+
+    private function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title);
+        $slug = $baseSlug !== '' ? $baseSlug : 'post';
+        $counter = 2;
+
+        while (Post::query()
+            ->when($ignoreId !== null, function ($query) use ($ignoreId) {
+                $query->where('id', '!=', $ignoreId);
+            })
+            ->where('slug', $slug)
+            ->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

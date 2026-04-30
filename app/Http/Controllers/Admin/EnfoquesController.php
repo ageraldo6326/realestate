@@ -2,112 +2,148 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Post;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreEnfoqueRequest;
+use App\Http\Requests\Admin\UpdateEnfoqueRequest;
 use App\Models\Enfoque;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Admin\ContentMediaService;
+use App\Services\CatalogoService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class EnfoquesController extends Controller
 {
-
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $enfoques = Enfoque::all();
+        $search = trim((string) request('search'));
 
-        return view("admin.enfoques.index",compact("enfoques"));
+        $enfoques = Enfoque::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($nestedQuery) use ($search): void {
+                    $nestedQuery->where('titulo', 'like', '%' . $search . '%')
+                        ->orWhere('enfoque', 'like', '%' . $search . '%')
+                        ->orWhere('id', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderByDesc('id')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('admin.enfoques.index', compact('enfoques', 'search'));
     }
 
-    public function edit($id)
+    public function edit(Enfoque $enfoque)
     {
-        //
-        $enfoque = Enfoque::where('id',$id)->first();
-
-        return view("admin.enfoques.edit", compact("enfoque"));
+        return view('admin.enfoques.edit', compact('enfoque'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateEnfoqueRequest $request, Enfoque $enfoque, ContentMediaService $mediaService): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+        $uploadedPhoto = $request->file('foto');
 
+        try {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $enfoque, $mediaService): void {
+                $payload = [
+                    'titulo' => $validated['titulo'],
+                    'enfoque' => $validated['enfoque'],
+                ];
 
-        $request->validate([
-            'titulo' => 'required',
-            'enfoque' => 'required'             
-        ]);
+                if ($uploadedPhoto) {
+                    $payload['foto'] = $mediaService->storeImageAsWebp($uploadedPhoto, 'enfoque', 800, 900);
+                }
 
-        $enfoque = Enfoque::where('id',$id)->first();
-              
+                $enfoque->update($payload);
+            });
 
-        $enfoque->titulo = $request->titulo;
-        $enfoque->enfoque = $request->enfoque;   
-        
-        if ($request->hasFile('foto')) {
+            CatalogoService::forgetAll();
 
-            $urlfoto = $request->file("foto");
+            return redirect()
+                ->route('enfoques.index')
+                ->with('status', 'Enfoque actualizado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('enfoques.update.failed', [
+                'enfoque_id' => (int) $enfoque->id,
+                'titulo' => $validated['titulo'] ?? null,
+                'error' => $exception->getMessage(),
+                'updated_by' => (int) optional($request->user())->id,
+            ]);
 
-            $enfoque->foto = '/img/enfoque/' . $request->file("foto")->getClientOriginalName(); 
-            
-            $ruta = public_path('/img/enfoque/').$request->file("foto")->getClientOriginalName();
-        
-            copy($urlfoto->getRealPath(),$ruta);
-        }          
- 
-        $enfoque->save();
-
-        return redirect()->route("enfoques.index");        
+            return redirect()
+                ->route('enfoques.edit', $enfoque)
+                ->withInput()
+                ->with('error', 'No fue posible actualizar el enfoque. Intenta nuevamente.');
+        }
     }
 
-    public function create() {
+    public function create()
+    {
         return view('admin.enfoques.create');
     }
 
-    public function destroy($id) {
-        $enfoque = Enfoque::where('id',$id)->first();
-        $enfoque->delete();
-        return redirect()->route("enfoques.index");
+    public function destroy(Request $request, Enfoque $enfoque): RedirectResponse
+    {
+        try {
+            DB::transaction(function () use ($enfoque): void {
+                $enfoque->delete();
+            });
 
+            CatalogoService::forgetAll();
+
+            return redirect()
+                ->route('enfoques.index')
+                ->with('status', 'Enfoque eliminado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('enfoques.delete.failed', [
+                'enfoque_id' => (int) $enfoque->id,
+                'error' => $exception->getMessage(),
+                'deleted_by' => (int) optional($request->user())->id,
+            ]);
+
+            return redirect()
+                ->route('enfoques.index')
+                ->with('error', 'No fue posible eliminar el enfoque. Intenta nuevamente.');
+        }
     }
 
-    public function store(Request $request)
+    public function store(StoreEnfoqueRequest $request, ContentMediaService $mediaService): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+        $uploadedPhoto = $request->file('foto');
 
+        try {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService): void {
+                Enfoque::query()->create([
+                    'titulo' => $validated['titulo'],
+                    'enfoque' => $validated['enfoque'],
+                    'foto' => $uploadedPhoto ? $mediaService->storeImageAsWebp($uploadedPhoto, 'enfoque', 800, 900) : null,
+                ]);
+            });
 
-        $request->validate([
-            'titulo' => 'required',
-            'enfoque' => 'required'             
-        ]);
+            CatalogoService::forgetAll();
 
-        $enfoque = new Enfoque();
-              
+            return redirect()
+                ->route('enfoques.index')
+                ->with('status', 'Enfoque registrado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('enfoques.store.failed', [
+                'titulo' => $validated['titulo'] ?? null,
+                'error' => $exception->getMessage(),
+                'created_by' => (int) optional($request->user())->id,
+            ]);
 
-        $enfoque->titulo = $request->titulo;
-        $enfoque->enfoque = $request->enfoque; 
-        
-        if ($request->hasFile('foto')) {
-
-            $urlfoto = $request->file("foto");
-
-            $enfoque->foto = '/img/enfoque/' . $request->file("foto")->getClientOriginalName(); 
-            
-            $ruta = public_path('/img/enfoque/').$request->file("foto")->getClientOriginalName();
-        
-            copy($urlfoto->getRealPath(),$ruta);
-        }          
- 
-        $enfoque->save();
-
-        return redirect()->route("enfoques.index");        
+            return redirect()
+                ->route('enfoques.create')
+                ->withInput()
+                ->with('error', 'No fue posible guardar el enfoque. Intenta nuevamente.');
+        }
     }    
-
-
 }

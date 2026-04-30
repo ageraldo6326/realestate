@@ -10,6 +10,8 @@
 
 @section('content')
     @php
+        $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+        $agentPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
         $images = collect([
             $propiedad->foto_portada,
             $propiedad->foto1,
@@ -31,6 +33,17 @@
         $whatsAppUrl = $telefonoAsesor
             ? 'https://api.whatsapp.com/send/?phone=' . $telefonoAsesor . '&text=' . urlencode($whatsAppMessage)
             : null;
+
+        $avatarSource = optional($usuario)->foto ?: ($propiedad->foto_vendedor ?? '');
+        if (!empty($avatarSource) && \Illuminate\Support\Str::startsWith($avatarSource, ['http://', 'https://'])) {
+            $agentAvatarUrl = $avatarSource;
+        } elseif (!empty($avatarSource) && \Illuminate\Support\Str::startsWith($avatarSource, '/')) {
+            $agentAvatarUrl = asset(ltrim($avatarSource, '/'));
+        } elseif (!empty($avatarSource)) {
+            $agentAvatarUrl = asset('assets/' . ltrim($avatarSource, '/'));
+        } else {
+            $agentAvatarUrl = $agentPlaceholder;
+        }
 
         $amenities = [
             'lobby' => 'Lobby',
@@ -110,7 +123,9 @@
                                     <div class="carousel-inner">
                                         @foreach ($images as $index => $image)
                                             <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                                <img loading="lazy" src="{{ asset('assets/' . $image) }}"
+                                                <img loading="lazy"
+                                                    src="{{ !empty($image) ? asset('assets/' . $image) : $propertyPlaceholder }}"
+                                                    onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                                     alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}"
                                                     class="w-100 d-block" style="height: 400px; object-fit: cover;">
                                             </div>
@@ -140,7 +155,9 @@
                                                 class="btn btn-sm p-0 border-2 border-transparent flex-shrink-0"
                                                 style="width: 80px; height: 60px;"
                                                 aria-label="Ir a imagen {{ $index + 1 }}">
-                                                <img loading="lazy" src="{{ asset('assets/' . $image) }}"
+                                                <img loading="lazy"
+                                                    src="{{ !empty($image) ? asset('assets/' . $image) : $propertyPlaceholder }}"
+                                                    onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                                     alt="Miniatura {{ $index + 1 }}" class="w-100 h-100"
                                                     style="object-fit: cover;">
                                             </button>
@@ -252,16 +269,35 @@
 
                     <!-- Video Card -->
                     @if (!empty($propiedad->video1))
-                        <article class="card shadow-sm mb-4 border-0">
-                            <div class="card-body">
-                                <h2 class="card-title h5 mb-3">Video de la propiedad</h2>
-                                <div class="ratio ratio-16x9 rounded overflow-hidden">
-                                    <iframe src="{{ 'https://www.youtube.com/embed/' . $propiedad->video1 }}"
-                                        title="Video de {{ $propiedad->titulo }}" allowfullscreen loading="lazy">
-                                    </iframe>
+                        @php
+                            $rawVideo = trim($propiedad->video1);
+                            $videoId  = $rawVideo;
+
+                            if (str_contains($rawVideo, 'watch?v=')) {
+                                parse_str(parse_url($rawVideo, PHP_URL_QUERY), $qs);
+                                $videoId = $qs['v'] ?? $rawVideo;
+                            } elseif (str_contains($rawVideo, 'youtu.be/')) {
+                                $videoId = basename(parse_url($rawVideo, PHP_URL_PATH));
+                            } elseif (str_contains($rawVideo, 'youtube.com/embed/')) {
+                                $videoId = basename(parse_url($rawVideo, PHP_URL_PATH));
+                            }
+
+                            // Remove any leftover query string attached to the ID
+                            $videoId = explode('?', $videoId)[0];
+                            $videoId = explode('&', $videoId)[0];
+                        @endphp
+                        @if (!empty($videoId))
+                            <article class="card shadow-sm mb-4 border-0">
+                                <div class="card-body">
+                                    <h2 class="card-title h5 mb-3">Video de la propiedad</h2>
+                                    <div class="ratio ratio-16x9 rounded overflow-hidden">
+                                        <iframe src="https://www.youtube.com/embed/{{ $videoId }}"
+                                            title="Video de {{ $propiedad->titulo }}" allowfullscreen loading="lazy">
+                                        </iframe>
+                                    </div>
                                 </div>
-                            </div>
-                        </article>
+                            </article>
+                        @endif
                     @endif
 
                 </div>
@@ -273,7 +309,8 @@
                     <aside class="agent-card card shadow-sm border-0 sticky-lg-top mb-4" style="top: 20px;">
                         <div class="card-body text-center">
                             <img class="rounded-circle mb-3"
-                                src="{{ asset('assets/' . ($usuario->foto ?? 'user.png')) }}"
+                                src="{{ $agentAvatarUrl }}"
+                                onerror="this.onerror=null;this.src='{{ $agentPlaceholder }}';"
                                 alt="{{ $usuario->name ?? 'Asesor inmobiliario' }}"
                                 title="{{ $usuario->name ?? 'Asesor inmobiliario' }}" loading="lazy"
                                 style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #f0ad4e;">
@@ -375,7 +412,8 @@
                                 <a href="{{ route('propiedad', $prop->slug) }}" class="text-decoration-none text-dark">
                                     <div class="position-relative overflow-hidden" style="height: 200px;">
                                         <img loading="lazy"
-                                            src="{{ asset('assets/' . ($prop->foto_portada ?? 'placeholder.jpg')) }}"
+                                            src="{{ !empty($prop->foto_portada) ? asset('assets/' . $prop->foto_portada) : $propertyPlaceholder }}"
+                                            onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $prop->titulo }}" class="w-100 h-100"
                                             style="object-fit: cover; transition: transform 0.3s ease;">
                                         <div class="position-absolute top-0 end-0 m-3">

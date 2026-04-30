@@ -4,17 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 
 use Throwable;
-use App\Models\Zonas;
-use App\Models\Estados;
 use App\Models\Clientes;
 use App\Models\Propiedad;
-use App\Models\Inmobiliaria;
 use Illuminate\Http\Request;
 use App\Mail\EnviarPropiedad;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -74,13 +71,13 @@ class ClientesController extends Controller
 
 
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
         $propiedades_dolar = Propiedad::query();
 
@@ -156,13 +153,13 @@ class ClientesController extends Controller
 
         $usuario = Auth::user();
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
         return view('admin.clientes.veropciones', compact('propiedades', 'inmobiliaria', 'zonas', 'disponibles_para', 'tipos_propiedades', 'cliente', 'usuario'));
     }
@@ -176,8 +173,11 @@ class ClientesController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
-        $contactOwnershipDays = (int) (optional(Inmobiliaria::query()->first())->dias_propiedad_contactos ?? 90);
+        $roleChecker = 'hasAnyRole';
+        $isAdmin = $user && method_exists($user, $roleChecker)
+            ? $user->{$roleChecker}(['admin', 'superadmin'])
+            : false;
+        $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;
         }
@@ -223,9 +223,9 @@ class ClientesController extends Controller
 
     public function create()
     {
-        $zonas = Zonas::all();
-        $estados_propiedad = Estados::all();
-        $tipos_propiedades = TiposDePropiedad::all();
+        $zonas = CatalogoService::zonas();
+        $estados_propiedad = CatalogoService::estados();
+        $tipos_propiedades = CatalogoService::tipos();
         return view("admin.clientes.create", compact('zonas', 'estados_propiedad', 'tipos_propiedades'));
     }
 
@@ -274,6 +274,14 @@ class ClientesController extends Controller
             if (is_numeric($request->tipo))
                 $cliente->tipo = $request->tipo;
 
+            if (is_numeric($request->precio_mini_dolar))
+                $cliente->precio_mini_dolar = $request->precio_mini_dolar;
+            if (is_numeric($request->precio_max_dolar))
+                $cliente->precio_max_dolar = $request->precio_max_dolar;
+            if (is_numeric($request->estadopropiedad_en_dolar))
+                $cliente->estado_en_dolares = $request->estadopropiedad_en_dolar;
+            if (is_numeric($request->tipo_en_dolares))
+                $cliente->tipo_en_dolares = $request->tipo_en_dolares;
 
             if ($request->has('activo')) {
                 $cliente->activo = 1;
@@ -294,9 +302,9 @@ class ClientesController extends Controller
 
         $cliente = Clientes::where('id', $id)->first();
 
-        $zonas = Zonas::all();
-        $estados_propiedad = Estados::all();
-        $tipos_propiedades = TiposDePropiedad::all();
+        $zonas = CatalogoService::zonas();
+        $estados_propiedad = CatalogoService::estados();
+        $tipos_propiedades = CatalogoService::tipos();
 
         return view('admin.clientes.edit', compact('cliente', 'zonas', 'estados_propiedad', 'tipos_propiedades'));
     }
@@ -309,16 +317,33 @@ class ClientesController extends Controller
             $cliente = Clientes::where('id', $id)->first();
 
             $cliente->nombre = $request->nombre;
-            $cliente->titulo = $request->titulo;
-            $cliente->tipo_contacto = $request->tipo_contacto;
-            $cliente->tipo_contacto2 = $request->tipo_contacto2;
-            $cliente->medio = $request->medio;
+            if ($request->filled('titulo'))
+                $cliente->titulo = $request->titulo;
+            if ($request->filled('tipo_contacto'))
+                $cliente->tipo_contacto = $request->tipo_contacto;
+            if ($request->filled('tipo_contacto2'))
+                $cliente->tipo_contacto2 = $request->tipo_contacto2;
+            if ($request->filled('medio'))
+                $cliente->medio = $request->medio;
             $cliente->testimonio = $request->testimonio;
-            $cliente->captado_por = Auth::user()->id;
-            $cliente->asignado_a = Auth::user()->id;
             $cliente->comentario = $request->comentario;
             $cliente->contact_at = $request->contact_at;
             $cliente->email = $request->email;
+
+            if ($request->filled('estatus')) {
+                if ($cliente->fechacierre === null && $request->estatus === 'CIERRE') {
+                    $cliente->fechacierre = now()->toDateString();
+                }
+                $cliente->estatus = $request->estatus;
+            }
+
+            if ($request->filled('probabilidades'))
+                $cliente->probabilidades = $request->probabilidades;
+
+            if ($request->filled('captadas_por'))
+                $cliente->captadas_por = $request->captadas_por;
+            else
+                $cliente->captadas_por = null;
 
             if (is_numeric($request->zona_id))
                 $cliente->zona_id = $request->zona_id;
@@ -335,6 +360,14 @@ class ClientesController extends Controller
             if (is_numeric($request->tipo))
                 $cliente->tipo = $request->tipo;
 
+            if (is_numeric($request->precio_mini_dolar))
+                $cliente->precio_mini_dolar = $request->precio_mini_dolar;
+            if (is_numeric($request->precio_max_dolar))
+                $cliente->precio_max_dolar = $request->precio_max_dolar;
+            if (is_numeric($request->estadopropiedad_en_dolar))
+                $cliente->estado_en_dolares = $request->estadopropiedad_en_dolar;
+            if (is_numeric($request->tipo_en_dolares))
+                $cliente->tipo_en_dolares = $request->tipo_en_dolares;
 
             if ($request->has('activo')) {
                 $cliente->activo = 1;
@@ -346,7 +379,7 @@ class ClientesController extends Controller
 
             return Redirect::route('clientes.index');
         } catch (Throwable $e) {
-            return back()->with('existe', 'Cliente Ya Existe');
+            return back()->with('existe', 'Error al guardar: ' . $e->getMessage());
         }
     }
 }

@@ -1,5 +1,9 @@
 @php
-    $isAdmin = auth()->check() && auth()->user()->hasAnyRole(['admin', 'superadmin']);
+    $isAdmin =
+        auth()->check() &&
+        auth()
+            ->user()
+            ->hasAnyRole(['admin', 'superadmin']);
     $galleryFields = collect(range(1, 8))->map(
         fn($index) => [
             'field' => 'foto' . $index,
@@ -165,18 +169,11 @@
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4">
                     <div>
                         <h3 class="h5 mb-1">Inventario de propiedades</h3>
-                        <p class="text-muted mb-0">Filtra por titulo, referencia o zona y entra al formulario completo
+                        <p class="text-muted mb-0">Filtra por titulo, referencia, provincia o sector y entra al
+                            formulario completo
                             de edicion cuando necesites actualizar una propiedad.</p>
                     </div>
                     <div class="d-flex flex-wrap gap-2 mt-3 mt-lg-0">
-                        @if ($isAdmin)
-                            <a href="{{ route('asignar') }}" class="btn btn-outline-secondary px-4">
-                                Asignar contacto
-                            </a>
-                            <a href="{{ route('import.index') }}" class="btn btn-outline-secondary px-4">
-                                Importar contactos
-                            </a>
-                        @endif
                         <a href="{{ route('propiedades.create') }}" class="btn btn-primary px-4">
                             Nueva propiedad
                         </a>
@@ -187,7 +184,8 @@
                     <div class="col-lg-8">
                         <label class="small text-muted font-weight-semibold">Buscar</label>
                         <input type="text" class="form-control form-control-lg rounded-lg"
-                            wire:model.debounce.350ms="criterio" placeholder="Ej. penthouse, PROP-0001, Naco">
+                            wire:model.debounce.350ms="criterio"
+                            placeholder="Ej. penthouse, PROP-0001, Santo Domingo, Naco">
                     </div>
                 </div>
 
@@ -206,6 +204,19 @@
                             @forelse ($propiedades as $propiedad)
                                 @php
                                     $rowImage = $resolveImage($propiedad->foto_portada);
+                                    $activeState = data_get(
+                                        $propiedad,
+                                        'activa_estado',
+                                        data_get($propiedad, 'activa', 0),
+                                    );
+                                    $isActive = (int) $activeState === 1;
+                                    $provinciaNombre = trim((string) ($propiedad->provincia_nombre ?? ''));
+                                    $sectorNombre = trim((string) ($propiedad->sector_nombre ?? ''));
+                                    $ubicacion = trim(
+                                        collect([$provinciaNombre, $sectorNombre])
+                                            ->filter()
+                                            ->implode(' - '),
+                                    );
                                 @endphp
                                 <tr>
                                     <td>
@@ -223,12 +234,13 @@
                                                 <div class="font-weight-bold">{{ $propiedad->titulo }}</div>
                                                 <div class="text-muted small">{{ $propiedad->referencia }}</div>
                                                 <div class="small text-muted d-md-none">
-                                                    {{ $propiedad->zona ?: 'Sin zona' }}</div>
+                                                    {{ $ubicacion !== '' ? $ubicacion : 'Sin ubicacion' }}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="d-none d-md-table-cell">
-                                        <div class="font-weight-semibold">{{ $propiedad->zona ?: 'Sin zona' }}</div>
+                                        <div class="font-weight-semibold">
+                                            {{ $ubicacion !== '' ? $ubicacion : 'Sin ubicacion' }}</div>
                                         <div class="small text-muted">{{ optional($propiedad)->created_at }}</div>
                                     </td>
                                     <td class="d-none d-lg-table-cell font-weight-semibold">
@@ -236,15 +248,15 @@
                                         {{ number_format((float) $propiedad->precio, 0, '.', ',') }}</td>
                                     <td class="d-none d-lg-table-cell">
                                         <span
-                                            class="badge badge-pill {{ $propiedad->activa ?? 0 ? 'badge-success' : 'badge-secondary' }} mr-2">{{ $propiedad->activa ?? 0 ? 'Activa' : 'Inactiva' }}</span>
+                                            class="badge badge-pill {{ $isActive ? 'badge-success' : 'badge-secondary' }} mr-2">{{ $isActive ? 'Activa' : 'Inactiva' }}</span>
                                         @if ($propiedad->destacada)
                                             <span class="badge badge-pill badge-warning">Destacada</span>
                                         @endif
                                     </td>
                                     <td class="text-right">
-                                        <div class="btn-group">
+                                        <div class="d-inline-flex align-items-center">
                                             <a href="{{ route('propiedades.edit', $propiedad->id) }}"
-                                                class="btn btn-outline-primary">
+                                                class="btn btn-outline-primary mr-2">
                                                 Editar
                                             </a>
                                             <button type="button" class="btn btn-outline-danger"

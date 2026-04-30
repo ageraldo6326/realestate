@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Post;
-use App\Models\Inmobiliaria;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\InmobiliariaService;
 
 class BlogController extends Controller
 {
@@ -17,7 +17,7 @@ class BlogController extends Controller
     public function index()
     {
         //
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
         $posts = Post::orderByDesc('created_at')->paginate();
 

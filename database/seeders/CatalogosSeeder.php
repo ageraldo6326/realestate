@@ -18,6 +18,7 @@ class CatalogosSeeder extends Seeder
   {
     $this->call([
       ProvinciaSeeder::class,
+      SectorBarrioSeeder::class,
       ZonaSeeder::class,
       TipoPropiedadSeeder::class,
       EstadoPropiedadSeeder::class,

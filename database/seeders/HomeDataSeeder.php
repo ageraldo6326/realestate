@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\DemoAdvisorSeeder;
 use Illuminate\Database\Seeder;
 
 /**
@@ -28,6 +29,7 @@ class HomeDataSeeder extends Seeder
       CatalogosSeeder::class,
       EmpresaSeeder::class,
       ContactoEmpresaSeeder::class,
+      DemoAdvisorSeeder::class,
       QuienesSomosSeeder::class,
       PortadaSeeder::class,
       EnfoqueSeeder::class,

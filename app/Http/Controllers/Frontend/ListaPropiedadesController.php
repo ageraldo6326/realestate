@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\Zonas;
-use App\Models\Portada;
-use App\Models\Propiedad;
-use App\Models\Inmobiliaria;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
 use Illuminate\Http\Request;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class ListaPropiedadesController extends Controller
@@ -21,16 +16,15 @@ class ListaPropiedadesController extends Controller
      */
     public function index(Request $request)
     {
+        $inmobiliaria = InmobiliariaService::get();
 
-        $inmobiliaria = Inmobiliaria::first();
+        $portadas = CatalogoService::portadas();
 
-        $portadas = Portada::all();
+        $zonas = CatalogoService::zonas();
 
-        $zonas = Zonas::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $disponibles_para = Disponible_para::all();
-
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
         // if ($request->criterio=="") {
         //     $propiedades = DB::table('propiedads')
@@ -58,12 +52,9 @@ class ListaPropiedadesController extends Controller
         //     ->paginate(20);
         // };        
 
-        $propiedades = Propiedad::where('aprobada',1)->get();
+        // Las propiedades se cargan via Livewire con paginacion y filtros para evitar cargas masivas.
+        $propiedades = collect();
 
-        return view('frontend.propiedades', compact('portadas','zonas','disponibles_para','tipos_propiedades','propiedades','inmobiliaria'));
-
+        return view('frontend.propiedades', compact('portadas', 'zonas', 'disponibles_para', 'tipos_propiedades', 'propiedades', 'inmobiliaria'));
     }
-
- 
-
 }

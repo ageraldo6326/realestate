@@ -216,6 +216,51 @@
 
             <div class="card border-0 shadow-sm mb-3">
                 <div class="card-header bg-white border-0 pb-0">
+                    <h3 class="h5 mb-0">Preferencias de negocio <span class="text-muted small">(US$)</span></h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label for="precio_mini_dolar">Precio minimo (US$)</label>
+                            <input type="number" class="form-control" id="precio_mini_dolar" name="precio_mini_dolar"
+                                value="{{ old('precio_mini_dolar') }}" placeholder="Ej. 50000">
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="precio_max_dolar">Precio maximo (US$)</label>
+                            <input type="number" class="form-control" id="precio_max_dolar" name="precio_max_dolar"
+                                value="{{ old('precio_max_dolar') }}" placeholder="Ej. 120000">
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="estadopropiedad_en_dolar">Estado de propiedad (US$)</label>
+                            <select class="form-control" name="estadopropiedad_en_dolar" id="estadopropiedad_en_dolar">
+                                <option value="">Selecciona</option>
+                                @foreach ($estados_propiedad as $estado_propiedad)
+                                    <option value="{{ $estado_propiedad->id }}"
+                                        @if (old('estadopropiedad_en_dolar') == $estado_propiedad->id) selected @endif>{{ $estado_propiedad->estado }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 form-group">
+                            <label for="tipo_en_dolares">Tipo de propiedad (US$)</label>
+                            <select class="form-control" name="tipo_en_dolares" id="tipo_en_dolares">
+                                <option value="">Selecciona</option>
+                                @foreach ($tipos_propiedades as $tipos_propiedad)
+                                    <option value="{{ $tipos_propiedad->id }}"
+                                        @if (old('tipo_en_dolares') == $tipos_propiedad->id) selected @endif>{{ $tipos_propiedad->tipo }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-white border-0 pb-0">
                     <h3 class="h5 mb-0">Testimonio</h3>
                 </div>
                 <div class="card-body">

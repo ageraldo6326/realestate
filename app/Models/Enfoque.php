@@ -14,4 +14,21 @@ class Enfoque extends Model
         'enfoque',
         'foto',
     ];
+
+    /**
+     * Normalize legacy foto paths that are bare filenames (no directory prefix).
+     * New uploads use /img/enfoques/uuid.webp; old records may have just the filename.
+     */
+    public function getFotoAttribute(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (str_contains($value, '/')) {
+            return $value;
+        }
+
+        return 'assets/' . $value;
+    }
 }

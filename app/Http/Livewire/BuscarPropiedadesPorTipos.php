@@ -2,21 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Post;
-use App\Models\Zonas;
-use App\Models\Enfoque;
-use App\Models\Portada;
 use Livewire\Component;
 use App\Models\Propiedad;
-use App\Models\Testimonio;
-use App\Models\Inmobiliaria;
 use Livewire\WithPagination;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
-use App\Http\Livewire\DisponiblePara;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
 
 class BuscarPropiedadesPorTipos extends Component
-{    use WithPagination;
+{
+    use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
 
@@ -30,41 +24,41 @@ class BuscarPropiedadesPorTipos extends Component
     public function render()
     {
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        $portadas = Portada::all();
+        $portadas = CatalogoService::portadas();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $testimonios = Testimonio::all();
+        $testimonios = CatalogoService::testimonios();
 
-        $enfoques = Enfoque::all();
+        $enfoques = CatalogoService::enfoques();
 
-        $posts = Post::all();
+        $posts = CatalogoService::posts();
 
         $propiedades = Propiedad::query();
 
-        $propiedades->select('propiedads.id', 'telefono', 'disponible_paras.disponible_para', 'foto_portada','slug','referencia', 'provincia','zona_id', 'zona', 'direccion', 'precio', 'propiedads.titulo', 'descripcion_corta', 'propiedads.descripcion', 'propiedads.metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_paras.disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'propiedads.metadescription', 'propiedads.created_at', 'propiedads.updated_at');
-        $propiedades->where('activa','=',1);
+        $propiedades->select('propiedads.id', 'telefono', 'disponible_paras.disponible_para', 'foto_portada', 'slug', 'referencia', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'propiedads.titulo', 'descripcion_corta', 'propiedads.descripcion', 'propiedads.metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_paras.disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'propiedads.metadescription', 'propiedads.created_at', 'propiedads.updated_at');
+        $propiedades->where('activa', '=', 1);
         $propiedades->where('tipo', $this->tipo_id);
 
-        if (optional($inmobiliaria)->aprobacion === 'on') {
-            $propiedades->where('aprobada','=',1);
+        if ((bool) optional($inmobiliaria)->aprobacion) {
+            $propiedades->where('aprobada', '=', 1);
         }
-        
-        $propiedades->leftJoin('zonas','propiedads.zona_id','=','zonas.id');
-        $propiedades->leftJoin('estados','propiedads.estado_id','=','estados.id');
-        $propiedades->leftJoin('users', 'propiedads.asignada_a', '=', 'users.email');
-        $propiedades->leftJoin('disponible_paras','propiedads.disponible_para','=','disponible_paras.id');
-        $propiedades->orderBy('created_at','desc');
 
-        $propiedades = $propiedades->paginate(20);  
+        $propiedades->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id');
+        $propiedades->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id');
+        $propiedades->leftJoin('users', 'propiedads.asignada_a_id', '=', 'users.id');
+        $propiedades->leftJoin('disponible_paras', 'propiedads.disponible_para', '=', 'disponible_paras.id');
+        $propiedades->whereNull('users.deleted_at');
+        $propiedades->orderBy('propiedads.created_at', 'desc');
 
-        return view('livewire.buscar-propiedades-por-tipos',compact('propiedades','zonas', 'disponibles_para', 'tipos_propiedades'));
+        $propiedades = $propiedades->paginate(20);
+
+        return view('livewire.buscar-propiedades-por-tipos', compact('propiedades', 'zonas', 'disponibles_para', 'tipos_propiedades'));
     }
-
 }

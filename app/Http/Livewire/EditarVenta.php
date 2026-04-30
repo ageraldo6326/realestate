@@ -9,6 +9,7 @@ use Livewire\Component;
 use App\Models\Clientes;
 use App\Models\Propiedad;
 use Illuminate\Support\Facades\DB;
+use App\Services\CatalogoService;
 
 class EditarVenta extends Component
 {
@@ -49,10 +50,8 @@ class EditarVenta extends Component
 
     public function render()
     {
-        $usuarios = User::all();
-
        $criterio = $this->criterio;
-        $usuarios = User::all();
+        $usuarios = CatalogoService::asesoresActivos();
         $propiedades = Propiedad::query();
 
         if($this->criterio!="") {

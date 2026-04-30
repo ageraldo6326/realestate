@@ -18,6 +18,7 @@ Menu padre:
 Opciones visibles por rol:
 
 1. Admin
+
 - `Clientes potenciales` -> ruta `clientespotenciales` -> `/admin/clientespotenciales/`
 - `Clientes cerrados` -> ruta `clientescerrados` -> `/admin/clientescerrados/`
 - `Fuente de clientes` -> ruta `fuenteclientes` -> `/admin/fuenteclientes/`
@@ -26,34 +27,41 @@ Opciones visibles por rol:
 - `Ventas` -> ruta `dashboardventas` -> `/admin/dashboardventas/`
 
 2. Asesor
+
 - `Ventas` -> ruta `dashboardventas` -> `/admin/dashboardventas/`
 
 ## Mapeo ruta -> controlador -> vista
 
 1. `clientespotenciales`
+
 - Controlador: `ClientesPotencialesController@grafico`
 - Vista: `estadisticas.clientespotenciales`
 - Renderiza componente Livewire: `clientespotenciales`
 
 2. `clientescerrados`
+
 - Controlador: `ClientesPotencialesCerradosController@grafico`
 - Vista: `estadisticas.clientespotencialescerrados`
 - Renderiza componente Livewire: `clientespotencialescerrados`
 
 3. `fuenteclientes`
+
 - Controlador: `FuenteClientesController@grafico`
 - Vista: `estadisticas.fuenteclientes`
 - Renderiza componente Livewire: `fuenteclientes`
 
 4. `tareasporcategorias`
+
 - Controlador: `TareasPorCategoriasController@grafico`
 - Vista: `estadisticas.tareasporcategorias`
 
 5. `propiedadesclick`
+
 - Controlador: `PropiedadesClickController@grafico`
 - Vista: `estadisticas.propiedadesclicks`
 
 6. `dashboardventas`
+
 - Controlador: `DashboardVentasController@index`
 - Vista: `admin.dashboard.dashboardventas`
 

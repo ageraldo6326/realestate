@@ -3,19 +3,14 @@
 namespace App\Http\Livewire;
 
 use App\Models\ToDo;
-use App\Models\User;
-use App\Models\Zonas;
-use App\Models\Estados;
 use Livewire\Component;
 use App\Models\Clientes;
 use App\Models\ToDoTipo;
-use Mockery\Matcher\Not;
 use App\Models\Clientenota;
 use App\Models\ToDoEstatus;
 use Livewire\WithPagination;
-use App\Models\Inmobiliaria;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -66,10 +61,10 @@ class BuscarCliente extends Component
 
     public function render()
     {
-
+        /** @var \App\Models\User|null $user */
         $user = Auth::user();
         $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
-        $contactOwnershipDays = (int) (optional(Inmobiliaria::query()->first())->dias_propiedad_contactos ?? 90);
+        $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;
         }
@@ -104,13 +99,13 @@ class BuscarCliente extends Component
 
         $clientes = $query->paginate(9);
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
         $notas = Clientenota::where('id_cliente', '=', $this->Id)->orderby("created_at", "desc")->get();
 
@@ -122,7 +117,7 @@ class BuscarCliente extends Component
             ->orderBy('to_dos.created_at', 'desc')
             ->get();
 
-        $usuarios = User::all();
+        $usuarios = CatalogoService::asesoresActivos();
 
         $tipos = ToDoTipo::all();
         $estatuses = ToDoEstatus::all();

@@ -73,6 +73,7 @@ class RegisterController extends Controller
             'activo' => 1,
             'mostrar' => 1,
             'orden' => 100,
+            'requiere_aprobacion_propiedades' => 0,
         ]);
 
         Role::firstOrCreate([

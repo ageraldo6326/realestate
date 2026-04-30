@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class Propiedad extends Model
 {
@@ -63,8 +65,38 @@ class Propiedad extends Model
     protected static function booted(): void
     {
         static::saving(function (self $propiedad): void {
+            $propiedad->syncAssignedAdvisor();
             $propiedad->stripMissingOptionalColumns();
         });
+    }
+
+    protected function syncAssignedAdvisor(): void
+    {
+        $assignedId = $this->attributes['asignada_a_id'] ?? null;
+        $assignedEmail = $this->attributes['asignada_a'] ?? null;
+
+        if (empty($assignedId) && !empty($assignedEmail)) {
+            $assignedId = User::query()->where('email', (string) $assignedEmail)->value('id');
+        }
+
+        if (empty($assignedId) && !empty($this->attributes['captada_por'])) {
+            $assignedId = (int) $this->attributes['captada_por'];
+        }
+
+        if (empty($assignedId) && Auth::check()) {
+            $assignedId = Auth::id();
+            if (empty($assignedEmail)) {
+                $assignedEmail = (string) Auth::user()->email;
+            }
+        }
+
+        if (!empty($assignedId)) {
+            $this->attributes['asignada_a_id'] = (int) $assignedId;
+
+            if (empty($assignedEmail)) {
+                $this->attributes['asignada_a'] = (string) User::query()->where('id', (int) $assignedId)->value('email');
+            }
+        }
     }
 
     public function setCaptadaPorAttribute($value): void
@@ -103,5 +135,50 @@ class Propiedad extends Model
         }
 
         return self::$tableColumns;
+    }
+
+    public function zona(): BelongsTo
+    {
+        return $this->belongsTo(Zonas::class, 'zona_id');
+    }
+
+    public function provinciaRelacion(): BelongsTo
+    {
+        return $this->belongsTo(provincia::class, 'provincia');
+    }
+
+    public function sector(): BelongsTo
+    {
+        return $this->belongsTo(Sector::class, 'sector_id');
+    }
+
+    public function barrio(): BelongsTo
+    {
+        return $this->belongsTo(Barrio::class, 'barrio_id');
+    }
+
+    public function estado(): BelongsTo
+    {
+        return $this->belongsTo(Estados::class, 'estado_id');
+    }
+
+    public function tipoPropiedad(): BelongsTo
+    {
+        return $this->belongsTo(TiposDePropiedad::class, 'tipo');
+    }
+
+    public function disponiblePara(): BelongsTo
+    {
+        return $this->belongsTo(Disponible_para::class, 'disponible_para');
+    }
+
+    public function asesor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'asignada_a', 'email');
+    }
+
+    public function asesorPorId(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'asignada_a_id');
     }
 }

@@ -1,14 +1,29 @@
 <div>
+    @php
+        $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+        $personPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
+    @endphp
+
     <!-- FILTROS DE BÚSQUEDA -->
     <div class="lw-search-form mb-4">
         <div class="row g-3 align-items-end">
 
             <div class="col-md-3 col-sm-6">
-                <label class="form-label lw-label" for="lw-zona">Ubicación / Zona</label>
-                <select id="lw-zona" class="form-select lw-select" wire:model="zona_id_criterio">
-                    <option value="">Todas las zonas</option>
-                    @foreach ($zonas as $zona)
-                        <option value="{{ $zona->id }}">{{ $zona->zona }}</option>
+                <label class="form-label lw-label" for="lw-provincia">Provincia</label>
+                <select id="lw-provincia" class="form-select lw-select" wire:model="provincia_id_criterio">
+                    <option value="">Todas las provincias</option>
+                    @foreach ($provincias as $provincia)
+                        <option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <label class="form-label lw-label" for="lw-sector-barrio">Sector</label>
+                <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio">
+                    <option value="">Todos los sectores</option>
+                    @foreach ($sectores as $sector)
+                        <option value="{{ $sector->id }}">{{ $sector->sector }}</option>
                     @endforeach
                 </select>
             </div>
@@ -39,7 +54,8 @@
     </div>
 
     <!-- INDICADOR DE CARGA: solo durante actualizaciones de filtros -->
-    <div wire:loading.delay.shortest wire:target="zona_id_criterio,tipo_id_criterio,precio_inicial,precio_final"
+    <div wire:loading.delay.shortest
+        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final,updatingProvinciaIdCriterio"
         class="lw-loading">
         <div class="spinner-border spinner-border-sm" role="status" style="color:var(--clr-accent)">
             <span class="visually-hidden">Cargando...</span>
@@ -49,7 +65,7 @@
 
     <!-- RESULTADOS -->
     <div wire:loading.class.delay.shortest="lw-results-loading"
-        wire:target="zona_id_criterio,tipo_id_criterio,precio_inicial,precio_final">
+        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final">
 
         @if ($propiedades->count())
             <p class="lw-results-count">
@@ -64,7 +80,9 @@
                             <div class="card-img-wrap">
                                 <a href="{{ route('propiedad', $propiedad->slug) }}"
                                     aria-label="{{ $propiedad->titulo }}">
-                                    <img loading="lazy" src="{{ asset('assets/' . $propiedad->foto_portada) }}"
+                                    <img loading="lazy"
+                                        src="{{ !empty($propiedad->foto_portada) ? asset('assets/' . $propiedad->foto_portada) : $propertyPlaceholder }}"
+                                        onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                         alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
                                 </a>
 
@@ -79,13 +97,48 @@
                             </div>
 
                             <div class="card-body">
+                                @php
+                                    $asesorNombre = $propiedad->asesor_nombre ?: 'Asesor inmobiliario';
+                                    $asesorFotoRaw = $propiedad->asesor_foto ?: '';
+                                    if (
+                                        $asesorFotoRaw &&
+                                        \Illuminate\Support\Str::startsWith($asesorFotoRaw, [
+                                            'http://',
+                                            'https://',
+                                            '//',
+                                            'data:',
+                                        ])
+                                    ) {
+                                        $asesorFoto = $asesorFotoRaw;
+                                    } elseif (
+                                        $asesorFotoRaw &&
+                                        \Illuminate\Support\Str::startsWith($asesorFotoRaw, [
+                                            '/img/',
+                                            '/assets/',
+                                            'img/',
+                                            'assets/',
+                                        ])
+                                    ) {
+                                        $asesorFoto = asset(ltrim($asesorFotoRaw, '/'));
+                                    } elseif ($asesorFotoRaw) {
+                                        $asesorFoto = asset('assets/' . ltrim($asesorFotoRaw, '/'));
+                                    } else {
+                                        $asesorFoto = $personPlaceholder;
+                                    }
+                                @endphp
                                 <h3 class="card-title mb-0">
                                     <a href="{{ route('propiedad', $propiedad->slug) }}">{{ $propiedad->titulo }}</a>
                                 </h3>
 
                                 <div class="prop-location">
                                     <i class="fas fa-location-dot text-accent"></i>
-                                    <span>{{ $propiedad->zona }}</span>
+                                    <span>
+                                        {{ $propiedad->ciudad ?: 'Santo Domingo' }},
+                                        {{ $propiedad->provincia_nombre }}
+                                        @if ($propiedad->barrio_nombre || $propiedad->sector_nombre)
+                                            - {{ $propiedad->barrio_nombre ?: $propiedad->sector_nombre }}
+                                        @endif
+                                    </span>
                                 </div>
 
                                 <div class="prop-specs">
@@ -111,13 +164,20 @@
 
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <span class="prop-ref">REF: {{ $propiedad->referencia }}</span>
-                                    @if ($propiedad->telefono)
-                                        <a href="{{ 'https://api.whatsapp.com/send/?phone=' . $propiedad->telefono . '&text=' . urlencode($propiedad->descripcion_corta . ' ' . route('propiedad', $propiedad->slug)) }}"
+                                    @if ($propiedad->asesor_telefono)
+                                        <a href="{{ 'https://api.whatsapp.com/send/?phone=' . $propiedad->asesor_telefono . '&text=' . urlencode($propiedad->descripcion_corta . ' ' . route('propiedad', $propiedad->slug)) }}"
                                             target="_blank" rel="noopener noreferrer"
                                             aria-label="Contactar por WhatsApp" class="whatsapp-btn">
                                             <i class="fab fa-whatsapp"></i>
                                         </a>
                                     @endif
+                                </div>
+                                <div class="d-flex align-items-center mt-3 pt-2 border-top">
+                                    <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" loading="lazy"
+                                        onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
+                                        style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
+                                        class="mr-2">
+                                    <span class="small text-muted">Asesor: {{ $asesorNombre }}</span>
                                 </div>
                             </div>
                         </article>

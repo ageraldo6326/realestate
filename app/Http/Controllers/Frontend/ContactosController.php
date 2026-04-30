@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Inmobiliaria;
 use Illuminate\Http\Request;
+use App\Services\InmobiliariaService;
 
 class ContactosController extends Controller
 {
@@ -16,7 +16,7 @@ class ContactosController extends Controller
     public function index()
     {
         //
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
         return view("frontend.contacto", compact("inmobiliaria"));
     }

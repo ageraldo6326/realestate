@@ -3,18 +3,16 @@
 namespace App\Http\Livewire;
 
 use Carbon\Carbon;
-use App\Models\Zonas;
-use App\Models\Estados;
 use Livewire\Component;
 use App\Models\Propiedad;
 use App\Models\provincia as ProvinciaModel;
 use Illuminate\Support\Str;
-use App\Models\Inmobiliaria;
 use Livewire\WithPagination;
 use App\Events\PropertySaved;
+use App\Services\InmobiliariaService;
 use Livewire\WithFileUploads;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
+use App\Services\CatalogoService;
+use App\Services\SitemapService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -119,10 +117,14 @@ class BuscarPropiedad extends Component
 
         if ($this->criterio == "") {
             $propiedades = DB::table('propiedads')
-                ->select('propiedads.id', 'referencia', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
+                ->select('propiedads.id', 'referencia', 'foto_portada', 'propiedads.provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'activa', 'propiedads.created_at', 'propiedads.updated_at')
+                ->selectRaw('COALESCE(propiedads.activa, 0) as activa_estado')
+                ->addSelect('provincias.provincia as provincia_nombre', 'sectores.sector as sector_nombre')
+                ->leftJoin('provincias', 'propiedads.provincia', '=', 'provincias.id')
+                ->leftJoin('sectores', 'propiedads.sector_id', '=', 'sectores.id')
                 ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
                 ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('propiedads.created_at', 'desc')
                 ->where(function ($query) {
                     $query->where('asignada_a', Auth::user()->email)
                         ->orWhere('captada_por', Auth::id())
@@ -132,7 +134,9 @@ class BuscarPropiedad extends Component
                 ->paginate(5);
         } else {
             $propiedades = DB::table('propiedads')
-                ->select('propiedads.id', 'referencia', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
+                ->select('propiedads.id', 'referencia', 'foto_portada', 'propiedads.provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'activa', 'propiedads.created_at', 'propiedads.updated_at')
+                ->selectRaw('COALESCE(propiedads.activa, 0) as activa_estado')
+                ->addSelect('provincias.provincia as provincia_nombre', 'sectores.sector as sector_nombre')
                 ->where(function ($query) {
                     $query->where('asignada_a', Auth::user()->email)
                         ->orWhere('captada_por', Auth::id())
@@ -142,21 +146,25 @@ class BuscarPropiedad extends Component
                 ->where(function ($query) use ($name) {
                     $query->orwhere('titulo', "like", "%$this->criterio%");
                     $query->orwhere('propiedads.referencia', 'like', "%$this->criterio");
+                    $query->orwhere('provincias.provincia', 'like', "%$this->criterio%");
+                    $query->orwhere('sectores.sector', 'like', "%$this->criterio%");
                     $query->orwhere('zona', 'like', "%$this->criterio%");
                 })
+                ->leftJoin('provincias', 'propiedads.provincia', '=', 'provincias.id')
+                ->leftJoin('sectores', 'propiedads.sector_id', '=', 'sectores.id')
                 ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
                 ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('propiedads.created_at', 'desc')
                 ->paginate(5);
         };
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
         $provincias = ProvinciaModel::all();
 
@@ -521,6 +529,7 @@ class BuscarPropiedad extends Component
         if ($isNew) {
             $propiedad->referencia = 'PROP-' . str_pad($storageId, 10, '0', STR_PAD_LEFT);
             $propiedad->asignada_a = Auth::user()->email;
+            $propiedad->asignada_a_id = Auth::id();
             $propiedad->captada_por = Auth::id();
             $propiedad->clicks = 0;
         }
@@ -675,73 +684,14 @@ class BuscarPropiedad extends Component
 
     public function misitemap()
     {
+        $inmo = InmobiliariaService::get();
 
-        $inmo = Inmobiliaria::first();
-
-        $myfile = fopen("sitemap.xml", "w");
-        $txt = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';
-        fwrite($myfile, $txt);
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>1</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'propiedades' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'blog' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'contacto' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-
-        $propiedades = Propiedad::where('activa', 1)->get();
-
-        foreach ($propiedades as $propiedad) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio . 'propiedad/' . $propiedad->slug . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($propiedad->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.6</priority>');
-            fwrite($myfile, '</url>');
+        if (!$inmo) {
+            return '';
         }
 
-        $zonas = Zonas::all();
+        app(SitemapService::class)->refresh();
 
-        foreach ($zonas as $zona) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio .  Str::slug($zona->zona) . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($zona->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.8</priority>');
-            fwrite($myfile, '</url>');
-        }
-
-        $tipos_propiedades = TiposDePropiedad::all();
-
-        foreach ($tipos_propiedades as $tipo_propiedad) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio .  Str::slug($tipo_propiedad->tipo) . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($tipo_propiedad->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.8</priority>');
-            fwrite($myfile, '</url>');
-        }
-
-
-        $txt = '</urlset>';
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-        return $inmo->dominio . 'sitemap.xml';
+        return rtrim((string) $inmo->dominio, '/') . '/sitemap.xml';
     }
 }

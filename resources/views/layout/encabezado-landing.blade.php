@@ -1,23 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 
+@php
+    $resolvePublicAssetUrl = static function (?string $path): ?string {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '//'])) {
+            return $path;
+        }
+
+        if (
+            \Illuminate\Support\Str::startsWith($path, [
+                '/img/',
+                'img/',
+                '/assets/',
+                'assets/',
+                '/storage/',
+                'storage/',
+            ])
+        ) {
+            return url('/' . ltrim($path, '/'));
+        }
+
+        return asset('assets/' . ltrim($path, '/'));
+    };
+
+    $companyTitle = optional($inmo)->titulo ?: 'Portal Inmobiliario';
+    $companyDescription = optional($inmo)->metadescription ?: '';
+    $companyKeywords = optional($inmo)->palabrasclaves ?: '';
+    $companyFaviconUrl = $resolvePublicAssetUrl(optional($inmo)->favicon);
+    $companyLogoUrl = $resolvePublicAssetUrl(optional($inmo)->logo);
+    $companyLogoPlaceholder = asset('assets/inmobiliaria/logo.png');
+    $themeVariables =
+        $frontendTheme ?? app(\App\Services\Branding\CompanyBrandingService::class)->getDefaultCssVariables();
+@endphp
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('seo_title', $inmo->titulo ?? 'Portal Inmobiliario')</title>
-    <meta name="description" content="@yield('seo_description', $inmo->metadescription ?? '')">
-    <meta name="keywords" content="{{ $inmo->palabrasclaves ?? '' }}">
+    <title>@yield('seo_title', $companyTitle)</title>
+    <meta name="description" content="@yield('seo_description', $companyDescription)">
+    <meta name="keywords" content="{{ $companyKeywords }}">
     <link rel="canonical" href="{{ preg_replace('/^http:/i', 'https:', url()->current()) }}" />
 
-    @if (isset($inmo) && $inmo->favicon)
-        <link rel="shortcut icon" href="{{ asset('assets/' . $inmo->favicon) }}" type="image/x-icon" />
+    @if ($companyFaviconUrl)
+        <link rel="shortcut icon" href="{{ $companyFaviconUrl }}" type="image/x-icon" />
     @endif
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('seo_title', $inmo->titulo ?? 'Portal Inmobiliario')">
-    <meta property="og:description" content="@yield('seo_description', $inmo->metadescription ?? '')">
+    <meta property="og:title" content="@yield('seo_title', $companyTitle)">
+    <meta property="og:description" content="@yield('seo_description', $companyDescription)">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
 
@@ -37,17 +75,15 @@
            TOKENS DE DISEÑO
         =========================== */
         :root {
-            --clr-accent: #C9A84C;
-            --clr-accent-lt: #E8D49E;
-            --clr-dark: #1C1C2E;
-            --clr-dark-2: #2D2D3F;
-            --clr-gray: #6B7280;
-            --clr-gray-lt: #9CA3AF;
-            --clr-bg: #F9F8F6;
-            --clr-white: #FFFFFF;
-            --clr-border: #E5E7EB;
-            --ff-head: 'Playfair Display', Georgia, serif;
-            --ff-body: 'Inter', system-ui, sans-serif;
+            @foreach ($themeVariables as $variable => $value)
+                {{ $variable }}: {{ $value }};
+            @endforeach
+            --ff-head: 'Playfair Display',
+            Georgia,
+            serif;
+            --ff-body: 'Inter',
+            system-ui,
+            sans-serif;
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, .06);
             --shadow-md: 0 4px 20px rgba(0, 0, 0, .10);
             --shadow-lg: 0 8px 40px rgba(0, 0, 0, .14);
@@ -113,7 +149,7 @@
 
         .navbar-landing .nav-link:hover {
             color: var(--clr-accent) !important;
-            background: rgba(201, 168, 76, .08);
+            background: rgba(var(--clr-accent-rgb), .08);
         }
 
         .navbar-landing .nav-link.active {
@@ -332,10 +368,10 @@
         }
 
         .btn-accent:hover {
-            background: #b8943e;
+            background: var(--clr-accent-dk);
             color: var(--clr-dark);
             transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(201, 168, 76, .4);
+            box-shadow: 0 4px 16px rgba(var(--clr-accent-rgb), .4);
         }
 
         .btn-dark-outline {
@@ -416,7 +452,7 @@
         .search-widget .form-select:focus,
         .search-widget .form-control:focus {
             border-color: var(--clr-accent);
-            box-shadow: 0 0 0 3px rgba(201, 168, 76, .15);
+            box-shadow: 0 0 0 3px rgba(var(--clr-accent-rgb), .15);
             outline: none;
         }
 
@@ -477,11 +513,11 @@
 
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}" aria-label="Inicio">
-                @if (isset($inmo) && $inmo->logo)
-                    <img src="{{ asset('assets/' . $inmo->logo) }}" alt="{{ $inmo->titulo ?? 'Logo' }}" height="48"
-                        loading="eager">
+                @if ($companyLogoUrl)
+                    <img src="{{ $companyLogoUrl }}" alt="{{ $companyTitle }}" height="48" loading="eager"
+                        onerror="this.onerror=null;this.src='{{ $companyLogoPlaceholder }}';">
                 @else
-                    <span class="brand-text">{{ $inmo->titulo ?? 'Inmobiliaria' }}</span>
+                    <span class="brand-text">{{ $companyTitle }}</span>
                 @endif
             </a>
 

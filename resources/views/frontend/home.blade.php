@@ -1,14 +1,18 @@
 @extends('layout.layout-landing')
 
 @section('seo_title', ($inmo->titulo ?? 'Portal Inmobiliario') . ' — ' . ($inmo->slogan ?? 'Encuentra tu hogar ideal'))
-@section('seo_description', $inmo->metadescription ?? 'Encuentra las mejores propiedades en venta y alquiler. Tu nuevo
+@section('seo_description',
+    $inmo->metadescription ??
+    'Encuentra las mejores propiedades en venta y alquiler. Tu nuevo
     hogar te espera.')
 
 @section('content')
 
     @php
         $portada = $portadas->first();
-        $heroImg = $portada ? asset('assets/' . $portada->foto) : '';
+        $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+        $personPlaceholder = 'https://dummyimage.com/160x160/edf2f7/6b7280&text=Asesor';
+        $heroImg = $portada && !empty($portada->foto) ? asset('assets/' . $portada->foto) : $propertyPlaceholder;
         $heroTitle = $portada ? $portada->titulo : $inmo->titulo ?? 'Encuentra el hogar que siempre soñaste';
         $heroSub = $portada ? $portada->minititulo : 'TU NUEVO COMIENZO, ESTÁ AQUÍ';
         $heroDesc = $portada ? strip_tags($portada->descripcion) : 'Explora miles de propiedades en venta y alquiler.';
@@ -19,7 +23,7 @@
         @if ($heroImg) style="background-image:linear-gradient(to right,rgba(28,28,46,.78) 40%,rgba(28,28,46,.2) 100%),url('{{ $heroImg }}');background-size:cover;background-position:center" @endif>
         <div class="container hero-container">
             <div class="row align-items-center">
-                <div class="col-lg-6 hero-content">
+                <div class="col-lg-8 hero-content">
                     <p class="hero-eyebrow">{{ $heroSub }}</p>
                     @php
                         $words = explode(' ', $heroTitle);
@@ -33,16 +37,27 @@
                         <div class="search-widget">
                             <form method="GET" action="{{ route('listapropiedades') }}" role="search">
                                 <div class="row g-2 align-items-end">
-                                    <div class="col-lg-5 col-md-6">
-                                        <label class="form-label" for="hero-zona">Ubicación</label>
-                                        <select name="zona_id" id="hero-zona" class="form-select">
-                                            <option value="">Selecciona ubicación</option>
-                                            @foreach ($zonas as $zona)
-                                                <option value="{{ $zona->id }}">{{ $zona->zona }}</option>
+                                    <div class="col-lg-3 col-md-6">
+                                        <label class="form-label" for="hero-provincia">Provincia</label>
+                                        <select name="provincia_id" id="hero-provincia" class="form-select">
+                                            <option value="">Selecciona provincia</option>
+                                            @foreach ($provincias as $provincia)
+                                                <option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-lg-5 col-md-6">
+                                    <div class="col-lg-3 col-md-6">
+                                        <label class="form-label" for="hero-sector">Sector</label>
+                                        <select name="sector_id" id="hero-sector" class="form-select">
+                                            <option value="">Selecciona sector</option>
+                                            @foreach ($sectores as $sector)
+                                                <option value="{{ $sector->id }}"
+                                                    data-provincia="{{ $sector->provincia_id }}">{{ $sector->sector }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
                                         <label class="form-label" for="hero-tipo">Tipo de propiedad</label>
                                         <select name="tipo_id" id="hero-tipo" class="form-select">
                                             <option value="">Selecciona tipo</option>
@@ -51,7 +66,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-lg-2 col-md-12">
+                                    <div class="col-lg-3 col-md-6 d-grid">
                                         <button type="submit" class="btn-search">
                                             <i class="fas fa-magnifying-glass"></i> Buscar
                                         </button>
@@ -124,7 +139,9 @@
                             <article class="prop-card h-100">
                                 <div class="card-img-wrap">
                                     <a href="{{ route('propiedad', $pro->slug) }}" aria-label="{{ $pro->titulo }}">
-                                        <img loading="lazy" src="{{ asset('assets/' . $pro->foto_portada) }}"
+                                        <img loading="lazy"
+                                            src="{{ !empty($pro->foto_portada) ? asset('assets/' . $pro->foto_portada) : $propertyPlaceholder }}"
+                                            onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $pro->titulo }}" title="{{ $pro->titulo }}">
                                     </a>
                                     @php $disp=strtolower($pro->disponible_para ?? ''); @endphp
@@ -134,12 +151,53 @@
                                         class="price-overlay">{{ $pro->Moneda }}{{ number_format($pro->precio, 0) }}</span>
                                 </div>
                                 <div class="card-body">
+                                    @php
+                                        $asesorNombre = $pro->asesor_nombre ?: 'Asesor inmobiliario';
+                                        $asesorFotoRaw = $pro->asesor_foto ?: '';
+                                        if (
+                                            $asesorFotoRaw &&
+                                            \Illuminate\Support\Str::startsWith($asesorFotoRaw, [
+                                                'http://',
+                                                'https://',
+                                                '//',
+                                                'data:',
+                                            ])
+                                        ) {
+                                            $asesorFoto = $asesorFotoRaw;
+                                        } elseif (
+                                            $asesorFotoRaw &&
+                                            \Illuminate\Support\Str::startsWith($asesorFotoRaw, [
+                                                '/img/',
+                                                '/assets/',
+                                                'img/',
+                                                'assets/',
+                                            ])
+                                        ) {
+                                            $asesorFoto = asset(ltrim($asesorFotoRaw, '/'));
+                                        } elseif ($asesorFotoRaw) {
+                                            $asesorFoto = asset('assets/' . ltrim($asesorFotoRaw, '/'));
+                                        } else {
+                                            $asesorFoto = $personPlaceholder;
+                                        }
+                                    @endphp
                                     <h3 class="card-title mb-0">
                                         <a href="{{ route('propiedad', $pro->slug) }}">{{ $pro->titulo }}</a>
                                     </h3>
+                                    @php
+                                        $ubicacion = trim(
+                                            collect([
+                                                $pro->barrio_nombre ?: null,
+                                                $pro->sector_nombre ?: null,
+                                                $pro->ciudad ?: null,
+                                                $pro->provincia_nombre ?: null,
+                                            ])
+                                                ->filter()
+                                                ->implode(', '),
+                                        );
+                                    @endphp
                                     <div class="prop-location">
                                         <i class="fas fa-location-dot text-accent"></i>
-                                        <span>{{ $pro->zona }}</span>
+                                        <span>{{ $ubicacion ?: 'Republica Dominicana' }}</span>
                                     </div>
                                     <div class="prop-specs">
                                         @if ($pro->habitaciones)
@@ -162,13 +220,20 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-2">
                                         <span class="prop-ref">REF: {{ $pro->referencia }}</span>
-                                        @if ($pro->telefono)
-                                            <a href="{{ 'https://api.whatsapp.com/send/?phone=' . $pro->telefono . '&text=' . urlencode($pro->descripcion_corta . ' ' . route('propiedad', $pro->slug)) }}"
+                                        @if ($pro->asesor_telefono)
+                                            <a href="{{ 'https://api.whatsapp.com/send/?phone=' . $pro->asesor_telefono . '&text=' . urlencode($pro->descripcion_corta . ' ' . route('propiedad', $pro->slug)) }}"
                                                 target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
                                                 class="whatsapp-btn">
                                                 <i class="fab fa-whatsapp"></i>
                                             </a>
                                         @endif
+                                    </div>
+                                    <div class="d-flex align-items-center mt-3 pt-2 border-top">
+                                        <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" loading="lazy"
+                                            onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
+                                            style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
+                                            class="mr-2">
+                                        <span class="small text-muted">Asesor: {{ $asesorNombre }}</span>
                                     </div>
                                 </div>
                             </article>
@@ -211,7 +276,9 @@
                                 <div class="how-number">{{ $i + 1 }}</div>
                                 @if ($enfoque->foto)
                                     <div class="how-icon">
-                                        <img loading="lazy" src="{{ asset('assets/' . $enfoque->foto) }}"
+                                        <img loading="lazy"
+                                            src="{{ !empty($enfoque->foto) ? asset('assets/' . $enfoque->foto) : $propertyPlaceholder }}"
+                                            onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $enfoque->titulo }}" width="64" height="64">
                                     </div>
                                 @endif
@@ -241,7 +308,9 @@
                                 @if ($post->foto)
                                     <a href="{{ route('post.show', $post->slug) }}" class="blog-card-img-wrap"
                                         aria-label="{{ $post->titulo }}">
-                                        <img loading="lazy" src="{{ asset('assets/' . $post->foto) }}"
+                                        <img loading="lazy"
+                                            src="{{ !empty($post->foto) ? asset('assets/' . $post->foto) : $propertyPlaceholder }}"
+                                            onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $post->titulo }}" title="{{ $post->titulo }}">
                                     </a>
                                 @endif
@@ -280,7 +349,9 @@
                                 <p class="testimonial-text">{!! $testimonio->testimonio !!}</p>
                                 <div class="testimonial-author mt-auto">
                                     @if ($testimonio->cliente_foto)
-                                        <img loading="lazy" src="{{ asset('assets/' . $testimonio->cliente_foto) }}"
+                                        <img loading="lazy"
+                                            src="{{ !empty($testimonio->cliente_foto) ? asset('assets/' . $testimonio->cliente_foto) : $personPlaceholder }}"
+                                            onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
                                             alt="{{ $testimonio->cliente }}" width="48" height="48">
                                     @endif
                                     <strong class="testimonial-name">{{ $testimonio->cliente }}</strong>
@@ -651,4 +722,34 @@
         }
     </style>
 
+@endsection
+
+@section('extra_scripts')
+    <script>
+        (function() {
+            var provSel = document.getElementById('hero-provincia');
+            var sectorSel = document.getElementById('hero-sector');
+            if (!provSel || !sectorSel) return;
+
+            var allOptions = Array.from(sectorSel.options);
+
+            function filterSectores() {
+                var val = provSel.value;
+                sectorSel.innerHTML = '';
+                var first = new Option('Selecciona sector', '');
+                sectorSel.appendChild(first);
+                allOptions.forEach(function(opt) {
+                    if (opt.value === '') return;
+                    if (!val || opt.dataset.provincia === val) {
+                        sectorSel.appendChild(opt.cloneNode(true));
+                    }
+                });
+                sectorSel.value = '';
+            }
+
+            provSel.addEventListener('change', filterSectores);
+
+            if (provSel.value) filterSectores();
+        })();
+    </script>
 @endsection

@@ -21,8 +21,6 @@
     <title></title>
 
     <style type="text/css">
-
-
         @media only screen and (min-width: 620px) {
             .u-row {
                 width: 600px !important;
@@ -409,8 +407,8 @@
                                                                         align="left">
                                                                         <a href="https://unlayer.com" target="_blank">
                                                                             <img align="left" border="0"
-                                                                                src="{{ $message->embed(public_path() . '/img/logo.png') }}" alt="Logo"
-                                                                                title="Logo"
+                                                                                src="{{ $message->embed(public_path() . '/img/logo.png') }}"
+                                                                                alt="Logo" title="Logo"
                                                                                 style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 62%;max-width: 170.5px;"
                                                                                 width="170.5" />
                                                                         </a>
@@ -453,17 +451,21 @@
 
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
                                                                                 <td align="left" valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://twitter.com/"
-                                                                                        title="Twitter" target="_blank">
-                                                                                        <img src="{{ $message->embed(public_path() . '/images/image-3.png') }}" alt="Twitter"
-                                                                                            title="Twitter" width="32"
+                                                                                        title="Twitter"
+                                                                                        target="_blank">
+                                                                                        <img src="{{ $message->embed(public_path() . '/images/image-3.png') }}"
+                                                                                            alt="Twitter"
+                                                                                            title="Twitter"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -473,8 +475,9 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
@@ -485,7 +488,8 @@
                                                                                         target="_blank">
                                                                                         <img src="{{ $message->embed(public_path() . '/images/image-2.png') }}"
                                                                                             alt="LinkedIn"
-                                                                                            title="LinkedIn" width="32"
+                                                                                            title="LinkedIn"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -495,8 +499,9 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
@@ -507,7 +512,8 @@
                                                                                         target="_blank">
                                                                                         <img src="{{ $message->embed(public_path() . '/images/image-1.png') }}"
                                                                                             alt="Instagram"
-                                                                                            title="Instagram" width="32"
+                                                                                            title="Instagram"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -517,18 +523,21 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
                                                                                 <td align="left" valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://youtube.com/"
-                                                                                        title="YouTube" target="_blank">
+                                                                                        title="YouTube"
+                                                                                        target="_blank">
                                                                                         <img src="{{ $message->embed(public_path() . '/images/image-15.png') }}"
                                                                                             alt="YouTube"
-                                                                                            title="YouTube" width="32"
+                                                                                            title="YouTube"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -592,8 +601,8 @@
                                                                         align="center">
 
                                                                         <img align="center" border="0"
-                                                                            src="{{ $message->embed(public_path() . '/img/portada_correo.jpeg') }}" alt="Hero Image"
-                                                                            title="Hero Image"
+                                                                            src="{{ $message->embed(public_path() . '/img/portada_correo.jpeg') }}"
+                                                                            alt="Hero Image" title="Hero Image"
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;"
                                                                             width="600" />
 
@@ -645,7 +654,7 @@
 
                                                             <h1 class="v-text-align"
                                                                 style="margin: 0px; color: #ff000a; line-height: 150%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Raleway',sans-serif; font-size: 28px;">
-                                                                Propiedades en la Zona</h1>
+                                                                Propiedades por ubicacion</h1>
 
                                                         </td>
                                                     </tr>
@@ -662,7 +671,8 @@
 
                                                             <h1 class="v-text-align"
                                                                 style="margin: 0px; color: #ffffff; line-height: 150%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Raleway',sans-serif; font-size: 28px;">
-                                                                <strong>Un Placer Asistirle!</strong></h1>
+                                                                <strong>Un Placer Asistirle!</strong>
+                                                            </h1>
 
                                                         </td>
                                                     </tr>
@@ -740,139 +750,149 @@
                                 <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #f6f6f6;"><![endif]-->
 
                                 <!--[if (mso)|(IE)]><td align="center" width="303" class="v-col-padding" style="background-color: #f6f6f6;width: 303px;padding: 15px 0px 0px 15px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-                                
-                                    <div id="u_column_10" class="u-col u-col-50p5"
+
+                                <div id="u_column_10" class="u-col u-col-50p5"
                                     style="max-width: 320px;min-width: 303px;display: table-cell;vertical-align: top;">
-                                    @foreach ($propiedades as $propiedad)                                 
-                                    <div style="background-color: #f6f6f6;height: 100%;width: 100% !important;">
-                                        <!--[if (!mso)&(!IE)]><!-->
-                                           
-                                        <div class="v-col-padding"
-                                            style="height: 100%; padding: 15px 0px 0px 15px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                                            <!--<![endif]-->
+                                    @foreach ($propiedades as $propiedad)
+                                        <div style="background-color: #f6f6f6;height: 100%;width: 100% !important;">
+                                            <!--[if (!mso)&(!IE)]><!-->
+
+                                            <div class="v-col-padding"
+                                                style="height: 100%; padding: 15px 0px 0px 15px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
+                                                <!--<![endif]-->
 
 
-                                                
-                                            
-                                            <table id="u_content_image_5"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:10px 5px 10px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
 
-                                                            <table width="100%" cellpadding="0" cellspacing="0"
-                                                                border="0">
-                                                                <tr>
-                                                                    <td class="v-text-align"
-                                                                        style="padding-right: 0px;padding-left: 0px;"
-                                                                        align="center">
 
-                                                                        <img height="100px" align="center" border="0" 
-                                                                        src="{{ $message->embed(public_path() . $propiedad->foto_portada ) }}"
-                                                                        title="Property"
-                                                                        style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block
+                                                <table id="u_content_image_5"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:10px 5px 10px 10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
+
+                                                                <table width="100%" cellpadding="0" cellspacing="0"
+                                                                    border="0">
+                                                                    <tr>
+                                                                        <td class="v-text-align"
+                                                                            style="padding-right: 0px;padding-left: 0px;"
+                                                                            align="center">
+
+                                                                            <img height="100px" align="center"
+                                                                                border="0"
+                                                                                src="{{ $message->embed(public_path() . $propiedad->foto_portada) }}"
+                                                                                title="Property"
+                                                                                style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block
                                                                         !important;border: none;height: auto;float: none;width: 100%;max-width: 288px;"
-                                                                        width="288" />
+                                                                                width="288" />
 
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                            
 
-                                            <table id="u_content_text_12"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0" height="80px">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
 
-                                                            <div class="v-text-align"
-                                                                style="color: #ad0e0f; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                                <p class="" style="font-size: 14px; line-height: 140%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 19.6px;">{{ $propiedad->descripcion_corta }}</span></p>
-                                                            </div>
+                                                <table id="u_content_text_12"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0" height="80px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px 10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                                <div class="v-text-align"
+                                                                    style="color: #ad0e0f; line-height: 140%; text-align: left; word-wrap: break-word;">
+                                                                    <p class=""
+                                                                        style="font-size: 14px; line-height: 140%;">
+                                                                        <span
+                                                                            style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 19.6px;">{{ $propiedad->descripcion_corta }}</span>
+                                                                    </p>
+                                                                </div>
 
-                                            <table id="u_content_text_13"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                                            <div class="v-text-align"
-                                                                style="color: #e90505; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                                <p style="font-size: 14px; line-height: 140%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 19.6px;"><span
-                                                                            style="font-size: 28px; line-height: 39.2px;">${{ number_format($propiedad->precio,2) }}</span></span>
-                                                                </p>
-                                                            </div>
+                                                <table id="u_content_text_13"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                                <div class="v-text-align"
+                                                                    style="color: #e90505; line-height: 140%; text-align: left; word-wrap: break-word;">
+                                                                    <p style="font-size: 14px; line-height: 140%;">
+                                                                        <span
+                                                                            style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 19.6px;"><span
+                                                                                style="font-size: 28px; line-height: 39.2px;">${{ number_format($propiedad->precio, 2) }}</span></span>
+                                                                    </p>
+                                                                </div>
 
-                                            <table id="u_content_text_14"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:5px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                                            <div class="v-text-align"
-                                                                style="color: #7e8c8d; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                                                <p style="font-size: 14px; line-height: 140%;">
-                                                                    <strong><span
-                                                                            style="font-family: Cabin, sans-serif; font-size: 18px; line-height: 25.2px;">Zona:{{ $propiedad->zona }}</span></strong>
-                                                                </p>
-                                                            </div>
+                                                <table id="u_content_text_14"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:5px 10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                                <div class="v-text-align"
+                                                                    style="color: #7e8c8d; line-height: 140%; text-align: left; word-wrap: break-word;">
+                                                                    <p style="font-size: 14px; line-height: 140%;">
+                                                                        <strong><span
+                                                                                style="font-family: Cabin, sans-serif; font-size: 18px; line-height: 25.2px;">Ubicacion:{{ trim(collect([$propiedad->barrio->barrio ?? null, $propiedad->sector->sector ?? null, $propiedad->ciudad ?? null, optional($propiedad->provinciaRelacion)->provincia ?? null])->filter()->implode(', ')) }}</span></strong>
+                                                                    </p>
+                                                                </div>
 
-                                            <table id="u_content_text_15"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                                            {{-- <div class="v-text-align"
+                                                <table id="u_content_text_15"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:0px 10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
+
+                                                                {{-- <div class="v-text-align"
                                                                 style="color: #e2010a; line-height: 140%; text-align: left; word-wrap: break-word;">
                                                                 <p style="font-size: 14px; line-height: 140%;"><span
                                                                         style="font-family: Cabin, sans-serif; font-size: 18px; line-height: 25.2px;">xxx</span></p>
                                                             </div> --}}
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                            {{-- <table id="u_content_text_16"
+                                                {{-- <table id="u_content_text_16"
                                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                                 cellpadding="0" cellspacing="0" width="100%" border="0">
                                                 <tbody>
@@ -896,41 +916,43 @@
                                                 </tbody>
                                             </table> --}}
 
-                                            <table id="u_content_button_5"
-                                                style="font-family:arial,helvetica,sans-serif;" role="presentation"
-                                                cellpadding="0" cellspacing="0" width="100%" border="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="v-container-padding-padding"
-                                                            style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
-                                                            align="left">
+                                                <table id="u_content_button_5"
+                                                    style="font-family:arial,helvetica,sans-serif;"
+                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                    width="100%" border="0">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="v-container-padding-padding"
+                                                                style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
+                                                                align="left">
 
-                                                            <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
-                                                            <div class="v-text-align" align="left">
-                                                                <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:36px; v-text-anchor:middle; width:136px;" arcsize="0%"  stroke="f" fillcolor="#ad0e0f"><w:anchorlock/><center style="color:#FFFFFF;font-family:arial,helvetica,sans-serif;"><![endif]-->
-                                                                <a href="http://127.0.0.1/product-details/{{ $propiedad->id }}" target="_blank"
-                                                                    class="v-button"
-                                                                    style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ad0e0f; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
-                                                                    <span class="v-padding"
-                                                                        style="display:block;padding:10px 30px;line-height:120%;"><span
-                                                                            style="font-size: 14px; line-height: 16.8px;">Ver detalles</span></span>
-                                                                </a>
-                                                                <!--[if mso]></center></v:roundrect><![endif]-->
-                                                            </div>
+                                                                <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
+                                                                <div class="v-text-align" align="left">
+                                                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://unlayer.com" style="height:36px; v-text-anchor:middle; width:136px;" arcsize="0%"  stroke="f" fillcolor="#ad0e0f"><w:anchorlock/><center style="color:#FFFFFF;font-family:arial,helvetica,sans-serif;"><![endif]-->
+                                                                    <a href="http://127.0.0.1/product-details/{{ $propiedad->id }}"
+                                                                        target="_blank" class="v-button"
+                                                                        style="box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #ad0e0f; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;">
+                                                                        <span class="v-padding"
+                                                                            style="display:block;padding:10px 30px;line-height:120%;"><span
+                                                                                style="font-size: 14px; line-height: 16.8px;">Ver
+                                                                                detalles</span></span>
+                                                                    </a>
+                                                                    <!--[if mso]></center></v:roundrect><![endif]-->
+                                                                </div>
 
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                            <!--[if (!mso)&(!IE)]><!-->
+                                                <!--[if (!mso)&(!IE)]><!-->
+                                            </div>
+                                            <!--<![endif]-->
                                         </div>
-                                        <!--<![endif]-->
-                                    </div>
                                     @endforeach
                                 </div>
 
-                                
+
 
                                 {{-- FINAL DEL INMUEBLE --}}
 
@@ -1662,7 +1684,7 @@
                                         <div class="v-col-padding"
                                             style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                                             <!--<![endif]-->
-{{-- 
+                                            {{-- 
                                             <table id="u_content_button_9"
                                                 style="font-family:arial,helvetica,sans-serif;" role="presentation"
                                                 cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -1736,8 +1758,8 @@
                                                                         align="center">
 
                                                                         <img align="center" border="0"
-                                                                            src="{{ $message->embed(public_path() . Auth::user()->foto ) }}" alt="Services"
-                                                                            title="Services"
+                                                                            src="{{ $message->embed(public_path() . Auth::user()->foto) }}"
+                                                                            alt="Services" title="Services"
                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 200px;"
                                                                             width="200" />
 
@@ -1776,7 +1798,9 @@
 
                                                             <h1 class="v-text-align"
                                                                 style="margin: 0px; color: #ad0e0f; line-height: 150%; text-align: left; word-wrap: break-word; font-weight: normal; font-family: 'Raleway',sans-serif; font-size: 28px;">
-                                                                <strong>{{ Auth::user()->name}} - {{ Auth::user()->titulo}}</strong></h1>
+                                                                <strong>{{ Auth::user()->name }} -
+                                                                    {{ Auth::user()->titulo }}</strong>
+                                                            </h1>
 
                                                         </td>
                                                     </tr>
@@ -1795,15 +1819,19 @@
                                                             <div class="v-text-align"
                                                                 style="color: #7e8c8d; line-height: 150%; text-align: left; word-wrap: break-word;">
                                                                 <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">{{ Auth::user()->descripcion}}&nbsp; </span></p>
+                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">{{ Auth::user()->descripcion }}&nbsp;
+                                                                    </span></p>
                                                                 <p style="font-size: 14px; line-height: 150%;">&nbsp;
                                                                 </p>
                                                                 <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Telefono: {{ Auth::user()->telefono}}&nbsp;</span></p>
+                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Telefono:
+                                                                        {{ Auth::user()->telefono }}&nbsp;</span></p>
                                                                 <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Whatsapp: {{ Auth::user()->whatsapp}}&nbsp;</span></p>
+                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Whatsapp:
+                                                                        {{ Auth::user()->whatsapp }}&nbsp;</span></p>
                                                                 <p style="font-size: 14px; line-height: 150%;"><span
-                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Correo: {{Auth::user()->email}}&nbsp;</span></p>
+                                                                        style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 21px;">Correo:
+                                                                        {{ Auth::user()->email }}&nbsp;</span></p>
                                                                 {{-- <p style="font-size: 14px; line-height: 150%;"><span
                                                                         style="font-family: Cabin, sans-serif; font-size: 16px; line-height: 24px;"><strong><span
                                                                                 style="line-height: 24px; color: #ad0e0f; font-size: 16px;"><a
@@ -1862,18 +1890,21 @@
 
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
                                                                                 <td align="left" valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://twitter.com/"
-                                                                                        title="Twitter" target="_blank">
-                                                                                        <img src={{ $message->embed(public_path() . "/images/image-5.png") }}  
+                                                                                        title="Twitter"
+                                                                                        target="_blank">
+                                                                                        <img src={{ $message->embed(public_path() . '/images/image-5.png') }}
                                                                                             alt="Twitter"
-                                                                                            title="Twitter" width="32"
+                                                                                            title="Twitter"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -1883,8 +1914,9 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
@@ -1893,9 +1925,10 @@
                                                                                     <a href="https://linkedin.com/"
                                                                                         title="LinkedIn"
                                                                                         target="_blank">
-                                                                                        <img src={{ $message->embed(public_path() . "/images/image-4.png") }}
+                                                                                        <img src={{ $message->embed(public_path() . '/images/image-4.png') }}
                                                                                             alt="LinkedIn"
-                                                                                            title="LinkedIn" width="32"
+                                                                                            title="LinkedIn"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -1905,8 +1938,9 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 15px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 15px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
@@ -1915,9 +1949,10 @@
                                                                                     <a href="https://instagram.com/"
                                                                                         title="Instagram"
                                                                                         target="_blank">
-                                                                                        <img src={{ $message->embed(public_path() . "/images/image-6.png") }}
+                                                                                        <img src={{ $message->embed(public_path() . '/images/image-6.png') }}
                                                                                             alt="Instagram"
-                                                                                            title="Instagram" width="32"
+                                                                                            title="Instagram"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>
@@ -1927,18 +1962,21 @@
                                                                     <!--[if (mso)|(IE)]></td><![endif]-->
 
                                                                     <!--[if (mso)|(IE)]><td width="32" style="width:32px; padding-right: 0px;" valign="top"><![endif]-->
-                                                                    <table align="left" border="0" cellspacing="0"
-                                                                        cellpadding="0" width="32" height="32"
+                                                                    <table align="left" border="0"
+                                                                        cellspacing="0" cellpadding="0"
+                                                                        width="32" height="32"
                                                                         style="width: 32px !important;height: 32px !important;display: inline-block;border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;margin-right: 0px">
                                                                         <tbody>
                                                                             <tr style="vertical-align: top">
                                                                                 <td align="left" valign="middle"
                                                                                     style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
                                                                                     <a href="https://youtube.com/"
-                                                                                        title="YouTube" target="_blank">
-                                                                                        <img src={{ $message->embed(public_path() . "/images/image-7.png") }}
+                                                                                        title="YouTube"
+                                                                                        target="_blank">
+                                                                                        <img src={{ $message->embed(public_path() . '/images/image-7.png') }}
                                                                                             alt="YouTube"
-                                                                                            title="YouTube" width="32"
+                                                                                            title="YouTube"
+                                                                                            width="32"
                                                                                             style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: none;height: auto;float: none;max-width: 32px !important">
                                                                                     </a>
                                                                                 </td>

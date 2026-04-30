@@ -3,8 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreDisponibleParaRequest;
+use App\Http\Requests\Admin\UpdateDisponibleParaRequest;
 use App\Models\Disponible_para;
+use App\Models\Propiedad;
+use App\Services\CatalogoService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class DisponibleParaController extends Controller
 {
@@ -15,15 +23,14 @@ class DisponibleParaController extends Controller
      * 
      * 
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware(['auth']);
     }
 
     public function index()
     {
-        $disponiblespara = Disponible_para::Paginate(5);
-
-        return view("admin.disponiblepara.index",compact("disponiblespara"));
+        return view('admin.disponiblepara.index');
     }
 
     /**
@@ -33,8 +40,7 @@ class DisponibleParaController extends Controller
      */
     public function create()
     {
-        //
-        return view("admin.disponiblepara.create");
+        return view('admin.disponiblepara.create');
     }
 
     /**
@@ -43,19 +49,34 @@ class DisponibleParaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreDisponibleParaRequest $request): RedirectResponse
     {
-        $request->validate([
-            'disponible_para' => 'required'            
-        ]);
+        $validated = $request->validated();
 
-        $disponiblespara = New Disponible_para();
+        try {
+            DB::transaction(function () use ($validated): void {
+                Disponible_para::query()->create([
+                    'disponible_para' => $validated['disponible_para'],
+                ]);
+            });
 
-        $disponiblespara->disponible_para = $request->disponible_para;
+            CatalogoService::forgetAll();
 
-        $disponiblespara->save();
+            return redirect()
+                ->route('disponiblepara.index')
+                ->with('status', 'Disponible para registrado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('disponible_para.store.failed', [
+                'disponible_para' => $validated['disponible_para'] ?? null,
+                'error' => $exception->getMessage(),
+                'created_by' => (int) optional($request->user())->id,
+            ]);
 
-        return redirect()->route("disponiblepara.index");        
+            return redirect()
+                ->route('disponiblepara.create')
+                ->withInput()
+                ->with('error', 'No fue posible guardar el registro. Intenta nuevamente.');
+        }
 
     }
 
@@ -78,9 +99,9 @@ class DisponibleParaController extends Controller
      */
     public function edit($id)
     {
-        $disponiblespara = Disponible_para::where('id',$id)->first();
+        $disponiblepara = Disponible_para::query()->findOrFail($id);
 
-        return view("admin.disponiblepara.edit", compact("disponiblespara"));
+        return view('admin.disponiblepara.edit', compact('disponiblepara'));
 
     }
 
@@ -91,19 +112,36 @@ class DisponibleParaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateDisponibleParaRequest $request, $id): RedirectResponse
     {
-        $request->validate([
-            'disponible_para' => 'required'              
-        ]);
+        $validated = $request->validated();
+        $disponiblepara = Disponible_para::query()->findOrFail($id);
 
-        $disponiblespara = Disponible_para::where('id',$id)->first();              
+        try {
+            DB::transaction(function () use ($disponiblepara, $validated): void {
+                $disponiblepara->update([
+                    'disponible_para' => $validated['disponible_para'],
+                ]);
+            });
 
-        $disponiblespara->disponible_para = $request->disponible_para;
+            CatalogoService::forgetAll();
 
-        $disponiblespara->save();
+            return redirect()
+                ->route('disponiblepara.index')
+                ->with('status', 'Disponible para actualizado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('disponible_para.update.failed', [
+                'disponible_para_id' => (int) $disponiblepara->id,
+                'disponible_para' => $validated['disponible_para'] ?? null,
+                'error' => $exception->getMessage(),
+                'updated_by' => (int) optional($request->user())->id,
+            ]);
 
-        return redirect()->route("disponiblepara.index");         
+            return redirect()
+                ->route('disponiblepara.edit', $disponiblepara->id)
+                ->withInput()
+                ->with('error', 'No fue posible actualizar el registro. Intenta nuevamente.');
+        }
 
     }
 
@@ -113,11 +151,41 @@ class DisponibleParaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id): RedirectResponse
     {
-        $disponiblespara = Disponible_para::where('id',$id)->first();
-        $disponiblespara->delete();
+        $disponiblepara = Disponible_para::query()->findOrFail($id);
 
-        return redirect()->route("disponiblepara.index");
+        try {
+            $propiedadesVinculadas = Propiedad::query()
+                ->where('disponible_para', $disponiblepara->id)
+                ->count();
+
+            if ($propiedadesVinculadas > 0) {
+                return redirect()
+                    ->route('disponiblepara.index')
+                    ->with('error', 'No se puede eliminar porque tiene propiedades relacionadas.');
+            }
+
+            DB::transaction(function () use ($disponiblepara): void {
+                $disponiblepara->delete();
+            });
+
+            CatalogoService::forgetAll();
+
+            return redirect()
+                ->route('disponiblepara.index')
+                ->with('status', 'Disponible para eliminado correctamente.');
+        } catch (Throwable $exception) {
+            Log::error('disponible_para.delete.failed', [
+                'disponible_para_id' => (int) $disponiblepara->id,
+                'error' => $exception->getMessage(),
+                'deleted_by' => (int) optional($request->user())->id,
+            ]);
+
+            return redirect()
+                ->route('disponiblepara.index')
+                ->with('error', 'No fue posible eliminar el registro. Intenta nuevamente.');
+        }
+
     }
 }

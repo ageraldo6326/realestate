@@ -8,11 +8,14 @@
         <div class="report-toolbar">
             <div class="report-toolbar__item">
                 <label for="periodo-fuente-clientes">Periodo</label>
-                <select class="form-control" id="periodo-fuente-clientes" name="periodo" wire:change="emitActualizar($event.target.value)">
+                <select class="form-control" id="periodo-fuente-clientes" name="periodo"
+                    wire:change="emitActualizar($event.target.value)">
                     <option value="PERIODOS">Seleccionar periodo</option>
-                    <option @if ($periodo == 'Ultimos 30 dias') selected @endif value="Ultimos 30 dias">Ultimos 30 dias</option>
+                    <option @if ($periodo == 'Ultimos 30 dias') selected @endif value="Ultimos 30 dias">Ultimos 30 dias
+                    </option>
                     <option @if ($periodo == 'Esta semana') selected @endif value="Esta semana">Esta semana</option>
-                    <option @if ($periodo == 'La semana pasada') selected @endif value="La semana pasada">La semana pasada</option>
+                    <option @if ($periodo == 'La semana pasada') selected @endif value="La semana pasada">La semana pasada
+                    </option>
                     <option @if ($periodo == 'Este mes') selected @endif value="Este mes">Este mes</option>
                     <option @if ($periodo == 'Mes pasado') selected @endif value="Mes pasado">Mes pasado</option>
                 </select>
@@ -44,7 +47,7 @@
     @endonce
 
     <script>
-        document.addEventListener('livewire:load', function () {
+        document.addEventListener('livewire:load', function() {
             const canvas = document.getElementById('fuenteClientesChart');
             if (!canvas) {
                 return;
@@ -53,7 +56,9 @@
             const palette = ['#0f766e', '#1d4ed8', '#f97316', '#16a34a', '#7c3aed', '#dc2626', '#0891b2'];
             let reportChart;
 
-            const buildColors = (count) => Array.from({ length: count }, (_, i) => palette[i % palette.length]);
+            const buildColors = (count) => Array.from({
+                length: count
+            }, (_, i) => palette[i % palette.length]);
 
             const renderChart = (labels, values) => {
                 if (reportChart) {
@@ -91,7 +96,3 @@
         });
     </script>
 </div>
-  
-  
-  
-  

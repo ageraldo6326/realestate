@@ -41,5 +41,29 @@
                 }
             });
         });
+
+        livewire.on('generarRestaurarUsuarioSweetAlert', (id, nombre) => {
+            Swal.fire({
+                title: '¿Restaurar a ' + nombre + '?',
+                text: 'El usuario volverá a estar activo en el sistema.',
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Restaurar',
+                cancelButtonColor: '#6c757d',
+                confirmButtonColor: '#28a745',
+                icon: 'question',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Usuario restaurado',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    livewire.emit('restaurarUsuario', id);
+                }
+            });
+        });
     </script>
 @endpush

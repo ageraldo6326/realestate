@@ -3,22 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
-use App\Models\Zonas;
-use App\Models\Estados;
 use Jorenvh\Share\Share;
 use App\Models\Propiedad;
-use App\Models\provincia;
 use Illuminate\Http\Request;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Inmobiliaria;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use App\Services\CatalogoService;
+use App\Services\InmobiliariaService;
+use App\Services\SitemapService;
 
 class PropiedadesController extends Controller
 {
@@ -26,74 +22,15 @@ class PropiedadesController extends Controller
 
     public function misitemap()
     {
+        $inmo = InmobiliariaService::get();
 
-        $inmo = Inmobiliaria::first();
-
-        $myfile = fopen("sitemap.xml", "w");
-        $txt = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';
-        fwrite($myfile, $txt);
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>1</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'propiedades' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'blog' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-        fwrite($myfile, '<url>');
-        fwrite($myfile, '<loc>' . $inmo->dominio . 'contacto' . '</loc>');
-        fwrite($myfile, '<lastmod>' . Carbon::parse($inmo->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-        fwrite($myfile, '<priority>0.9</priority>');
-        fwrite($myfile, '</url>');
-
-
-        $propiedades = Propiedad::where('activa', 1)->get();
-
-        foreach ($propiedades as $propiedad) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio . 'propiedad/' . $propiedad->slug . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($propiedad->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.6</priority>');
-            fwrite($myfile, '</url>');
+        if (!$inmo) {
+            return '';
         }
 
-        $zonas = Zonas::all();
+        app(SitemapService::class)->refresh();
 
-        foreach ($zonas as $zona) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio .  Str::slug($zona->zona) . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($zona->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.8</priority>');
-            fwrite($myfile, '</url>');
-        }
-
-        $tipos_propiedades = TiposDePropiedad::all();
-
-        foreach ($tipos_propiedades as $tipo_propiedad) {
-            fwrite($myfile, '<url>');
-            fwrite($myfile, '<loc>' . $inmo->dominio .  Str::slug($tipo_propiedad->tipo) . '</loc>');
-            fwrite($myfile, '<lastmod>' . Carbon::parse($tipo_propiedad->updated_at)->format('Y-m-d') . 'T15:24:45+00:00</lastmod>');
-            fwrite($myfile, '<priority>0.8</priority>');
-            fwrite($myfile, '</url>');
-        }
-
-
-        $txt = '</urlset>';
-        fwrite($myfile, $txt);
-        fclose($myfile);
-
-        return $inmo->dominio . 'sitemap.xml';
+        return rtrim((string) $inmo->dominio, '/') . '/sitemap.xml';
     }
 
     public function duplicar(Request $request, $id)
@@ -106,6 +43,7 @@ class PropiedadesController extends Controller
         $nuevaPropiedad->created_at = Carbon::now();
         $nuevaPropiedad->captada_por = Auth::user()->id;
         $nuevaPropiedad->asignada_a = Auth::user()->email;
+        $nuevaPropiedad->asignada_a_id = Auth::id();
         $nuevaPropiedad->destacada = 0;
         $nuevaPropiedad->activa = 0;
         $nuevaPropiedad->clicks = 0;
@@ -144,7 +82,7 @@ class PropiedadesController extends Controller
         $this->misitemap();
 
         $propiedades = DB::table('propiedads')
-            ->select('propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
+            ->select('propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->orderBy('created_at', 'desc')
@@ -163,9 +101,9 @@ class PropiedadesController extends Controller
     {
 
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        if (optional($inmobiliaria)->aprobacion === "on") {
+        if ((bool) optional($inmobiliaria)->aprobacion) {
 
             $propiedades_pendientes = Propiedad::query();
 
@@ -200,7 +138,7 @@ class PropiedadesController extends Controller
 
         if ($request->criterio == "") {
             $propiedades = DB::table('propiedads')
-                ->select('propiedads.id', 'referencia', 'referencia', 'comision', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
+                ->select('propiedads.id', 'referencia', 'referencia', 'comision', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
                 ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
                 ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
                 ->orderBy('created_at', 'desc')
@@ -214,7 +152,7 @@ class PropiedadesController extends Controller
         } else {
 
             $propiedades = DB::table('propiedads')
-                ->select('propiedads.id', 'referencia', 'referencia', 'comision', 'foto_portada', 'aprobada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
+                ->select('propiedads.id', 'referencia', 'referencia', 'comision', 'foto_portada', 'aprobada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
                 ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
                 ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
                 ->orderBy('created_at', 'desc')
@@ -237,19 +175,17 @@ class PropiedadesController extends Controller
 
     public function create()
     {
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $zonas = Zonas::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $disponibles_para = Disponible_para::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $provincias = CatalogoService::provincias();
+        $sectores = CatalogoService::sectores();
+        $barrios = CatalogoService::barrios();
 
-        $estados_propiedad = Estados::all();
-
-        $provincias = provincia::all();
-
-
-        return view('admin.propiedades.create', compact('estados_propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias'));
+        return view('admin.propiedades.create', compact('estados_propiedad', 'disponibles_para', 'tipos_propiedades', 'provincias', 'sectores', 'barrios'));
     }
 
     public function store(Request $request)
@@ -262,8 +198,8 @@ class PropiedadesController extends Controller
             'descripcion_corta' => 'required|min:20|max:160',
             'descripcion' => 'required',
             'metadescription' => 'required|min:20|max:160',
-            'zona_id' => 'required',
-            'provincia' => 'required',
+            'provincia' => 'required|exists:provincias,id',
+            'sector_id' => 'required|exists:sectores,id',
             'tipomoneda' => 'required',
             'precio' => 'required',
             'tipo' => 'required',
@@ -308,12 +244,14 @@ class PropiedadesController extends Controller
         }
 
         $propiedad->provincia = $request->provincia;
-        $propiedad->zona_id = $request->zona_id;
+        $propiedad->ciudad = null;
+        $propiedad->sector_id = $request->sector_id;
+        $propiedad->barrio_id = null;
         $propiedad->direccion = $request->direccion;
         $propiedad->precio = str_replace([','], '', $request->precio);
-        $propiedad->comision = $request->comision;
+        $propiedad->comision = $request->filled('comision') ? (float) $request->comision : 0;
         $propiedad->titulo = $request->titulo;
-        $propiedad->slug = Str::slug($request->titulo);
+        $propiedad->slug = $this->buildUniquePropertySlug($request->titulo);
         $propiedad->descripcion_corta = $request->descripcion_corta;
         $propiedad->descripcion = $request->descripcion;
         $propiedad->metadescripcion = $request->metadescripcion;
@@ -323,6 +261,7 @@ class PropiedadesController extends Controller
         $propiedad->metraje = $request->metraje;
         $propiedad->metraje_construccion = $request->metraje_construccion;
         $propiedad->asignada_a = Auth::user()->email;
+        $propiedad->asignada_a_id = Auth::id();
         $propiedad->captada_por = Auth::id();
         $propiedad->tipo = $request->tipo;
         $propiedad->foto_vendedor = $request->foto_vendedor;
@@ -487,6 +426,8 @@ class PropiedadesController extends Controller
 
         $propiedad->clicks = 0;
         $propiedad->metadescription = $request->metadescription;
+        $propiedad->aprobada = $this->shouldRequireReviewForCurrentUser() ? 0 : 1;
+        $propiedad->activa = 1;
 
         $propiedad->save();
         $this->misitemap();
@@ -499,24 +440,25 @@ class PropiedadesController extends Controller
 
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'referencia', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'referencia', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             // ->where('asignada_a',Auth::user()->email)
             ->where('propiedads.id', $id)
             ->first();
 
-        $zonas = Zonas::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $disponibles_para = Disponible_para::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $zonas = CatalogoService::zonas();
+        $provincias = CatalogoService::provincias();
+        $sectores = CatalogoService::sectores();
+        $barrios = CatalogoService::barrios();
 
-        $provincias = provincia::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $estados_propiedad = Estados::all();
-
-        return view('admin.propiedades.ver', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias'));
+        return view('admin.propiedades.ver', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'sectores', 'barrios'));
     }
 
     public function edit($id)
@@ -524,7 +466,7 @@ class PropiedadesController extends Controller
 
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'referencia', 'fechacierre', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'referencia', 'fechacierre', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->where(function ($query) {
@@ -536,19 +478,20 @@ class PropiedadesController extends Controller
             ->where('propiedads.id', $id)
             ->first();
 
-        $zonas = Zonas::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $disponibles_para = Disponible_para::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $zonas = CatalogoService::zonas();
+        $provincias = CatalogoService::provincias();
+        $sectores = CatalogoService::sectores();
+        $barrios = CatalogoService::barrios();
 
-        $provincias = provincia::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $estados_propiedad = Estados::all();
+        $inmobiliaria = InmobiliariaService::get();
 
-        $inmobiliaria = Inmobiliaria::first();
-
-        return view('admin.propiedades.edit', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'inmobiliaria'));
+        return view('admin.propiedades.edit', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'sectores', 'barrios', 'inmobiliaria'));
     }
 
     public function editPendiente($id)
@@ -556,25 +499,27 @@ class PropiedadesController extends Controller
 
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'referencia', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'referencia', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->where('propiedads.id', $id)
             ->first();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $provincias = provincia::all();
+        $provincias = CatalogoService::provincias();
+        $sectores = CatalogoService::sectores();
+        $barrios = CatalogoService::barrios();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        return view('admin.propiedades.editPendientes', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'inmobiliaria'));
+        return view('admin.propiedades.editPendientes', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'sectores', 'barrios', 'inmobiliaria'));
     }
 
     public function borrarpropiedad($id)
@@ -589,48 +534,50 @@ class PropiedadesController extends Controller
 
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'estado', 'referencia', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'estado', 'referencia', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->where('propiedads.id', $id)
             ->first();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $provincias = provincia::all();
+        $provincias = CatalogoService::provincias();
+        $sectores = CatalogoService::sectores();
+        $barrios = CatalogoService::barrios();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
-        return view('admin.propiedades.editarpendientescualquiera', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'inmobiliaria'));
+        return view('admin.propiedades.editarpendientescualquiera', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'sectores', 'barrios', 'inmobiliaria'));
     }
 
     function vercualquierpropiedad($id)
     {
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'estado', 'referencia', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'estado', 'referencia', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->where('propiedads.id', $id)
             ->first();
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $provincias = provincia::all();
+        $provincias = \App\Models\provincia::all();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
-        $inmobiliaria = Inmobiliaria::first();
+        $inmobiliaria = InmobiliariaService::get();
 
         return view('admin.propiedades.vercualquierpropiedad', compact('estados_propiedad', 'propiedad', 'zonas', 'disponibles_para', 'tipos_propiedades', 'provincias', 'inmobiliaria'));
     }
@@ -642,8 +589,8 @@ class PropiedadesController extends Controller
             'descripcion' => 'required',
             'descripcion_corta' => 'required|max:160',
             'metadescription' => 'required|min:20|max:160',
-            'zona_id' => 'required',
-            'provincia' => 'required',
+            'provincia' => 'required|exists:provincias,id',
+            'sector_id' => 'required|exists:sectores,id',
             'tipomoneda' => 'required',
             'precio' => 'required',
             'tipo' => 'required',
@@ -676,12 +623,14 @@ class PropiedadesController extends Controller
 
 
         $propiedad->provincia = $request->provincia;
-        $propiedad->zona_id = $request->zona_id;
+        $propiedad->ciudad = null;
+        $propiedad->sector_id = $request->sector_id;
+        $propiedad->barrio_id = null;
         $propiedad->direccion = $request->direccion;
         $propiedad->precio = str_replace([','], '', $request->precio);
-        $propiedad->comision = $request->comision;
+        $propiedad->comision = $request->filled('comision') ? (float) $request->comision : 0;
         $propiedad->titulo = $request->titulo;
-        $propiedad->slug = Str::slug($request->titulo);
+        $propiedad->slug = $this->buildUniquePropertySlug($request->titulo, $propiedad->id);
         $propiedad->descripcion_corta = $request->descripcion_corta;
         $propiedad->descripcion = $request->descripcion;
         $propiedad->metadescripcion = $request->metadescripcion;
@@ -701,10 +650,9 @@ class PropiedadesController extends Controller
         else
             $propiedad->destacada = 0;
 
-        if ($request->has('aprobada'))
-            $propiedad->aprobada = 1;
-        else
-            $propiedad->aprobada = 0;
+        if ($this->canManagePropertyApproval()) {
+            $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
+        }
 
         if ($request->hasFile('foto1')) {
 
@@ -999,8 +947,8 @@ class PropiedadesController extends Controller
             'descripcion' => 'required',
             'descripcion_corta' => 'required|max:160',
             'metadescription' => 'required|min:20|max:160',
-            'zona_id' => 'required',
             'provincia' => 'required',
+            'sector_id' => 'required|exists:sectores,id',
             'tipomoneda' => 'required',
             'precio' => 'required',
             'tipo' => 'required',
@@ -1033,12 +981,14 @@ class PropiedadesController extends Controller
 
 
         $propiedad->provincia = $request->provincia;
-        $propiedad->zona_id = $request->zona_id;
+        $propiedad->ciudad = null;
+        $propiedad->sector_id = $request->sector_id;
+        $propiedad->barrio_id = null;
         $propiedad->direccion = $request->direccion;
         $propiedad->precio = $request->precio;
-        $propiedad->comision = $request->comision;
+        $propiedad->comision = $request->filled('comision') ? (float) $request->comision : 0;
         $propiedad->titulo = $request->titulo;
-        $propiedad->slug = Str::slug($request->titulo);
+        $propiedad->slug = $this->buildUniquePropertySlug($request->titulo, $propiedad->id);
         $propiedad->descripcion_corta = $request->descripcion_corta;
         $propiedad->descripcion = $request->descripcion;
         $propiedad->metadescripcion = $request->metadescripcion;
@@ -1057,10 +1007,9 @@ class PropiedadesController extends Controller
         else
             $propiedad->destacada = 0;
 
-        if ($request->has('aprobada'))
-            $propiedad->aprobada = 1;
-        else
-            $propiedad->aprobada = 0;
+        if ($this->canManagePropertyApproval()) {
+            $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
+        }
 
         if ($request->hasFile('foto1')) {
 
@@ -1355,8 +1304,8 @@ class PropiedadesController extends Controller
             'descripcion' => 'required',
             'descripcion_corta' => 'required|max:160',
             'metadescription' => 'required|min:20|max:160',
-            'zona_id' => 'required',
             'provincia' => 'required',
+            'sector_id' => 'required|exists:sectores,id',
             'tipomoneda' => 'required',
             'precio' => 'required',
             'tipo' => 'required',
@@ -1389,12 +1338,14 @@ class PropiedadesController extends Controller
 
 
         $propiedad->provincia = $request->provincia;
-        $propiedad->zona_id = $request->zona_id;
+        $propiedad->ciudad = null;
+        $propiedad->sector_id = $request->sector_id;
+        $propiedad->barrio_id = null;
         $propiedad->direccion = $request->direccion;
         $propiedad->precio = $request->precio;
-        $propiedad->comision = $request->comision;
+        $propiedad->comision = $request->filled('comision') ? (float) $request->comision : 0;
         $propiedad->titulo = $request->titulo;
-        $propiedad->slug = Str::slug($request->titulo);
+        $propiedad->slug = $this->buildUniquePropertySlug($request->titulo, $propiedad->id);
         $propiedad->descripcion_corta = $request->descripcion_corta;
         $propiedad->descripcion = $request->descripcion;
         $propiedad->metadescripcion = $request->metadescripcion;
@@ -1413,10 +1364,9 @@ class PropiedadesController extends Controller
         else
             $propiedad->destacada = 0;
 
-        if ($request->has('aprobada'))
-            $propiedad->aprobada = 1;
-        else
-            $propiedad->aprobada = 0;
+        if ($this->canManagePropertyApproval()) {
+            $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
+        }
 
         if ($request->hasFile('foto1')) {
 
@@ -1700,5 +1650,98 @@ class PropiedadesController extends Controller
         $this->misitemap();
 
         return Redirect::route('consultarpropiedades');
+    }
+
+    protected function buildUniquePropertySlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title);
+
+        if ($baseSlug === '') {
+            $baseSlug = 'propiedad';
+        }
+
+        $slug = $baseSlug;
+        $counter = 2;
+
+        while (true) {
+            $query = Propiedad::query()->where('slug', $slug);
+
+            if ($ignoreId !== null) {
+                $query->where('id', '!=', $ignoreId);
+            }
+
+            if (!$query->exists()) {
+                return $slug;
+            }
+
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+    }
+
+    public function sectoresPorProvincia(Request $request)
+    {
+        $provinciaId = (int) $request->query('provincia_id');
+
+        if ($provinciaId <= 0) {
+            return response()->json([]);
+        }
+
+        $sectores = DB::table('sectores')
+            ->select('id', 'sector', 'provincia_id')
+            ->where('provincia_id', $provinciaId)
+            ->orderBy('sector')
+            ->get();
+
+        return response()->json($sectores);
+    }
+
+    public function barriosPorSector(Request $request)
+    {
+        $sectorId = (int) $request->query('sector_id');
+
+        if ($sectorId <= 0) {
+            return response()->json([]);
+        }
+
+        $barrios = DB::table('barrios')
+            ->select('id', 'barrio', 'sector_id')
+            ->where('sector_id', $sectorId)
+            ->orderBy('barrio')
+            ->get();
+
+        return response()->json($barrios);
+    }
+
+    protected function shouldRequireReviewForCurrentUser(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return true;
+        }
+
+        // User override has highest priority: false means immediate publish.
+        if ($user->requiere_aprobacion_propiedades !== null) {
+            return (bool) $user->requiere_aprobacion_propiedades;
+        }
+
+        $inmobiliaria = InmobiliariaService::get();
+        return (bool) optional($inmobiliaria)->aprobacion;
+    }
+
+    protected function canManagePropertyApproval(): bool
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return false;
+        }
+
+        if (method_exists($user, 'hasAnyRole')) {
+            return (bool) $user->hasAnyRole(['admin', 'superadmin']);
+        }
+
+        return (int) ($user->rol ?? 0) === 1;
     }
 }

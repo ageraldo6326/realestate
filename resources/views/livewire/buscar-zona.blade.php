@@ -33,7 +33,8 @@
     <div class="catalog-shell">
         <section class="catalog-hero">
             <h2 class="h4 mb-2 font-weight-bold">Zonas comerciales</h2>
-            <p class="mb-0 text-white-50">Administra zonas de ubicacion para clasificar propiedades de forma consistente.</p>
+            <p class="mb-0 text-white-50">Administra zonas de ubicacion para clasificar propiedades de forma consistente.
+            </p>
         </section>
 
         <section class="card catalog-panel">
@@ -43,7 +44,8 @@
                         <h3 class="h5 mb-1">Listado de zonas</h3>
                         <p class="text-muted mb-0">Busca por nombre o ID y edita sin salir de la pantalla.</p>
                     </div>
-                    <button type="button" class="btn btn-primary mt-3 mt-lg-0 px-4" wire:click="clear" data-toggle="modal"
+                    <button type="button" class="btn btn-primary mt-3 mt-lg-0 px-4" wire:click="clear"
+                        data-toggle="modal" wire:loading.attr="disabled" wire:target="save,store,update,borrarZona"
                         data-target="#modalForm">
                         Nueva zona
                     </button>
@@ -51,9 +53,10 @@
 
                 <div class="row mb-4">
                     <div class="col-lg-8">
-                        <label class="small text-muted font-weight-semibold">Buscar</label>
-                        <input type="text" class="form-control form-control-lg rounded-lg" wire:model.debounce.350ms="criterio"
-                            placeholder="Ej. Naco o ID 12">
+                        <label for="zona-criterio" class="small text-muted font-weight-semibold">Buscar</label>
+                        <input type="text" class="form-control form-control-lg rounded-lg"
+                            wire:model.debounce.350ms="criterio" id="zona-criterio" placeholder="Ej. Naco o ID 12"
+                            autocomplete="off" maxlength="50">
                     </div>
                 </div>
 
@@ -68,23 +71,27 @@
                         </thead>
                         <tbody>
                             @forelse ($zonas as $zona)
-                                <tr>
+                                <tr wire:key="zona-row-{{ $zona->id }}">
                                     <td class="font-weight-semibold">{{ $zona->id }}</td>
                                     <td>{{ $zona->zona }}</td>
                                     <td class="text-right">
                                         <button type="button" class="btn btn-outline-primary btn-sm mr-1"
-                                            wire:click="edit({{ $zona->id }})" data-toggle="modal" data-target="#modalForm">
+                                            wire:click="edit({{ $zona->id }})" data-toggle="modal"
+                                            data-target="#modalForm" wire:loading.attr="disabled"
+                                            wire:target="edit({{ $zona->id }})">
                                             Editar
                                         </button>
                                         <button type="button" class="btn btn-outline-danger btn-sm"
-                                            wire:click="$emit('generarBorrarZonaSweetAlert', {{ $zona->id }})">
+                                            wire:click="$emit('generarBorrarZonaSweetAlert', {{ $zona->id }}, @js($zona->zona))"
+                                            wire:loading.attr="disabled" wire:target="borrarZona">
                                             Borrar
                                         </button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center py-5 text-muted">No hay zonas para mostrar.</td>
+                                    <td colspan="3" class="text-center py-5 text-muted">No hay zonas para mostrar.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -101,40 +108,66 @@
     <div class="modal fade catalog-modal" id="modalForm" wire:ignore.self tabindex="-1" data-backdrop="static">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-0 pb-0 px-4 pt-4">
-                    <div>
-                        <div class="text-uppercase small text-muted">{{ $Id ? 'Edicion' : 'Nueva zona' }}</div>
-                        <h4 class="modal-title mb-0">{{ $Id ? 'Editar zona' : 'Registrar zona' }}</h4>
+                <form wire:submit.prevent="save" autocomplete="off">
+                    <div class="modal-header border-0 pb-0 px-4 pt-4">
+                        <div>
+                            <div class="text-uppercase small text-muted">{{ $Id ? 'Edicion' : 'Nueva zona' }}</div>
+                            <h4 class="modal-title mb-0">{{ $Id ? 'Editar zona' : 'Registrar zona' }}</h4>
+                        </div>
+                        <button type="button" class="close" wire:click="clear" data-dismiss="modal"
+                            aria-label="Cerrar" wire:loading.attr="disabled" wire:target="save,store,update">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <button type="button" class="close" wire:click="clear" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
 
-                <div class="modal-body px-4 pb-3">
-                    <div class="form-group mb-0">
-                        <label>Zona</label>
-                        <input type="text" class="form-control" wire:model.lazy="zona" placeholder="Nombre de zona">
-                        @error('zona')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
+                    <div class="modal-body px-4 pb-3">
+                        <div class="form-group mb-0">
+                            <label for="zona-nombre">Zona</label>
+                            <input type="text" id="zona-nombre" class="form-control" wire:model.debounce.350ms="zona"
+                                placeholder="Nombre de zona" maxlength="50" minlength="2" required>
+                            @error('zona')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
-                <div class="modal-footer border-0 px-4 pb-4 pt-0">
-                    <button type="button" class="btn btn-light px-4" wire:click="clear" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4"
-                        @if ($Id == 0) wire:click.prevent="store" @else wire:click.prevent="update({{ $Id }})" @endif>
-                        {{ $Id ? 'Actualizar' : 'Guardar' }}
-                    </button>
-                </div>
+                    <div class="modal-footer border-0 px-4 pb-4 pt-0">
+                        <button type="button" class="btn btn-light px-4" wire:click="clear" data-dismiss="modal"
+                            wire:loading.attr="disabled" wire:target="save,store,update">Cancelar</button>
+                        <button type="submit" class="btn btn-primary px-4" wire:loading.attr="disabled"
+                            wire:target="save,store,update">
+                            <span wire:loading.remove
+                                wire:target="save,store,update">{{ $Id ? 'Actualizar' : 'Guardar' }}</span>
+                            <span wire:loading wire:target="save,store,update">Procesando...</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('close-modal', () => {
-            $('#modalForm').modal('hide');
-        });
-    </script>
+    @once
+        @push('scripts')
+            <script>
+                window.addEventListener('close-modal', () => {
+                    $('#modalForm').modal('hide');
+                });
+
+                window.addEventListener('zona-operation-result', event => {
+                    if (!event.detail || !event.detail.message) {
+                        return;
+                    }
+
+                    Swal.fire({
+                        icon: event.detail.type || 'info',
+                        text: event.detail.message,
+                        timer: 2200,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                });
+            </script>
+        @endpush
+    @endonce
 </div>

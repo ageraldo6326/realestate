@@ -1,41 +1,20 @@
 @extends('admin.layoutadmin')
 
+@section('title', 'Nueva Zona')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item">Catálogos</li>
+    <li class="breadcrumb-item"><a href="{{ route('zonas.index') }}">Zonas</a></li>
+    <li class="breadcrumb-item active">Nueva</li>
+@endsection
+
+@section('page_title', 'Nueva Zona')
+
 @section('content')
-
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1>ZONA</h1>
-            @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-            @endif
-            <form action="{{ route("zonas.store") }}" method="post" enctype="multipart/form-data">
-                @method("post")
-                @csrf
-                <div class="form-group">
-
-                    <div class="form-group">
-                        <label for="titulo">Zona</label>
-                        <input type="text" class="form-control" id="zona" name="zona" placeholder="zona" value="{{ old('zona') }}">
-                    </div>
-
-
-                    <div class="form-group">              
-                    <input type="submit" class="btn btn-success" name="submit" id="submit" value="Grabar">
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
+    @include('admin.zonas._form', [
+        'mode' => 'create',
+        'zona' => null,
+        'action' => route('zonas.store'),
+    ])
 @endsection
 

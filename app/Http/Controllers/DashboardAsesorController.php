@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Clientes;
 use DateTime;
-use App\Models\meses;
 use App\Models\Venta;
-use App\Models\Inmobiliaria;
+use App\Services\InmobiliariaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +16,7 @@ class DashboardAsesorController extends Controller
     public function index(Request $request)
     {
 
-        $contactOwnershipDays = (int) (optional(Inmobiliaria::query()->first())->dias_propiedad_contactos ?? 90);
+        $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;
         }
@@ -99,7 +98,7 @@ class DashboardAsesorController extends Controller
 
         ////////////////////////////////
 
-        $ventas_por_mes = meses::query();
+        $ventas_por_mes = \App\Models\meses::query();
 
         $ventas_por_mes->leftjoin(DB::raw('ventas'), DB::raw('meses.numero'), '=', DB::raw('MONTH(ventas.fechaVentaCierre)'));
         $ventas_por_mes->select(
@@ -112,7 +111,7 @@ class DashboardAsesorController extends Controller
         $ventas_por_mes->orderBy(DB::raw('meses.numero'));
         $ventas_por_mes->where('id_asesor', '=', Auth::user()->email);
 
-        $ventas_por_mes_monto = meses::query();
+        $ventas_por_mes_monto = \App\Models\meses::query();
 
         $ventas_por_mes_monto->leftjoin(DB::raw('ventas'), DB::raw('meses.numero'), '=', DB::raw('MONTH(ventas.fechaVentaCierre)'));
         $ventas_por_mes_monto->select(

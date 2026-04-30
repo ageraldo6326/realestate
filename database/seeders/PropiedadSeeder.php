@@ -7,6 +7,7 @@ use App\Models\Zonas;
 use App\Models\TiposDePropiedad;
 use App\Models\Disponible_para;
 use App\Models\Estados;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class PropiedadSeeder extends Seeder
@@ -35,8 +36,26 @@ class PropiedadSeeder extends Seeder
     $estadoUsada  = $estadoIds->get('Usada', $estadoIds->first());
     $estadoEnPlano = $estadoIds->get('En plano', $estadoIds->first());
 
+    $advisorEmails = [
+      'kelly@realestate.local',
+      'lavinia@realestate.local',
+      'mario@realestate.local',
+    ];
+
+    $advisors = User::query()
+      ->whereIn('email', $advisorEmails)
+      ->get()
+      ->keyBy('email');
+
+    $fallbackAdvisor = User::query()->where('email', 'admin@realestate.local')->first();
+
+    $advisorFor = static function (string $email) use ($advisors, $fallbackAdvisor): ?User {
+      return $advisors->get($email) ?: $fallbackAdvisor;
+    };
+
     $propiedades = [
       [
+        'advisor_email'     => 'kelly@realestate.local',
         'referencia'       => 'APT-001',
         'titulo'           => 'Apartamento Moderno en Santo Domingo Este',
         'slug'             => 'apartamento-moderno-santo-domingo-este',
@@ -67,6 +86,7 @@ class PropiedadSeeder extends Seeder
         'balcon'           => true,
       ],
       [
+        'advisor_email'     => 'lavinia@realestate.local',
         'referencia'       => 'CASA-001',
         'titulo'           => 'Casa Familiar en Urbanización Exclusiva',
         'slug'             => 'casa-familiar-urbanizacion-exclusiva',
@@ -99,6 +119,7 @@ class PropiedadSeeder extends Seeder
         'parqueostechados' => true,
       ],
       [
+        'advisor_email'     => 'kelly@realestate.local',
         'referencia'       => 'APT-002',
         'titulo'           => 'Apartamento Turístico con Vista al Mar en Bávaro',
         'slug'             => 'apartamento-turistico-vista-mar-bavaro',
@@ -128,6 +149,7 @@ class PropiedadSeeder extends Seeder
         'terraza'          => true,
       ],
       [
+        'advisor_email'     => 'mario@realestate.local',
         'referencia'       => 'APT-003',
         'titulo'           => 'Apartamento en Alquiler cerca de Universidad',
         'slug'             => 'apartamento-alquiler-cerca-universidad',
@@ -155,6 +177,7 @@ class PropiedadSeeder extends Seeder
         'seguridad24horas' => true,
       ],
       [
+        'advisor_email'     => 'lavinia@realestate.local',
         'referencia'       => 'CASA-002',
         'titulo'           => 'Villa de Lujo en Punta Cana con Piscina',
         'slug'             => 'villa-lujo-punta-cana-piscina',
@@ -190,6 +213,7 @@ class PropiedadSeeder extends Seeder
         'walkincloset'     => true,
       ],
       [
+        'advisor_email'     => 'kelly@realestate.local',
         'referencia'       => 'APT-004',
         'titulo'           => 'Apartamento en Planos con Financiamiento Bancario',
         'slug'             => 'apartamento-en-planos-financiamiento-bancario',
@@ -221,6 +245,7 @@ class PropiedadSeeder extends Seeder
         'plantaelectrica'  => true,
       ],
       [
+        'advisor_email'     => 'mario@realestate.local',
         'referencia'       => 'OFI-001',
         'titulo'           => 'Oficina corporativa en Piantini',
         'slug'             => 'oficina-corporativa-en-piantini',
@@ -252,6 +277,17 @@ class PropiedadSeeder extends Seeder
     ];
 
     foreach ($propiedades as $data) {
+      $advisor = $advisorFor((string) ($data['advisor_email'] ?? ''));
+
+      if ($advisor) {
+        $data['asignada_a'] = $advisor->email;
+        $data['asignada_a_id'] = $advisor->id;
+        $data['captada_por'] = $advisor->id;
+        $data['foto_vendedor'] = $advisor->foto;
+      }
+
+      unset($data['advisor_email']);
+
       Propiedad::updateOrCreate(
         ['referencia' => $data['referencia']],
         $data

@@ -2,16 +2,11 @@
 
 namespace App\Mail;
 
-use App\Models\Zonas;
-use App\Models\Inmobiliaria;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Services\InmobiliariaService;
 
 class EnviarPropiedad extends Mailable
 {
@@ -61,13 +56,7 @@ class EnviarPropiedad extends Mailable
         ->where("propiedads.estado_id", "=", "$cliente->estado")          
         ->paginate(3);        
 
-        $inmobiliaria = Inmobiliaria::first();
-
-        $zonas = Zonas::all();
-
-        $disponibles_para = Disponible_para::all();
-
-        $tipos_propiedades = TiposDePropiedad::all();  
+        $inmobiliaria = InmobiliariaService::get();
         
 
         // return $this->view('frontend.propiedades',compact('propiedades','inmobiliaria','zonas','disponibles_para','tipos_propiedades'));

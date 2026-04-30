@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\Inmobiliaria;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
+use App\Services\Branding\CompanyBrandingService;
+use App\Services\InmobiliariaService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,8 +32,10 @@ class AppServiceProvider extends ServiceProvider
         $this->ensurePublicAssetDirectories();
 
         Paginator::useBootstrap();
-        $inmo = Inmobiliaria::first();
+        $inmo = InmobiliariaService::get();
+        $frontendTheme = app(CompanyBrandingService::class)->resolveCssVariables($inmo);
         View::share('inmo', $inmo);
+        View::share('frontendTheme', $frontendTheme);
     }
 
     /**

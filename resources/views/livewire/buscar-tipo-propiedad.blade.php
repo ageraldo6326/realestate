@@ -1,11 +1,11 @@
 <div>
     <style>
-        .catalog-shell {
+        .types-shell {
             display: grid;
             gap: 1rem;
         }
 
-        .catalog-hero {
+        .types-hero {
             background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 55%, #38bdf8 100%);
             border-radius: 1.25rem;
             color: #fff;
@@ -13,14 +13,17 @@
             box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
         }
 
-        .catalog-panel {
+        .types-stat {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .types-panel {
             border: 1px solid #dbe4f0;
             border-radius: 1.25rem;
             box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
-        }
-
-        .catalog-modal .modal-dialog {
-            max-width: 680px;
         }
     </style>
 
@@ -30,30 +33,47 @@
         </div>
     @endif
 
-    <div class="catalog-shell">
-        <section class="catalog-hero">
-            <h2 class="h4 mb-2 font-weight-bold">Tipos de propiedad</h2>
-            <p class="mb-0 text-white-50">Gestiona los tipos comerciales para estandarizar inventario y filtros del portal.</p>
+    @if (session('error'))
+        <div class="alert alert-danger border-0 shadow-sm rounded-lg mb-3">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <div class="types-shell">
+        <section class="types-hero">
+            <div class="row align-items-end">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <span class="badge badge-light text-primary px-3 py-2 rounded-pill mb-3">Catalogos del CRM</span>
+                    <h2 class="h3 font-weight-bold mb-2">Gestion de tipos de propiedad con vistas dedicadas.</h2>
+                    <p class="mb-0 text-white-50">Busca por nombre o ID, crea nuevos tipos y edita registros sin salir del flujo principal.</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="types-stat">
+                        <div class="text-uppercase small text-white-50">Tipos encontrados</div>
+                        <div class="h3 mb-0 font-weight-bold">{{ $tipoPropiedades->total() }}</div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="card catalog-panel">
+        <section class="card types-panel">
             <div class="card-body p-4">
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4">
                     <div>
-                        <h3 class="h5 mb-1">Listado de tipos</h3>
-                        <p class="text-muted mb-0">Crea, edita o elimina tipos de propiedad desde un solo lugar.</p>
+                        <h3 class="h5 mb-1">Listado de tipos de propiedad</h3>
+                        <p class="text-muted mb-0">Administra el catalogo de tipologias utilizadas en captacion y publicacion.</p>
                     </div>
-                    <button type="button" class="btn btn-primary mt-3 mt-lg-0 px-4" wire:click="clear" data-toggle="modal"
-                        data-target="#modalForm">
-                        Nuevo tipo
-                    </button>
+                    <a href="{{ route('tipopropiedades.create') }}" class="btn btn-primary mt-3 mt-lg-0 px-4">Nuevo tipo</a>
                 </div>
 
                 <div class="row mb-4">
                     <div class="col-lg-8">
-                        <label class="small text-muted font-weight-semibold">Buscar</label>
-                        <input type="text" class="form-control form-control-lg rounded-lg" wire:model.debounce.350ms="criterio"
-                            placeholder="Ej. Apartamento o ID 5">
+                        <label for="filtro-tipo" class="small text-muted font-weight-semibold">Buscar tipo</label>
+                        <input type="text" id="filtro-tipo" wire:model.debounce.350ms="criterio"
+                            class="form-control form-control-lg rounded-lg" maxlength="100" placeholder="Ej. Casa o ID 4">
+                    </div>
+                    <div class="col-lg-4 d-flex align-items-end mt-3 mt-lg-0">
+                        <button type="button" class="btn btn-outline-secondary" wire:click="limpiar">Limpiar</button>
                     </div>
                 </div>
 
@@ -63,30 +83,30 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tipo</th>
-                                <th class="d-none d-md-table-cell">Creado</th>
                                 <th class="text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($tipoPropiedades as $tipoPropiedad)
+                            @forelse ($tipoPropiedades as $tipo)
                                 <tr>
-                                    <td class="font-weight-semibold">{{ $tipoPropiedad->id }}</td>
-                                    <td>{{ $tipoPropiedad->tipo }}</td>
-                                    <td class="d-none d-md-table-cell text-muted small">{{ $tipoPropiedad->created_at }}</td>
+                                    <td class="font-weight-bold">{{ $tipo->id }}</td>
+                                    <td>
+                                        <div class="font-weight-semibold">{{ $tipo->tipo }}</div>
+                                    </td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-outline-primary btn-sm mr-1"
-                                            wire:click="edit({{ $tipoPropiedad->id }})" data-toggle="modal" data-target="#modalForm">
-                                            Editar
-                                        </button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm"
-                                            wire:click="$emit('generarBorrarTipoPropiedadSweetAlert', {{ $tipoPropiedad->id }})">
-                                            Borrar
-                                        </button>
+                                        <div class="d-flex justify-content-end">
+                                            <a href="{{ route('tipopropiedades.edit', $tipo->id) }}"
+                                                class="btn btn-outline-primary btn-sm mr-1">Editar</a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                wire:click="$emit('generarBorrarSweetAlert', {{ $tipo->id }})">Eliminar</button>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center py-5 text-muted">No hay tipos para mostrar.</td>
+                                    <td colspan="3" class="text-center py-5 text-muted">
+                                        No hay tipos de propiedad registrados con ese criterio.
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -94,50 +114,9 @@
                 </div>
 
                 <div class="mt-4">
-                    {{ $tipoPropiedades->links() }}
+                    {{ $tipoPropiedades->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </section>
     </div>
-
-    <div class="modal fade catalog-modal" id="modalForm" wire:ignore.self tabindex="-1" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-0 pb-0 px-4 pt-4">
-                    <div>
-                        <div class="text-uppercase small text-muted">{{ $Id ? 'Edicion' : 'Nuevo tipo' }}</div>
-                        <h4 class="modal-title mb-0">{{ $Id ? 'Editar tipo' : 'Registrar tipo' }}</h4>
-                    </div>
-                    <button type="button" class="close" wire:click="clear" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body px-4 pb-3">
-                    <div class="form-group mb-0">
-                        <label>Tipo de propiedad</label>
-                        <input type="text" class="form-control" wire:model.lazy="tipo" maxlength="100"
-                            placeholder="Ej. Villa, Penthouse, Solar">
-                        @error('tipo')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="modal-footer border-0 px-4 pb-4 pt-0">
-                    <button type="button" class="btn btn-light px-4" wire:click="clear" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4"
-                        @if ($Id == 0) wire:click.prevent="store" @else wire:click.prevent="update({{ $Id }})" @endif>
-                        {{ $Id ? 'Actualizar' : 'Guardar' }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('close-modal', () => {
-            $('#modalForm').modal('hide');
-        });
-    </script>
 </div>

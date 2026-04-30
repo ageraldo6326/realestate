@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->string('instagram')->nullable();
             $table->string('tiktok')->nullable();
             $table->string('whatsapp')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

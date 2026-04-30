@@ -5,16 +5,12 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 
 use App\Models\ToDo;
-use App\Models\User;
-use App\Models\Zonas;
-use App\Models\Estados;
 use App\Models\Clientes;
 use App\Models\ToDoTipo;
 use App\Models\Clientenota;
 use App\Models\ToDoEstatus;
 use Livewire\WithPagination;
-use App\Models\Disponible_para;
-use App\Models\TiposDePropiedad;
+use App\Services\CatalogoService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -95,13 +91,13 @@ class AsignarContacto extends Component
 
         $clientes = $query->paginate(9);
 
-        $zonas = Zonas::all();
+        $zonas = CatalogoService::zonas();
 
-        $disponibles_para = Disponible_para::all();
+        $disponibles_para = CatalogoService::disponiblePara();
 
-        $tipos_propiedades = TiposDePropiedad::all();
+        $tipos_propiedades = CatalogoService::tipos();
 
-        $estados_propiedad = Estados::all();
+        $estados_propiedad = CatalogoService::estados();
 
         $notas = Clientenota::where('id_cliente', '=', $this->Id)->orderby("created_at", "desc")->get();
 
@@ -113,7 +109,7 @@ class AsignarContacto extends Component
             ->orderBy('to_dos.created_at', 'desc')
             ->get();
 
-        $usuarios = User::all();
+        $usuarios = CatalogoService::asesoresActivos();
 
         $tipos = ToDoTipo::all();
         $estatuses = ToDoEstatus::all();

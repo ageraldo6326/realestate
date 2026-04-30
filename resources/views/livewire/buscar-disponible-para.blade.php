@@ -13,14 +13,17 @@
             box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
         }
 
+        .catalog-stat {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
         .catalog-panel {
             border: 1px solid #dbe4f0;
             border-radius: 1.25rem;
             box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
-        }
-
-        .catalog-modal .modal-dialog {
-            max-width: 680px;
         }
     </style>
 
@@ -30,10 +33,27 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger border-0 shadow-sm rounded-lg mb-3">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="catalog-shell">
         <section class="catalog-hero">
-            <h2 class="h4 mb-2 font-weight-bold">Disponible para</h2>
-            <p class="mb-0 text-white-50">Administra tipos de operacion como venta, alquiler o alquiler temporal.</p>
+            <div class="row align-items-end">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                    <span class="badge badge-light text-primary px-3 py-2 rounded-pill mb-3">Catalogos del CRM</span>
+                    <h2 class="h3 font-weight-bold mb-2">Gestion de disponible para con vistas dedicadas.</h2>
+                    <p class="mb-0 text-white-50">Filtra por nombre o ID, crea nuevos registros y edita en pantallas separadas sin usar modales.</p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="catalog-stat">
+                        <div class="text-uppercase small text-white-50">Registros encontrados</div>
+                        <div class="h3 mb-0 font-weight-bold">{{ $disponiblespara->total() }}</div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="card catalog-panel">
@@ -41,19 +61,23 @@
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4">
                     <div>
                         <h3 class="h5 mb-1">Listado de operaciones</h3>
-                        <p class="text-muted mb-0">Define como se publica cada inmueble en los canales comerciales.</p>
+                        <p class="text-muted mb-0">Gestiona las modalidades de publicacion para venta, alquiler o renta temporal.</p>
                     </div>
-                    <button type="button" class="btn btn-primary mt-3 mt-lg-0 px-4" wire:click="clear" data-toggle="modal"
-                        data-target="#modalForm">
+                    <a href="{{ route('disponiblepara.create') }}" class="btn btn-primary mt-3 mt-lg-0 px-4">
                         Nuevo registro
-                    </button>
+                    </a>
                 </div>
 
                 <div class="row mb-4">
                     <div class="col-lg-8">
-                        <label class="small text-muted font-weight-semibold">Buscar</label>
-                        <input type="text" class="form-control form-control-lg rounded-lg" wire:model.debounce.350ms="criterio"
-                            placeholder="Ej. Venta o ID 4">
+                        <label class="small text-muted font-weight-semibold" for="filtro-disponible">Buscar</label>
+                        <input id="filtro-disponible" type="text" class="form-control form-control-lg rounded-lg"
+                            wire:model.debounce.350ms="criterio" placeholder="Ej. Venta o ID 4">
+                    </div>
+                    <div class="col-lg-4 d-flex align-items-end mt-3 mt-lg-0">
+                        <button type="button" class="btn btn-outline-secondary" wire:click="clear">
+                            Limpiar
+                        </button>
                     </div>
                 </div>
 
@@ -74,10 +98,10 @@
                                     <td>{{ $disponiblepara->disponible_para }}</td>
                                     <td class="d-none d-md-table-cell text-muted small">{{ $disponiblepara->created_at }}</td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-outline-primary btn-sm mr-1"
-                                            wire:click="edit({{ $disponiblepara->id }})" data-toggle="modal" data-target="#modalForm">
+                                        <a href="{{ route('disponiblepara.edit', $disponiblepara->id) }}"
+                                            class="btn btn-outline-primary btn-sm mr-1">
                                             Editar
-                                        </button>
+                                        </a>
                                         <button type="button" class="btn btn-outline-danger btn-sm"
                                             wire:click="$emit('generarBorrarDisponibleParaSweetAlert', {{ $disponiblepara->id }})">
                                             Borrar
@@ -94,50 +118,9 @@
                 </div>
 
                 <div class="mt-4">
-                    {{ $disponiblespara->links() }}
+                    {{ $disponiblespara->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </section>
     </div>
-
-    <div class="modal fade catalog-modal" id="modalForm" wire:ignore.self tabindex="-1" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-0 pb-0 px-4 pt-4">
-                    <div>
-                        <div class="text-uppercase small text-muted">{{ $Id ? 'Edicion' : 'Nuevo registro' }}</div>
-                        <h4 class="modal-title mb-0">{{ $Id ? 'Editar operacion' : 'Registrar operacion' }}</h4>
-                    </div>
-                    <button type="button" class="close" wire:click="clear" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body px-4 pb-3">
-                    <div class="form-group mb-0">
-                        <label>Disponible para</label>
-                        <input type="text" class="form-control" wire:model.lazy="disponible_para" maxlength="50"
-                            placeholder="Ej. Venta, Alquiler, Alquiler vacacional">
-                        @error('disponible_para')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="modal-footer border-0 px-4 pb-4 pt-0">
-                    <button type="button" class="btn btn-light px-4" wire:click="clear" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4"
-                        @if ($Id == 0) wire:click.prevent="store" @else wire:click.prevent="update({{ $Id }})" @endif>
-                        {{ $Id ? 'Actualizar' : 'Guardar' }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('close-modal', () => {
-            $('#modalForm').modal('hide');
-        });
-    </script>
 </div>

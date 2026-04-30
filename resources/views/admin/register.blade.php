@@ -14,9 +14,9 @@
     <!-- Font Icons css -->
     <link rel="stylesheet" href="css/font-icons.css">
     <!-- plugins css -->
-    <link rel="stylesheet" href="{{asset('css/plugins.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <!-- Responsive css -->
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 </head>
@@ -28,52 +28,64 @@
 
     <!-- Add your site or application content here -->
 
-<!-- Body main wrapper start -->
-<div class="body-wrapper">
-    <!-- LOGIN AREA START (Register) -->
-    <div class="ltn__login-area pb-110">
-        <div class="row">
-            <div class="col-12">
-                <img src="{{ asset('img/header_image.jpg') }}" alt="">
-            </div>
-        </div>        
-        <div class="container">
+    <!-- Body main wrapper start -->
+    <div class="body-wrapper">
+        <!-- LOGIN AREA START (Register) -->
+        <div class="ltn__login-area pb-110">
             <div class="row">
-                <div class="col-lg-6 offset-lg-3">
-                    <div class="account-login-inner">
-                        <form action="{{ route("registrarse") }}" method="post" class="ltn__form-box contact-form-box">
-                            @csrf
-                            <input type="text" placeholder="Nombre" id="name" name="name">
-                            <input type="text" placeholder="Correo" id="email" name="email">
-                            <input type="password" placeholder="Clave" id="password" name="password">
-                            <input type="password" placeholder="Repetir clave">
-                            <div class="btn-wrapper text-center">
-                                <button class="theme-btn-1 btn reverse-color btn-block" type="submit">CREAR USUARIO</button>
-                            </div>
-                            <div>
-                                <a href="{{ route("login") }}" class="text-center">Ya estoy registrado</a>
-                            </div>
-                        </form>
-                        
+                <div class="col-12">
+                    <img src="{{ asset('img/header_image.jpg') }}" alt="">
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3">
+                        <div class="account-login-inner">
+                            <form action="{{ route('registrarse') }}" method="post"
+                                class="ltn__form-box contact-form-box">
+                                @csrf
+                                <input type="text" placeholder="Nombre" id="name" name="name">
+                                <input type="text" placeholder="Correo" id="email" name="email">
+                                <input type="password" placeholder="Clave" id="password" name="password">
+                                <input type="password" placeholder="Repetir clave">
+                                <div class="mb-3" style="text-align: left;">
+                                    <label for="requiere_aprobacion_propiedades"
+                                        style="display:block; font-weight: 600; margin-bottom: 6px;">Aprobacion de
+                                        propiedades</label>
+                                    <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+                                        <input type="checkbox" id="requiere_aprobacion_propiedades"
+                                            name="requiere_aprobacion_propiedades" value="1">
+                                        Requiere aprobacion antes de publicar
+                                    </label>
+                                </div>
+                                <div class="btn-wrapper text-center">
+                                    <button class="theme-btn-1 btn reverse-color btn-block" type="submit">CREAR
+                                        USUARIO</button>
+                                </div>
+                                <div>
+                                    <a href="{{ route('login') }}" class="text-center">Ya estoy registrado</a>
+                                </div>
+                            </form>
+
+                        </div>
+                        @error('nombre_apellido')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('nombre_apellido')
-                    <p class="error-message">{{ $message }}</p>
-                    @enderror
                 </div>
             </div>
         </div>
+        <!-- LOGIN AREA END -->
+
+
     </div>
-    <!-- LOGIN AREA END -->
-
-
-</div>
-<!-- Body main wrapper end -->
+    <!-- Body main wrapper end -->
 
     <!-- All JS Plugins -->
-    <script src="{{asset('js/plugins.js') }}"></script>
+    <script src="{{ asset('js/plugins.js') }}"></script>
     <!-- Main JS -->
-    <script src="{{asset('js/main.js') }}"></script>
-  
-</body>
-</html>
+    <script src="{{ asset('js/main.js') }}"></script>
 
+</body>
+
+</html>
