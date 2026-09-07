@@ -1,5 +1,9 @@
+<?php
+    $darkModeEnabled = (bool) config('ui.dark_mode_enabled');
+    $uiTheme = $darkModeEnabled && optional(Auth::user())->ui_theme === 'dark' ? 'dark' : 'light';
+?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="<?php echo e($uiTheme); ?>">
 
 <head>
     <meta charset="utf-8">
@@ -49,13 +53,14 @@
 
     <link rel="stylesheet" href="/css/start.css">
     <link rel="stylesheet" href="/css/admin-custom.css">
+    <link rel="stylesheet" href="<?php echo e(asset('css/admin-dark-theme.css')); ?>">
 
     <?php echo \Livewire\Livewire::styles(); ?>
 
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed <?php echo e(config('ui.modern_sidebar') ? 'modern-sidebar-enabled' : ''); ?>">
     <?php
         $userPhotoPath = Auth::user()->foto ?? null;
         $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
@@ -77,7 +82,7 @@
             <!-- Left: Toggle + Breadcrumb -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link px-3" data-widget="pushmenu" href="#" role="button" title="Colapsar menú">
+                    <a class="nav-link px-3" <?php if(config('ui.modern_sidebar')): ?> data-modern-sidebar-toggle aria-expanded="false" aria-controls="modern-sidebar" aria-label="Abrir menú lateral" <?php else: ?> data-widget="pushmenu" <?php endif; ?> href="#" role="button" title="Colapsar menú">
                         <i class="fas fa-bars"></i>
                     </a>
                 </li>
@@ -93,6 +98,25 @@
 
             <!-- Right: acciones rápidas + perfil -->
             <ul class="navbar-nav ml-auto align-items-center">
+                <?php if($darkModeEnabled): ?>
+                    <li class="nav-item d-flex align-items-center">
+                        <?php
+if (! isset($_instance)) {
+    $html = \Livewire\Livewire::mount('theme-toggle')->html();
+} elseif ($_instance->childHasBeenRendered('XT7ugJP')) {
+    $componentId = $_instance->getRenderedChildComponentId('XT7ugJP');
+    $componentTag = $_instance->getRenderedChildComponentTagName('XT7ugJP');
+    $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
+    $_instance->preserveRenderedChild('XT7ugJP');
+} else {
+    $response = \Livewire\Livewire::mount('theme-toggle');
+    $html = $response->html();
+    $_instance->logRenderedChild('XT7ugJP', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+}
+echo $html;
+?>
+                    </li>
+                <?php endif; ?>
                 <!-- Acceso rápido a propiedades -->
                 <li class="nav-item d-none d-md-block">
                     <a href="<?php echo e(route('propiedades.index')); ?>" class="nav-link text-muted" title="Mis propiedades">
@@ -150,7 +174,11 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <?php echo $__env->make('admin.menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php if(config('ui.modern_sidebar')): ?>
+            <?php echo $__env->make('components.navigation.modern-sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php else: ?>
+            <?php echo $__env->make('admin.menu', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <?php endif; ?>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -217,6 +245,18 @@
 
     <!-- AdminLTE -->
     <script src="<?php echo e(asset('vendor/adminlte/dist/js/adminlte.js')); ?>"></script>
+
+    <?php if($darkModeEnabled): ?>
+        <script>
+            window.addEventListener('ui-theme-changed', function(event) {
+                document.documentElement.dataset.theme = event.detail.theme === 'dark' ? 'dark' : 'light';
+            });
+        </script>
+    <?php endif; ?>
+
+    <?php if(config('ui.modern_sidebar')): ?>
+        <script src="<?php echo e(asset('js/modern-sidebar.js')); ?>"></script>
+    <?php endif; ?>
 
     <!-- SweetAlert listeners (Livewire) -->
     <script>

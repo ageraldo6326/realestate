@@ -42,24 +42,34 @@
         'controldeacceso' => 'Control de acceso',
     ];
 
-    $resolveImage = function ($value) {
+    $resolveImage = function ($value, $version = null) {
         if (!$value) {
             return null;
         }
+
+        $appendVersion = function (string $url) use ($version): string {
+            if (!$version) {
+                return $url;
+            }
+
+            $separator = str_contains($url, '?') ? '&' : '?';
+
+            return $url . $separator . 'v=' . rawurlencode((string) $version);
+        };
 
         if (is_object($value) && method_exists($value, 'temporaryUrl')) {
             return $value->temporaryUrl();
         }
 
         if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])) {
-            return $value;
+            return $appendVersion($value);
         }
 
         if (\Illuminate\Support\Str::startsWith($value, '/')) {
-            return asset(ltrim($value, '/'));
+            return $appendVersion(asset(ltrim($value, '/')));
         }
 
-        return asset('assets/' . ltrim($value, '/'));
+        return $appendVersion(asset('assets/' . ltrim($value, '/')));
     };
 
     $videoPreview = '';
@@ -203,7 +213,10 @@
                         <tbody>
                             @forelse ($propiedades as $propiedad)
                                 @php
-                                    $rowImage = $resolveImage($propiedad->foto_portada);
+                                    $rowImage = $resolveImage(
+                                        $propiedad->foto_portada,
+                                        optional($propiedad)->updated_at,
+                                    );
                                     $activeState = data_get(
                                         $propiedad,
                                         'activa_estado',

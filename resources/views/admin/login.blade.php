@@ -270,7 +270,7 @@
     <div class="login-wrapper">
         <!-- Panel de marca (izquierdo) -->
         <div class="login-brand">
-            <img src="{{ asset('img/logo.png') }}" alt="Logo">
+            <img src="{{ asset('assets/inmobiliaria/logo.png') }}" alt="Logo del sistema">
             <h1>Alis CRM</h1>
             <p>Sistema de gestión inmobiliaria</p>
 

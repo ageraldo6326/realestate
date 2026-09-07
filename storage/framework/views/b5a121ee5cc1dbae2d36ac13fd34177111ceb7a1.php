@@ -12,7 +12,46 @@
         $portada = $portadas->first();
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = 'https://dummyimage.com/160x160/edf2f7/6b7280&text=Asesor';
-        $heroImg = $portada && !empty($portada->foto) ? asset('assets/' . $portada->foto) : $propertyPlaceholder;
+        $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
+            $fallback ??= asset('assets/prop-apto-1.jpg');
+
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            $appendVersion = function (string $url) use ($version): string {
+                if (!$version) {
+                    return $url;
+                }
+
+                $separator = str_contains($url, '?') ? '&' : '?';
+
+                return $url . $separator . 'v=' . rawurlencode((string) $version);
+            };
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $appendVersion($value);
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/img/', '/assets/', 'img/', 'assets/'])) {
+                return $appendVersion(asset(ltrim($value, '/')));
+            }
+
+            return $appendVersion(asset('assets/' . ltrim($value, '/')));
+        };
+        $heroImgRaw = $portada && !empty($portada->foto) ? trim((string) $portada->foto) : '';
+        if (
+            $heroImgRaw !== '' &&
+            \Illuminate\Support\Str::startsWith($heroImgRaw, ['http://', 'https://', '//', 'data:'])
+        ) {
+            $heroImg = $heroImgRaw;
+        } elseif ($heroImgRaw !== '' && str_contains($heroImgRaw, '/')) {
+            $heroImg = asset(ltrim($heroImgRaw, '/'));
+        } elseif ($heroImgRaw !== '') {
+            $heroImg = asset('assets/' . ltrim($heroImgRaw, '/'));
+        } else {
+            $heroImg = $propertyPlaceholder;
+        }
         $heroTitle = $portada ? $portada->titulo : $inmo->titulo ?? 'Encuentra el hogar que siempre soñaste';
         $heroSub = $portada ? $portada->minititulo : 'TU NUEVO COMIENZO, ESTÁ AQUÍ';
         $heroDesc = $portada ? strip_tags($portada->descripcion) : 'Explora miles de propiedades en venta y alquiler.';
@@ -141,7 +180,7 @@
                                 <div class="card-img-wrap">
                                     <a href="<?php echo e(route('propiedad', $pro->slug)); ?>" aria-label="<?php echo e($pro->titulo); ?>">
                                         <img loading="lazy"
-                                            src="<?php echo e(!empty($pro->foto_portada) ? asset('assets/' . $pro->foto_portada) : $propertyPlaceholder); ?>"
+                                            src="<?php echo e($resolvePropertyImage($pro->foto_portada, optional($pro)->updated_at, $propertyPlaceholder)); ?>"
                                             onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
                                             alt="<?php echo e($pro->titulo); ?>" title="<?php echo e($pro->titulo); ?>">
                                     </a>
@@ -260,15 +299,15 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-propiedades-home')->html();
-} elseif ($_instance->childHasBeenRendered('tmYsIiD')) {
-    $componentId = $_instance->getRenderedChildComponentId('tmYsIiD');
-    $componentTag = $_instance->getRenderedChildComponentTagName('tmYsIiD');
+} elseif ($_instance->childHasBeenRendered('3ZOTdrH')) {
+    $componentId = $_instance->getRenderedChildComponentId('3ZOTdrH');
+    $componentTag = $_instance->getRenderedChildComponentTagName('3ZOTdrH');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('tmYsIiD');
+    $_instance->preserveRenderedChild('3ZOTdrH');
 } else {
     $response = \Livewire\Livewire::mount('buscar-propiedades-home');
     $html = $response->html();
-    $_instance->logRenderedChild('tmYsIiD', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('3ZOTdrH', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

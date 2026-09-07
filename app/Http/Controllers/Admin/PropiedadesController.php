@@ -4,14 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use Jorenvh\Share\Share;
+use App\Events\PropertySaved;
 use App\Models\Propiedad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use App\Services\CatalogoService;
 use App\Services\InmobiliariaService;
 use App\Services\SitemapService;
@@ -226,22 +230,8 @@ class PropiedadesController extends Controller
 
         $propiedad->referencia = $id;
 
-        $directorio = public_path() . '/img/propiedades/img/' . $propiedad->referencia . '/';
-
-        if (!is_dir($directorio)) {
-            File::makeDirectory($directorio, 0777, true, true);
-        }
-
-        if ($request->hasFile('foto_portada')) {
-
-            $urlfoto = $request->file("foto_portada");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'portada.' . $urlfoto->extension();
-
-            $propiedad->foto_portada = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'portada.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
+        $this->ensurePropertyImageDirectory($propiedad);
+        $this->storeUploadedPropertyImage($request, $propiedad, 'foto_portada', 'portada');
 
         $propiedad->provincia = $request->provincia;
         $propiedad->ciudad = null;
@@ -270,92 +260,9 @@ class PropiedadesController extends Controller
             $propiedad->destacada = 1;
 
 
-        if ($request->hasFile('foto1')) {
-
-            $urlfoto = $request->file("foto1");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto1.' . $urlfoto->extension();
-
-            $propiedad->foto1 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto1.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto2')) {
-
-            $urlfoto = $request->file("foto2");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto2.' . $urlfoto->extension();
-
-            $propiedad->foto2 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto2.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto3')) {
-
-            $urlfoto = $request->file("foto3");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto3.' . $urlfoto->extension();
-
-            $propiedad->foto3 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto3.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto4')) {
-
-            $urlfoto = $request->file("foto4");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto4.' . $urlfoto->extension();
-
-            $propiedad->foto4 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto4.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto5')) {
-
-            $urlfoto = $request->file("foto5");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto5.' . $urlfoto->extension();
-
-            $propiedad->foto5 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto5.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto6')) {
-
-            $urlfoto = $request->file("foto6");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto6.' . $urlfoto->extension();
-
-            $propiedad->foto6 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto6.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto7')) {
-
-            $urlfoto = $request->file("foto7");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto7.' . $urlfoto->extension();
-
-            $propiedad->foto7 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto7.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->hasFile('foto8')) {
-
-            $urlfoto = $request->file("foto8");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto8.' . $urlfoto->extension();
-
-            $propiedad->foto8 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto8.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
+        foreach (range(1, 8) as $index) {
+            $field = 'foto' . $index;
+            $this->storeUploadedPropertyImage($request, $propiedad, $field, $field);
         }
 
         $propiedad->video1 = str_replace('watch?v=', 'embed/', $request->video1);
@@ -364,6 +271,7 @@ class PropiedadesController extends Controller
         $propiedad->Moneda = $request->tipomoneda;
 
         $propiedad->estado_id = $request->estadopropiedad;
+        $propiedad->marcadeagua = $request->boolean('marcadeagua');
 
         if ($request->has('vendida'))
             $propiedad->vendida = 1;
@@ -430,6 +338,8 @@ class PropiedadesController extends Controller
         $propiedad->activa = 1;
 
         $propiedad->save();
+        $this->syncPropertyImagesWithWatermark($propiedad, (bool) $propiedad->marcadeagua);
+        PropertySaved::dispatch($propiedad);
         $this->misitemap();
 
         return Redirect::route('propiedades.index');
@@ -466,7 +376,7 @@ class PropiedadesController extends Controller
 
 
         $propiedad = DB::table('propiedads')
-            ->select('estado_id', 'comision', 'referencia', 'fechacierre', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa')
+            ->select('estado_id', 'comision', 'referencia', 'fechacierre', 'estado', 'propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'ciudad', 'sector_id', 'barrio_id', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at', 'activa', 'marcadeagua')
             ->leftJoin('zonas', 'propiedads.zona_id', '=', 'zonas.id')
             ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id')
             ->where(function ($query) {
@@ -524,8 +434,60 @@ class PropiedadesController extends Controller
 
     public function borrarpropiedad($id)
     {
-        $propiedad = Propiedad::where('id', '=', $id);
+        $propiedad = Propiedad::where('id', '=', $id)->first();
+
+        if (!$propiedad) {
+            return back()->with('borrarpropiedad', 'No se encontro la propiedad ' . $id . '.');
+        }
+
+        foreach (['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'] as $field) {
+            $this->deletePropertyImage($propiedad, $field);
+        }
+
         $propiedad->delete();
+
+        $baseDirectory = public_path('img/propiedades/img');
+        if (is_dir($baseDirectory)) {
+            $referencedImages = Propiedad::query()
+                ->select(['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'])
+                ->get()
+                ->flatMap(function (Propiedad $property) {
+                    return [
+                        $property->foto_portada,
+                        $property->foto1,
+                        $property->foto2,
+                        $property->foto3,
+                        $property->foto4,
+                        $property->foto5,
+                        $property->foto6,
+                        $property->foto7,
+                        $property->foto8,
+                    ];
+                })
+                ->filter()
+                ->map(function ($path) {
+                    return str_replace('\\', '/', ltrim((string) $path, '/'));
+                })
+                ->unique()
+                ->flip()
+                ->all();
+
+            foreach (File::allFiles($baseDirectory) as $file) {
+                $absolutePath = $file->getPathname();
+                $relativePath = str_replace('\\', '/', ltrim(str_replace(public_path(), '', $absolutePath), '/'));
+
+                if (!array_key_exists($relativePath, $referencedImages)) {
+                    @unlink($absolutePath);
+                }
+            }
+
+            foreach (array_reverse(File::directories($baseDirectory)) as $directory) {
+                if (empty(File::files($directory)) && empty(File::directories($directory))) {
+                    @rmdir($directory);
+                }
+            }
+        }
+
         return back()->with('borrarpropiedad', 'Propiedad ' . $id . ' borrada!');
     }
 
@@ -604,22 +566,8 @@ class PropiedadesController extends Controller
 
         $propiedad = Propiedad::where('id', $id)->first();
 
-        $directorio = public_path() . '/img/propiedades/img/' . $propiedad->referencia . '/';
-
-        if (!is_dir($directorio)) {
-            File::makeDirectory($directorio, 0777, true, true);
-        }
-
-        if ($request->hasFile('foto_portada')) {
-
-            $urlfoto = $request->file("foto_portada");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'portada.' . $urlfoto->extension();
-
-            $propiedad->foto_portada = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'portada.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
+        $this->ensurePropertyImageDirectory($propiedad);
+        $this->storeUploadedPropertyImage($request, $propiedad, 'foto_portada', 'portada');
 
 
         $propiedad->provincia = $request->provincia;
@@ -654,147 +602,12 @@ class PropiedadesController extends Controller
             $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
         }
 
-        if ($request->hasFile('foto1')) {
+        foreach (range(1, 8) as $index) {
+            $field = 'foto' . $index;
+            $this->storeUploadedPropertyImage($request, $propiedad, $field, $field);
 
-            $urlfoto = $request->file("foto1");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto1.' . $urlfoto->extension();
-
-            $propiedad->foto1 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto1.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto1')) {
-            if (file_exists(public_path($propiedad->foto1))) {
-                unlink(public_path($propiedad->foto1));
-                $propiedad->foto1 = "";
-            }
-        }
-
-        if ($request->hasFile('foto2')) {
-
-            $urlfoto = $request->file("foto2");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto2.' . $urlfoto->extension();
-
-            $propiedad->foto2 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto2.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto2')) {
-            if (file_exists(public_path($propiedad->foto2))) {
-                unlink(public_path($propiedad->foto2));
-                $propiedad->foto2 = "";
-            }
-        }
-
-        if ($request->hasFile('foto3')) {
-
-            $urlfoto = $request->file("foto3");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto3.' . $urlfoto->extension();
-
-            $propiedad->foto3 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto3.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto3')) {
-            if (file_exists(public_path($propiedad->foto3))) {
-                unlink(public_path($propiedad->foto3));
-                $propiedad->foto3 = "";
-            }
-        }
-
-        if ($request->hasFile('foto4')) {
-
-            $urlfoto = $request->file("foto4");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto4.' . $urlfoto->extension();
-
-            $propiedad->foto4 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto4.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto4')) {
-            if (file_exists(public_path($propiedad->foto4))) {
-                unlink(public_path($propiedad->foto4));
-                $propiedad->foto4 = "";
-            }
-        }
-
-        if ($request->hasFile('foto5')) {
-
-            $urlfoto = $request->file("foto5");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto5.' . $urlfoto->extension();
-
-            $propiedad->foto5 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto5.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto5')) {
-            if (file_exists(public_path($propiedad->foto5))) {
-                unlink(public_path($propiedad->foto5));
-                $propiedad->foto5 = "";
-            }
-        }
-
-        if ($request->hasFile('foto6')) {
-
-            $urlfoto = $request->file("foto6");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto6.' . $urlfoto->extension();
-
-            $propiedad->foto6 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto6.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto6')) {
-            if (file_exists(public_path($propiedad->foto6))) {
-                unlink(public_path($propiedad->foto6));
-                $propiedad->foto6 = "";
-            }
-        }
-
-        if ($request->hasFile('foto7')) {
-
-            $urlfoto = $request->file("foto7");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto7.' . $urlfoto->extension();
-
-            $propiedad->foto7 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto7.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto7')) {
-            if (file_exists(public_path($propiedad->foto7))) {
-                unlink(public_path($propiedad->foto7));
-                $propiedad->foto7 = "";
-            }
-        }
-
-        if ($request->hasFile('foto8')) {
-
-            $urlfoto = $request->file("foto8");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto8.' . $urlfoto->extension();
-
-            $propiedad->foto8 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto8.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto8')) {
-            if (file_exists(public_path($propiedad->foto8))) {
-                unlink(public_path($propiedad->foto8));
-                $propiedad->foto8 = "";
+            if ($request->has('ckfoto' . $index)) {
+                $this->deletePropertyImage($propiedad, $field);
             }
         }
 
@@ -808,6 +621,7 @@ class PropiedadesController extends Controller
         $propiedad->estado_id = $request->estadopropiedad;
 
         $propiedad->Moneda = $request->tipomoneda;
+        $propiedad->marcadeagua = $request->boolean('marcadeagua');
 
         if ($request->has('activa'))
             $propiedad->activa = 1;
@@ -933,6 +747,51 @@ class PropiedadesController extends Controller
         $propiedad->metadescription = $request->metadescription;
 
         $propiedad->save();
+        $this->syncPropertyImagesWithWatermark($propiedad, (bool) $propiedad->marcadeagua);
+        PropertySaved::dispatch($propiedad);
+
+        $baseDirectory = public_path('img/propiedades/img');
+        if (is_dir($baseDirectory)) {
+            $referencedImages = Propiedad::query()
+                ->select(['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'])
+                ->get()
+                ->flatMap(function (Propiedad $property) {
+                    return [
+                        $property->foto_portada,
+                        $property->foto1,
+                        $property->foto2,
+                        $property->foto3,
+                        $property->foto4,
+                        $property->foto5,
+                        $property->foto6,
+                        $property->foto7,
+                        $property->foto8,
+                    ];
+                })
+                ->filter()
+                ->map(function ($path) {
+                    return str_replace('\\', '/', ltrim((string) $path, '/'));
+                })
+                ->unique()
+                ->flip()
+                ->all();
+
+            foreach (File::allFiles($baseDirectory) as $file) {
+                $absolutePath = $file->getPathname();
+                $relativePath = str_replace('\\', '/', ltrim(str_replace(public_path(), '', $absolutePath), '/'));
+
+                if (!array_key_exists($relativePath, $referencedImages)) {
+                    @unlink($absolutePath);
+                }
+            }
+
+            foreach (array_reverse(File::directories($baseDirectory)) as $directory) {
+                if (empty(File::files($directory)) && empty(File::directories($directory))) {
+                    @rmdir($directory);
+                }
+            }
+        }
+
         $this->misitemap();
 
         return Redirect::route('propiedades.index');
@@ -962,22 +821,8 @@ class PropiedadesController extends Controller
 
         $propiedad = Propiedad::where('id', $id)->first();
 
-        $directorio = public_path() . '/img/propiedades/img/' . $propiedad->referencia . '/';
-
-        if (!is_dir($directorio)) {
-            File::makeDirectory($directorio, 0777, true, true);
-        }
-
-        if ($request->hasFile('foto_portada')) {
-
-            $urlfoto = $request->file("foto_portada");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'portada.' . $urlfoto->extension();
-
-            $propiedad->foto_portada = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'portada.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
+        $this->ensurePropertyImageDirectory($propiedad);
+        $this->storeUploadedPropertyImage($request, $propiedad, 'foto_portada', 'portada');
 
 
         $propiedad->provincia = $request->provincia;
@@ -1011,147 +856,12 @@ class PropiedadesController extends Controller
             $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
         }
 
-        if ($request->hasFile('foto1')) {
+        foreach (range(1, 8) as $index) {
+            $field = 'foto' . $index;
+            $this->storeUploadedPropertyImage($request, $propiedad, $field, $field);
 
-            $urlfoto = $request->file("foto1");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto1.' . $urlfoto->extension();
-
-            $propiedad->foto1 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto1.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto1')) {
-            if (file_exists(public_path($propiedad->foto1))) {
-                unlink(public_path($propiedad->foto1));
-                $propiedad->foto1 = "";
-            }
-        }
-
-        if ($request->hasFile('foto2')) {
-
-            $urlfoto = $request->file("foto2");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto2.' . $urlfoto->extension();
-
-            $propiedad->foto2 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto2.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto2')) {
-            if (file_exists(public_path($propiedad->foto2))) {
-                unlink(public_path($propiedad->foto2));
-                $propiedad->foto2 = "";
-            }
-        }
-
-        if ($request->hasFile('foto3')) {
-
-            $urlfoto = $request->file("foto3");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto3.' . $urlfoto->extension();
-
-            $propiedad->foto3 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto3.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto3')) {
-            if (file_exists(public_path($propiedad->foto3))) {
-                unlink(public_path($propiedad->foto3));
-                $propiedad->foto3 = "";
-            }
-        }
-
-        if ($request->hasFile('foto4')) {
-
-            $urlfoto = $request->file("foto4");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto4.' . $urlfoto->extension();
-
-            $propiedad->foto4 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto4.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto4')) {
-            if (file_exists(public_path($propiedad->foto4))) {
-                unlink(public_path($propiedad->foto4));
-                $propiedad->foto4 = "";
-            }
-        }
-
-        if ($request->hasFile('foto5')) {
-
-            $urlfoto = $request->file("foto5");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto5.' . $urlfoto->extension();
-
-            $propiedad->foto5 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto5.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto5')) {
-            if (file_exists(public_path($propiedad->foto5))) {
-                unlink(public_path($propiedad->foto5));
-                $propiedad->foto5 = "";
-            }
-        }
-
-        if ($request->hasFile('foto6')) {
-
-            $urlfoto = $request->file("foto6");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto6.' . $urlfoto->extension();
-
-            $propiedad->foto6 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto6.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto6')) {
-            if (file_exists(public_path($propiedad->foto6))) {
-                unlink(public_path($propiedad->foto6));
-                $propiedad->foto6 = "";
-            }
-        }
-
-        if ($request->hasFile('foto7')) {
-
-            $urlfoto = $request->file("foto7");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto7.' . $urlfoto->extension();
-
-            $propiedad->foto7 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto7.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto7')) {
-            if (file_exists(public_path($propiedad->foto7))) {
-                unlink(public_path($propiedad->foto7));
-                $propiedad->foto7 = "";
-            }
-        }
-
-        if ($request->hasFile('foto8')) {
-
-            $urlfoto = $request->file("foto8");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto8.' . $urlfoto->extension();
-
-            $propiedad->foto8 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto8.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto8')) {
-            if (file_exists(public_path($propiedad->foto8))) {
-                unlink(public_path($propiedad->foto8));
-                $propiedad->foto8 = "";
+            if ($request->has('ckfoto' . $index)) {
+                $this->deletePropertyImage($propiedad, $field);
             }
         }
 
@@ -1290,6 +1000,49 @@ class PropiedadesController extends Controller
         $propiedad->metadescription = $request->metadescription;
 
         $propiedad->save();
+
+        $baseDirectory = public_path('img/propiedades/img');
+        if (is_dir($baseDirectory)) {
+            $referencedImages = Propiedad::query()
+                ->select(['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'])
+                ->get()
+                ->flatMap(function (Propiedad $property) {
+                    return [
+                        $property->foto_portada,
+                        $property->foto1,
+                        $property->foto2,
+                        $property->foto3,
+                        $property->foto4,
+                        $property->foto5,
+                        $property->foto6,
+                        $property->foto7,
+                        $property->foto8,
+                    ];
+                })
+                ->filter()
+                ->map(function ($path) {
+                    return str_replace('\\', '/', ltrim((string) $path, '/'));
+                })
+                ->unique()
+                ->flip()
+                ->all();
+
+            foreach (File::allFiles($baseDirectory) as $file) {
+                $absolutePath = $file->getPathname();
+                $relativePath = str_replace('\\', '/', ltrim(str_replace(public_path(), '', $absolutePath), '/'));
+
+                if (!array_key_exists($relativePath, $referencedImages)) {
+                    @unlink($absolutePath);
+                }
+            }
+
+            foreach (array_reverse(File::directories($baseDirectory)) as $directory) {
+                if (empty(File::files($directory)) && empty(File::directories($directory))) {
+                    @rmdir($directory);
+                }
+            }
+        }
+
         $this->misitemap();
 
         return Redirect::route('poraprobar');
@@ -1319,22 +1072,8 @@ class PropiedadesController extends Controller
 
         $propiedad = Propiedad::where('id', $id)->first();
 
-        $directorio = public_path() . '/img/propiedades/img/' . $propiedad->referencia . '/';
-
-        if (!is_dir($directorio)) {
-            File::makeDirectory($directorio, 0777, true, true);
-        }
-
-        if ($request->hasFile('foto_portada')) {
-
-            $urlfoto = $request->file("foto_portada");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'portada.' . $urlfoto->extension();
-
-            $propiedad->foto_portada = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'portada.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
+        $this->ensurePropertyImageDirectory($propiedad);
+        $this->storeUploadedPropertyImage($request, $propiedad, 'foto_portada', 'portada');
 
 
         $propiedad->provincia = $request->provincia;
@@ -1368,147 +1107,12 @@ class PropiedadesController extends Controller
             $propiedad->aprobada = $request->has('aprobada') ? 1 : 0;
         }
 
-        if ($request->hasFile('foto1')) {
+        foreach (range(1, 8) as $index) {
+            $field = 'foto' . $index;
+            $this->storeUploadedPropertyImage($request, $propiedad, $field, $field);
 
-            $urlfoto = $request->file("foto1");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto1.' . $urlfoto->extension();
-
-            $propiedad->foto1 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto1.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto1')) {
-            if (file_exists(public_path($propiedad->foto1))) {
-                unlink(public_path($propiedad->foto1));
-                $propiedad->foto1 = "";
-            }
-        }
-
-        if ($request->hasFile('foto2')) {
-
-            $urlfoto = $request->file("foto2");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto2.' . $urlfoto->extension();
-
-            $propiedad->foto2 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto2.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto2')) {
-            if (file_exists(public_path($propiedad->foto2))) {
-                unlink(public_path($propiedad->foto2));
-                $propiedad->foto2 = "";
-            }
-        }
-
-        if ($request->hasFile('foto3')) {
-
-            $urlfoto = $request->file("foto3");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto3.' . $urlfoto->extension();
-
-            $propiedad->foto3 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto3.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto3')) {
-            if (file_exists(public_path($propiedad->foto3))) {
-                unlink(public_path($propiedad->foto3));
-                $propiedad->foto3 = "";
-            }
-        }
-
-        if ($request->hasFile('foto4')) {
-
-            $urlfoto = $request->file("foto4");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto4.' . $urlfoto->extension();
-
-            $propiedad->foto4 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto4.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto4')) {
-            if (file_exists(public_path($propiedad->foto4))) {
-                unlink(public_path($propiedad->foto4));
-                $propiedad->foto4 = "";
-            }
-        }
-
-        if ($request->hasFile('foto5')) {
-
-            $urlfoto = $request->file("foto5");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto5.' . $urlfoto->extension();
-
-            $propiedad->foto5 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto5.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto5')) {
-            if (file_exists(public_path($propiedad->foto5))) {
-                unlink(public_path($propiedad->foto5));
-                $propiedad->foto5 = "";
-            }
-        }
-
-        if ($request->hasFile('foto6')) {
-
-            $urlfoto = $request->file("foto6");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto6.' . $urlfoto->extension();
-
-            $propiedad->foto6 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto6.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto6')) {
-            if (file_exists(public_path($propiedad->foto6))) {
-                unlink(public_path($propiedad->foto6));
-                $propiedad->foto6 = "";
-            }
-        }
-
-        if ($request->hasFile('foto7')) {
-
-            $urlfoto = $request->file("foto7");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto7.' . $urlfoto->extension();
-
-            $propiedad->foto7 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto7.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto7')) {
-            if (file_exists(public_path($propiedad->foto7))) {
-                unlink(public_path($propiedad->foto7));
-                $propiedad->foto7 = "";
-            }
-        }
-
-        if ($request->hasFile('foto8')) {
-
-            $urlfoto = $request->file("foto8");
-
-            $ruta = public_path('/img/propiedades/img/' . $propiedad->referencia . '/') . 'foto8.' . $urlfoto->extension();
-
-            $propiedad->foto8 = '/img/propiedades/img/' . $propiedad->referencia . '/' . 'foto8.' . $urlfoto->extension();
-
-            copy($urlfoto->getRealPath(), $ruta);
-        }
-
-        if ($request->has('ckfoto8')) {
-            if (file_exists(public_path($propiedad->foto8))) {
-                unlink(public_path($propiedad->foto8));
-                $propiedad->foto8 = "";
+            if ($request->has('ckfoto' . $index)) {
+                $this->deletePropertyImage($propiedad, $field);
             }
         }
 
@@ -1647,9 +1251,119 @@ class PropiedadesController extends Controller
         $propiedad->metadescription = $request->metadescription;
 
         $propiedad->save();
+
+        $baseDirectory = public_path('img/propiedades/img');
+        if (is_dir($baseDirectory)) {
+            $referencedImages = Propiedad::query()
+                ->select(['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'])
+                ->get()
+                ->flatMap(function (Propiedad $property) {
+                    return [
+                        $property->foto_portada,
+                        $property->foto1,
+                        $property->foto2,
+                        $property->foto3,
+                        $property->foto4,
+                        $property->foto5,
+                        $property->foto6,
+                        $property->foto7,
+                        $property->foto8,
+                    ];
+                })
+                ->filter()
+                ->map(function ($path) {
+                    return str_replace('\\', '/', ltrim((string) $path, '/'));
+                })
+                ->unique()
+                ->flip()
+                ->all();
+
+            foreach (File::allFiles($baseDirectory) as $file) {
+                $absolutePath = $file->getPathname();
+                $relativePath = str_replace('\\', '/', ltrim(str_replace(public_path(), '', $absolutePath), '/'));
+
+                if (!array_key_exists($relativePath, $referencedImages)) {
+                    @unlink($absolutePath);
+                }
+            }
+
+            foreach (array_reverse(File::directories($baseDirectory)) as $directory) {
+                if (empty(File::files($directory)) && empty(File::directories($directory))) {
+                    @rmdir($directory);
+                }
+            }
+        }
+
         $this->misitemap();
 
         return Redirect::route('consultarpropiedades');
+    }
+
+    protected function ensurePropertyImageDirectory(Propiedad $propiedad): string
+    {
+        $directory = public_path('img/propiedades/img/' . $propiedad->referencia);
+
+        if (!is_dir($directory)) {
+            File::makeDirectory($directory, 0777, true, true);
+        }
+
+        return rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    }
+
+    protected function storeUploadedPropertyImage(Request $request, Propiedad $propiedad, string $field, string $basename): void
+    {
+        if (!$request->hasFile($field)) {
+            return;
+        }
+
+        $directory = $this->ensurePropertyImageDirectory($propiedad);
+        $this->deletePropertyImageArtifacts($directory, $basename, (string) data_get($propiedad, $field));
+
+        $uploadedFile = $request->file($field);
+        $extension = strtolower((string) ($uploadedFile->getClientOriginalExtension() ?: $uploadedFile->extension() ?: 'jpg'));
+        $filename = sprintf('%s-%s-%s.%s', $basename, now()->format('YmdHis'), Str::lower(Str::random(8)), $extension);
+
+        $uploadedFile->move($directory, $filename);
+
+        $propiedad->{$field} = '/img/propiedades/img/' . $propiedad->referencia . '/' . $filename;
+    }
+
+    protected function deletePropertyImage(Propiedad $propiedad, string $field): void
+    {
+        $currentPath = (string) data_get($propiedad, $field);
+
+        if ($currentPath === '') {
+            return;
+        }
+
+        $directory = $this->ensurePropertyImageDirectory($propiedad);
+        $basename = $field === 'foto_portada' ? 'portada' : $field;
+
+        $this->deletePropertyImageArtifacts($directory, $basename, $currentPath);
+        $propiedad->{$field} = '';
+    }
+
+    protected function deletePropertyImageArtifacts(string $directory, string $basename, ?string $currentPath = null): void
+    {
+        $targets = [];
+
+        foreach ([$directory . $basename . '.*', $directory . $basename . '-*'] as $pattern) {
+            foreach (glob($pattern) ?: [] as $match) {
+                $targets[] = $match;
+            }
+        }
+
+        if ($currentPath) {
+            $absoluteCurrentPath = public_path(ltrim($currentPath, '/'));
+            $targets[] = $absoluteCurrentPath;
+            $targets[] = $this->getWatermarkBackupPath($absoluteCurrentPath);
+        }
+
+        foreach (array_unique($targets) as $target) {
+            if (is_file($target)) {
+                @unlink($target);
+            }
+        }
     }
 
     protected function buildUniquePropertySlug(string $title, ?int $ignoreId = null): string
@@ -1677,6 +1391,68 @@ class PropiedadesController extends Controller
             $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
+    }
+
+    protected function syncPropertyImagesWithWatermark(Propiedad $propiedad, bool $withWatermark): void
+    {
+        $logoPath = public_path('assets/inmobiliaria/logo.png');
+
+        foreach (['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'] as $field) {
+            $relativePath = (string) data_get($propiedad, $field);
+
+            if ($relativePath === '') {
+                continue;
+            }
+
+            $absolutePath = public_path(ltrim($relativePath, '/'));
+
+            if (!file_exists($absolutePath)) {
+                continue;
+            }
+
+            try {
+                $backupPath = $this->getWatermarkBackupPath($absolutePath);
+
+                if ($withWatermark) {
+                    if (!file_exists($backupPath)) {
+                        copy($absolutePath, $backupPath);
+                    }
+
+                    if (!file_exists($logoPath)) {
+                        continue;
+                    }
+
+                    $base = Image::make($backupPath)->fit(850, 650);
+
+                    $targetLogoWidth = max(90, (int) round($base->width() * 0.18));
+                    $watermark = Image::make($logoPath)
+                        ->widen($targetLogoWidth, function ($constraint) {
+                            $constraint->upsize();
+                        })
+                        ->opacity(50);
+
+                    $base->insert($watermark, 'center')->save($absolutePath, 90);
+                } else {
+                    if (file_exists($backupPath)) {
+                        copy($backupPath, $absolutePath);
+                    } elseif (Storage::disk('local')->exists(ltrim($relativePath, '/'))) {
+                        file_put_contents($absolutePath, Storage::disk('local')->get(ltrim($relativePath, '/')));
+                    }
+                }
+            } catch (\Throwable $exception) {
+                Log::warning('No se pudo aplicar marca de agua a imagen de propiedad.', [
+                    'propiedad_id' => $propiedad->id,
+                    'field' => $field,
+                    'path' => $relativePath,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
+        }
+    }
+
+    protected function getWatermarkBackupPath(string $absolutePath): string
+    {
+        return $absolutePath . '.orig';
     }
 
     public function sectoresPorProvincia(Request $request)

@@ -30,11 +30,11 @@ class AiContentGeneratorService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => $this->systemPrompt($type),
+                    'content' => $this->systemPrompt($type, $instructions),
                 ],
                 [
                     'role' => 'user',
-                    'content' => $this->userPrompt($context, $instructions),
+                    'content' => $this->userPrompt($context, $type),
                 ],
             ],
         ];
@@ -65,15 +65,26 @@ class AiContentGeneratorService
 
         $parsed = $this->parseJsonPayload($content);
 
+        $descripcion = $this->sanitizeHtml((string) Arr::get($parsed, 'descripcion', ''), 8000);
+        if ($type === 'inmueble') {
+            $descripcion = $this->ensurePropertyHashtags($descripcion, $context);
+        }
+
+        $tituloSugerido = (string) Arr::get(
+            $parsed,
+            'titulo_sugerido',
+            Arr::get($parsed, 'titulo', '')
+        );
+
         return [
-            'descripcion'      => $this->sanitizeHtml((string) Arr::get($parsed, 'descripcion', ''), 8000),
+            'descripcion'      => $descripcion,
             'descripcion_corta' => $this->sanitizeText((string) Arr::get($parsed, 'descripcion_corta', ''), 160),
             'metadescription'  => $this->sanitizeText((string) Arr::get($parsed, 'metadescription', ''), 160),
-            'titulo_sugerido'  => $this->sanitizeText((string) Arr::get($parsed, 'titulo_sugerido', ''), 60),
+            'titulo_sugerido'  => $this->sanitizeText($tituloSugerido, 60),
         ];
     }
 
-    protected function systemPrompt(string $type): string
+    protected function systemPrompt(string $type, string $instructions = ''): string
     {
         if ($type === 'asesor') {
             return <<<'PROMPT'
@@ -107,27 +118,55 @@ Reglas estrictas: sin hashtags, sin emojis, sin comillas decorativas, sin markdo
 PROMPT;
         }
 
+        $prompt = $this->inmuebleBasePrompt();
+
+        if ($instructions !== '') {
+            $prompt .= "\n\nInstrucciones del usuario que deben aplicarse a TODOS los campos generados (titulo_sugerido, descripcion_corta, metadescription y descripcion): {$instructions}.\nAdapta el tono, enfoque y vocabulario de todos los campos segun esas instrucciones.";
+        }
+
+        return $prompt;
+    }
+
+    protected function userPrompt(array $context, string $type = 'inmueble'): string
+    {
+        $contextJson = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        $locationRules = '';
+        if ($type === 'inmueble') {
+            $provincia = trim((string) Arr::get($context, 'provincia', ''));
+            $sector = trim((string) Arr::get($context, 'sector', ''));
+
+            if ($provincia !== '' || $sector !== '') {
+                $locationRules = "\nReglas obligatorias de ubicacion:\n"
+                    . "- Ubicacion de referencia: " . ($sector !== '' ? "Sector {$sector}" : 'Sector no especificado')
+                    . ", " . ($provincia !== '' ? "Provincia {$provincia}" : 'Provincia no especificada') . ".\n"
+                    . "- Usa solo esos datos para hablar de ubicacion.\n"
+                    . "- No menciones ciudades o zonas distintas (por ejemplo, Santo Domingo Este) a menos que coincidan exactamente con provincia o sector.\n"
+                    . "- Si los textos actuales del contexto contienen otra ubicacion, ignoralos para la ubicacion final.";
+            }
+        }
+
+        return "Contexto del registro:\n{$contextJson}{$locationRules}";
+    }
+
+    private function inmuebleBasePrompt(): string
+    {
         return <<<'PROMPT'
 Eres un asesor inmobiliario senior con mas de 15 anos vendiendo propiedades en Latinoamerica. Tu estilo es persuasivo, preciso y enfocado en el beneficio para el comprador o inversionista.
 Destacas la ubicacion, el estilo de vida, la rentabilidad potencial y los atributos unicos de cada propiedad. Creas deseo y urgencia de forma natural, sin exagerar.
 El texto debe estar en espanol neutro, orientado a ventas, con parrafos cortos y llamadas a la accion implícitas.
 
+Regla obligatoria de ubicacion: usa unicamente la provincia y el sector recibidos en el contexto como fuente de ubicacion.
+No inventes ni sustituyas ciudades, zonas o sectores diferentes. Si en textos previos del contexto hay otra ubicacion, debes ignorarla.
+
 Genera los textos para la ficha de un inmueble y responde UNICAMENTE en JSON valido con estas claves exactas:
-- "descripcion": HTML bien formateado con etiquetas <h2>, <p>, <ul>/<li> y <strong> donde corresponda. Minimo 250 palabras. Destaca los beneficios clave, el entorno, los acabados y el estilo de vida que ofrece la propiedad.
+- "descripcion": HTML bien formateado con etiquetas <h2>, <p>, <ul>/<li> y <strong> donde corresponda. Minimo 250 palabras. Destaca los beneficios clave, el entorno, los acabados y el estilo de vida que ofrece la propiedad. Incluye exactamente 3 hashtags inmobiliarios al final (por ejemplo: #Inmuebles #BienesRaices #HogarIdeal).
 - "descripcion_corta": texto plano, 80-160 caracteres, sin HTML, frase de gancho con el mayor atributo del inmueble.
 - "metadescription": texto plano, 120-160 caracteres, sin HTML, optimizado para SEO con llamada a la accion sutil.
 - "titulo_sugerido": texto plano, maximo 60 caracteres, titulo SEO atractivo y con palabra clave natural.
 
-Reglas estrictas: sin hashtags, sin emojis, sin comillas decorativas, sin markdown (solo HTML en "descripcion").
+Reglas estrictas: sin emojis, sin comillas decorativas, sin markdown (solo HTML en "descripcion").
 PROMPT;
-    }
-
-    protected function userPrompt(array $context, string $instructions): string
-    {
-        $contextJson = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $extra = $instructions !== '' ? "\nInstrucciones adicionales del usuario: {$instructions}" : '';
-
-        return "Contexto del registro:\n{$contextJson}{$extra}";
     }
 
     protected function parseJsonPayload(string $content): array
@@ -171,5 +210,76 @@ PROMPT;
         }
 
         return Str::limit($clean, $maxLength, '');
+    }
+
+    protected function ensurePropertyHashtags(string $description, array $context): string
+    {
+        if ($description === '') {
+            return '';
+        }
+
+        preg_match_all('/(^|[\s>])(#[\p{L}\p{N}_]+)/u', $description, $matches);
+        $existing = [];
+        foreach ((array) ($matches[2] ?? []) as $tag) {
+            $normalized = $this->normalizeHashtag($tag);
+            if ($normalized !== '' && !in_array($normalized, $existing, true)) {
+                $existing[] = $normalized;
+            }
+        }
+
+        if (count($existing) >= 3) {
+            return $description;
+        }
+
+        $candidateKeys = [
+            'tipo_propiedad',
+            'disponible_para',
+            'provincia',
+            'sector',
+            'estado',
+        ];
+
+        $candidates = [];
+        foreach ($candidateKeys as $key) {
+            $value = trim((string) Arr::get($context, $key, ''));
+            $tag = $this->normalizeHashtag($value);
+            if ($tag !== '' && !in_array($tag, $candidates, true)) {
+                $candidates[] = $tag;
+            }
+        }
+
+        $defaults = ['#Inmuebles', '#BienesRaices', '#HogarIdeal', '#TuNuevoHogar'];
+        $allTags = array_values(array_unique(array_merge($existing, $candidates, $defaults)));
+        $targetTags = array_slice($allTags, 0, 3);
+        $missingTags = array_values(array_diff($targetTags, $existing));
+
+        if ($missingTags === []) {
+            return $description;
+        }
+
+        return rtrim($description) . '<p>' . implode(' ', $missingTags) . '</p>';
+    }
+
+    protected function normalizeHashtag(string $value): string
+    {
+        $value = ltrim(trim($value), '#');
+        if ($value === '') {
+            return '';
+        }
+
+        $ascii = Str::ascii($value);
+        $ascii = preg_replace('/[^A-Za-z0-9\s]/', ' ', $ascii) ?? '';
+        $ascii = preg_replace('/\s+/', ' ', trim($ascii)) ?? '';
+
+        if ($ascii === '') {
+            return '';
+        }
+
+        $compact = str_replace(' ', '', ucwords(Str::lower($ascii)));
+        if ($compact === '') {
+            return '';
+        }
+
+        return '#' . substr($compact, 0, 24);
     }
 }

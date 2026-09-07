@@ -57,9 +57,6 @@
                             Importar contactos
                         </a>
                     @endif
-                    <a href="{{ route('propiedades.index') }}" class="btn btn-outline-secondary">
-                        Volver al listado
-                    </a>
                 </div>
             </div>
         </section>
@@ -78,10 +75,27 @@
             @csrf
 
             <div class="row g-4">
-                <div class="col-xl-8">
-                    <div class="card shadow-sm border-0 mb-4">
+                <div class="col-xl-8 property-form-sections">
+                    <div class="card shadow-sm border-0 mb-4 property-section-main">
                         <div class="card-body p-4">
                             <h2 class="section-title">Informacion principal</h2>
+
+                            <div class="form-group mb-2">
+                                <label for="ia_instrucciones_propiedad" class="font-weight-bold">Instrucciones para IA
+                                    (opcional)</label>
+                                <input type="text" class="form-control" id="ia_instrucciones_propiedad" maxlength="220"
+                                    placeholder="Ej: tono premium para inversionistas, enfocar rentabilidad y ubicacion">
+                                <small class="form-text text-muted">Despues de completar caracteristicas, la IA puede
+                                    generar titulo, descripcion y meta description.</small>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <button type="button" class="btn btn-outline-primary" id="btn-generar-ia-propiedad">
+                                    <span id="ia-propiedad-spinner" class="spinner-border spinner-border-sm mr-1 d-none"
+                                        role="status" aria-hidden="true"></span>
+                                    <span id="ia-propiedad-label">Generar textos con IA</span>
+                                </button>
+                            </div>
 
                             <div class="form-group mb-3">
                                 <label for="titulo" class="font-weight-bold">Titulo <span
@@ -103,23 +117,6 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label for="ia_instrucciones_propiedad" class="font-weight-bold">Instrucciones para IA
-                                    (opcional)</label>
-                                <input type="text" class="form-control" id="ia_instrucciones_propiedad" maxlength="220"
-                                    placeholder="Ej: tono premium para inversionistas, enfocar rentabilidad y ubicacion">
-                                <small class="form-text text-muted">La IA completara descripcion, descripcion corta y meta
-                                    description usando el contexto del inmueble.</small>
-                            </div>
-
-                            <div class="form-group mb-0">
-                                <button type="button" class="btn btn-outline-primary" id="btn-generar-ia-propiedad">
-                                    <span id="ia-propiedad-spinner" class="spinner-border spinner-border-sm mr-1 d-none"
-                                        role="status" aria-hidden="true"></span>
-                                    <span id="ia-propiedad-label">Generar textos con IA</span>
-                                </button>
-                            </div>
-
-                            <div class="form-group mb-3">
                                 <label for="descripcion" class="font-weight-bold">Descripcion completa <span
                                         class="text-danger">*</span></label>
                                 <textarea class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion"
@@ -135,7 +132,7 @@
                         </div>
                     </div>
 
-                    <div class="card shadow-sm border-0 mb-4">
+                    <div class="card shadow-sm border-0 mb-4 property-section-commercial">
                         <div class="card-body p-4">
                             <h2 class="section-title">Datos comerciales</h2>
 
@@ -143,8 +140,8 @@
                                 <div class="col-md-6 form-group">
                                     <label for="provincia" class="font-weight-bold">Provincia <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-control select2 @error('provincia') is-invalid @enderror"
-                                        name="provincia" id="provincia" required>
+                                    <select class="form-control @error('provincia') is-invalid @enderror" name="provincia"
+                                        id="provincia" required>
                                         <option value="">Selecciona una provincia</option>
                                         @foreach ($provincias as $provincia)
                                             <option value="{{ $provincia->id }}"
@@ -157,9 +154,8 @@
                                 <div class="col-md-6 form-group">
                                     <label for="sector_id" class="font-weight-bold">Sector <span
                                             class="text-danger">*</span></label>
-                                    <select
-                                        class="form-control select2 sector-select2 @error('sector_id') is-invalid @enderror"
-                                        name="sector_id" id="sector_id" required>
+                                    <select class="form-control @error('sector_id') is-invalid @enderror" name="sector_id"
+                                        id="sector_id" required>
                                         <option value="">Selecciona un sector</option>
                                         @foreach ($sectores as $sector)
                                             <option value="{{ $sector->id }}"
@@ -308,7 +304,7 @@
                         </div>
                     </div>
 
-                    <div class="card shadow-sm border-0 mb-4">
+                    <div class="card shadow-sm border-0 mb-4 property-section-amenities">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
                                 <h2 class="section-title mb-0">Amenidades y estado</h2>
@@ -325,6 +321,11 @@
                                     <input type="checkbox" name="vendida" id="vendida"
                                         {{ old('vendida') ? 'checked' : '' }}>
                                     <span>Vendida</span>
+                                </label>
+                                <label class="toggle-chip">
+                                    <input type="checkbox" name="marcadeagua" id="marcadeagua"
+                                        {{ old('marcadeagua', 0) ? 'checked' : '' }}>
+                                    <span>Aplicar marca de agua del logo</span>
                                 </label>
                             </div>
 
@@ -487,6 +488,23 @@
             font-weight: 700;
             color: var(--brand-900);
             margin-bottom: 1rem;
+        }
+
+        .property-form-sections {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-section-commercial {
+            order: 1;
+        }
+
+        .property-section-amenities {
+            order: 2;
+        }
+
+        .property-section-main {
+            order: 3;
         }
 
         .sticky-media-card {
@@ -789,7 +807,7 @@
                 label: 'Parqueos'
             },
         ];
-        const nonAmenityToggleIds = new Set(['destacada', 'vendida', 'activa', 'aprobada']);
+        const nonAmenityToggleIds = new Set(['destacada', 'vendida', 'activa', 'aprobada', 'marcadeagua']);
 
         const getEditorContent = () => {
             if (window.__propiedadDescripcionEditor) {
@@ -883,56 +901,11 @@
 
         const provinciaSelect = document.getElementById('provincia');
         const sectorSelect = document.getElementById('sector_id');
-        const monedaSelect = document.getElementById('tipomoneda');
-
-        const getSelectTargetHeight = () => Math.max(monedaSelect?.offsetHeight || 0, 38);
-
-        const applyProvinciaSelect2Height = () => {
-            if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !provinciaSelect) {
-                return;
-            }
-
-            const targetHeight = getSelectTargetHeight();
-            const renderedLineHeight = Math.max(targetHeight - 2, 36);
-            const container = window.jQuery(provinciaSelect).next('.select2-container');
-
-            container.find('.select2-selection--single').css({
-                height: `${targetHeight}px`
-            });
-            container.find('.select2-selection__rendered').css({
-                lineHeight: `${renderedLineHeight}px`,
-                paddingLeft: '12px',
-                paddingRight: '28px'
-            });
-            container.find('.select2-selection__arrow').css({
-                height: `${targetHeight}px`
-            });
-        };
-
-        const applySectorSelect2Height = () => {
-            if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !sectorSelect) {
-                return;
-            }
-
-            const provinciaContainer = window.jQuery(provinciaSelect).next('.select2-container');
-            const provinciaSelection = provinciaContainer.find('.select2-selection--single');
-            const provinciaVisualHeight = provinciaSelection.length ? provinciaSelection.outerHeight() :
-                getSelectTargetHeight();
-            const container = window.jQuery(sectorSelect).next('.select2-container');
-            const targetHeight = Math.max(Number(provinciaVisualHeight) || 0, 38);
-            const renderedLineHeight = Math.max(targetHeight - 2, 36);
-            container.find('.select2-selection--single').css({
-                height: `${targetHeight}px`
-            });
-            container.find('.select2-selection__rendered').css({
-                lineHeight: `${renderedLineHeight}px`,
-                paddingLeft: '12px',
-                paddingRight: '28px'
-            });
-            container.find('.select2-selection__arrow').css({
-                height: `${targetHeight}px`
-            });
-        };
+        const allSectorOptions = sectorSelect ? Array.from(sectorSelect.options).map((option) => ({
+            value: option.value,
+            text: option.text,
+            provincia: option.dataset.provincia || ''
+        })) : [];
 
         const refreshSectorOptions = () => {
             if (!provinciaSelect || !sectorSelect) {
@@ -943,51 +916,33 @@
             const currentValue = sectorSelect.value;
             let hasCurrent = false;
 
-            Array.from(sectorSelect.options).forEach((option) => {
-                if (!option.value) {
-                    option.hidden = false;
+            sectorSelect.innerHTML = '';
+
+            allSectorOptions.forEach((item) => {
+                if (item.value && provinciaValue && item.provincia !== provinciaValue) {
                     return;
                 }
 
-                const matches = !provinciaValue || option.dataset.provincia === provinciaValue;
-                option.hidden = !matches;
-                if (!matches && option.selected) {
-                    option.selected = false;
+                const option = document.createElement('option');
+                option.value = item.value;
+                option.text = item.text;
+
+                if (item.provincia) {
+                    option.dataset.provincia = item.provincia;
                 }
 
-                if (matches && option.value === currentValue) {
+                if (item.value && item.value === currentValue) {
+                    option.selected = true;
                     hasCurrent = true;
                 }
+
+                sectorSelect.appendChild(option);
             });
 
             if (!hasCurrent) {
                 sectorSelect.value = '';
             }
-
-            if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
-                window.jQuery(sectorSelect).trigger('change.select2');
-            }
         };
-
-        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
-            if (!window.jQuery(provinciaSelect).hasClass('select2-hidden-accessible')) {
-                window.jQuery(provinciaSelect).select2({
-                    width: '100%',
-                    placeholder: 'Selecciona una provincia'
-                });
-            }
-
-            if (!window.jQuery(sectorSelect).hasClass('select2-hidden-accessible')) {
-                window.jQuery(sectorSelect).select2({
-                    width: '100%',
-                    placeholder: 'Selecciona un sector'
-                });
-            }
-
-            applyProvinciaSelect2Height();
-            applySectorSelect2Height();
-            window.jQuery(provinciaSelect).on('change.select2', applySectorSelect2Height);
-        }
 
         provinciaSelect?.addEventListener('change', refreshSectorOptions);
         refreshSectorOptions();
@@ -1051,7 +1006,7 @@
                     }
 
                     const data = result.data || {};
-                    if (data.titulo_sugerido && tituloField && !tituloField.value) {
+                    if (data.titulo_sugerido && tituloField) {
                         tituloField.value = data.titulo_sugerido;
                     }
 

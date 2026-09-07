@@ -39,8 +39,11 @@ class AiContentController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'ok' => false,
-                'message' => (string) Arr::first(Arr::flatten($e->errors()),
-                    'Completa los campos requeridos para generar con IA.'),
+                'message' => (string) Arr::first(
+                    Arr::flatten($e->errors()),
+                    null,
+                    'Completa los campos requeridos para generar con IA.'
+                ),
                 'errors' => $e->errors(),
             ], 422);
         } catch (Throwable $e) {
@@ -59,9 +62,14 @@ class AiContentController extends Controller
     protected function sanitizeContext(array $context): array
     {
         $sanitized = [];
+        $blockedKeys = ['direccion', 'direccion_actual', 'address'];
 
         foreach ($context as $key => $value) {
             if (!is_string($key) || $key === '') {
+                continue;
+            }
+
+            if (in_array(mb_strtolower(trim($key)), $blockedKeys, true)) {
                 continue;
             }
 
@@ -91,8 +99,8 @@ class AiContentController extends Controller
         }
 
         $validator = Validator::make($context, [
-            'zona' => ['required', 'string', 'max:120'],
             'provincia' => ['required', 'string', 'max:120'],
+            'sector' => ['required', 'string', 'max:120'],
             'tipo_propiedad' => ['required', 'string', 'max:120'],
             'disponible_para' => ['required', 'string', 'max:120'],
             'estado' => ['required', 'string', 'max:120'],
@@ -103,8 +111,8 @@ class AiContentController extends Controller
             'amenidades' => ['required', 'array', 'min:1'],
             'amenidades.*' => ['required', 'string', 'max:120'],
         ], [
-            'zona.required' => 'Selecciona la zona en Datos comerciales antes de usar IA.',
             'provincia.required' => 'Selecciona la provincia en Datos comerciales antes de usar IA.',
+            'sector.required' => 'Selecciona el sector en Datos comerciales antes de usar IA.',
             'tipo_propiedad.required' => 'Selecciona el tipo de propiedad en Datos comerciales antes de usar IA.',
             'disponible_para.required' => 'Selecciona disponible para en Datos comerciales antes de usar IA.',
             'estado.required' => 'Selecciona el estado de propiedad antes de usar IA.',
@@ -117,11 +125,13 @@ class AiContentController extends Controller
         ]);
 
         $validator->after(function ($validator) use ($context) {
-            foreach (['zona', 'provincia', 'tipo_propiedad', 'disponible_para', 'estado', 'moneda'] as $key) {
+            foreach (['provincia', 'sector', 'tipo_propiedad', 'disponible_para', 'estado', 'moneda'] as $key) {
                 $value = mb_strtolower(trim((string) Arr::get($context, $key, '')));
                 if ($value !== '' && str_starts_with($value, 'selecciona')) {
-                    $validator->errors()->add($key,
-                        'Completa los campos de Datos comerciales y estado antes de usar IA.');
+                    $validator->errors()->add(
+                        $key,
+                        'Completa los campos de Datos comerciales y estado antes de usar IA.'
+                    );
                 }
             }
         });

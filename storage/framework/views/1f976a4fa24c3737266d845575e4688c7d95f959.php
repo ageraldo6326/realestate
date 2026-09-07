@@ -2,13 +2,40 @@
     <?php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
+        $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
+            $fallback ??= asset('assets/prop-apto-1.jpg');
+
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            $appendVersion = function (string $url) use ($version): string {
+                if (!$version) {
+                    return $url;
+                }
+
+                $separator = str_contains($url, '?') ? '&' : '?';
+
+                return $url . $separator . 'v=' . rawurlencode((string) $version);
+            };
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $appendVersion($value);
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/img/', '/assets/', 'img/', 'assets/'])) {
+                return $appendVersion(asset(ltrim($value, '/')));
+            }
+
+            return $appendVersion(asset('assets/' . ltrim($value, '/')));
+        };
     ?>
 
     <!-- FILTROS DE BÚSQUEDA -->
     <div class="lw-search-form mb-4">
-        <div class="row g-3 align-items-end">
+        <div class="row g-2 align-items-end flex-nowrap">
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col">
                 <label class="form-label lw-label" for="lw-provincia">Provincia</label>
                 <select id="lw-provincia" class="form-select lw-select" wire:model="provincia_id_criterio">
                     <option value="">Todas las provincias</option>
@@ -18,7 +45,7 @@
                 </select>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col">
                 <label class="form-label lw-label" for="lw-sector-barrio">Sector</label>
                 <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio">
                     <option value="">Todos los sectores</option>
@@ -28,7 +55,7 @@
                 </select>
             </div>
 
-            <div class="col-md-3 col-sm-6">
+            <div class="col">
                 <label class="form-label lw-label" for="lw-tipo">Tipo de propiedad</label>
                 <select id="lw-tipo" class="form-select lw-select" wire:model="tipo_id_criterio">
                     <option value="">Todos los tipos</option>
@@ -38,16 +65,14 @@
                 </select>
             </div>
 
-            <div class="col-md-3 col-sm-6">
-                <label class="form-label lw-label" for="lw-precio-ini">Precio mínimo</label>
-                <input type="text" id="lw-precio-ini" class="form-control lw-input" placeholder="Ej: 50,000"
-                    wire:model.debounce.500ms="precio_inicial">
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-                <label class="form-label lw-label" for="lw-precio-fin">Precio máximo</label>
-                <input type="text" id="lw-precio-fin" class="form-control lw-input" placeholder="Ej: 500,000"
-                    wire:model.debounce.500ms="precio_final">
+            <div class="col" style="min-width:220px;">
+                <label class="form-label lw-label">Margen de precio</label>
+                <div class="d-flex gap-1">
+                    <input type="text" id="lw-precio-ini" class="form-control lw-input" placeholder="Mín"
+                        wire:model.debounce.500ms="precio_inicial" aria-label="Precio mínimo">
+                    <input type="text" id="lw-precio-fin" class="form-control lw-input" placeholder="Máx"
+                        wire:model.debounce.500ms="precio_final" aria-label="Precio máximo">
+                </div>
             </div>
 
         </div>
@@ -83,7 +108,7 @@
                                 <a href="<?php echo e(route('propiedad', $propiedad->slug)); ?>"
                                     aria-label="<?php echo e($propiedad->titulo); ?>">
                                     <img loading="lazy"
-                                        src="<?php echo e(!empty($propiedad->foto_portada) ? asset('assets/' . $propiedad->foto_portada) : $propertyPlaceholder); ?>"
+                                        src="<?php echo e($resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder)); ?>"
                                         onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
                                         alt="<?php echo e($propiedad->titulo); ?>" title="<?php echo e($propiedad->titulo); ?>">
                                 </a>

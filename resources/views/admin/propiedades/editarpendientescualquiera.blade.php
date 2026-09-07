@@ -238,7 +238,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="provincia">Provincia</label>
-                                <select class="form-control select2" name="provincia" id="provincia" required>
+                                <select class="form-control" name="provincia" id="provincia" required>
                                     <option value="">Selecciona una provincia</option>
                                     @foreach ($provincias as $provinciaItem)
                                         <option value="{{ $provinciaItem->id }}"
@@ -252,8 +252,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="sector_id">Sector</label>
-                                <select class="form-control select2 sector-select2" name="sector_id" id="sector_id"
-                                    required>
+                                <select class="form-control" name="sector_id" id="sector_id" required>
                                     <option value="">Selecciona un sector</option>
                                     @foreach ($sectores as $sector)
                                         <option value="{{ $sector->id }}" data-provincia="{{ $sector->provincia_id }}"
@@ -817,56 +816,11 @@
 
             const provinciaSelect = document.getElementById('provincia');
             const sectorSelect = document.getElementById('sector_id');
-            const monedaSelect = document.getElementById('tipomoneda');
-
-            const getSelectTargetHeight = () => Math.max(monedaSelect?.offsetHeight || 0, 38);
-
-            const applyProvinciaSelect2Height = () => {
-                if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !provinciaSelect) {
-                    return;
-                }
-
-                const targetHeight = getSelectTargetHeight();
-                const renderedLineHeight = Math.max(targetHeight - 2, 36);
-                const container = window.jQuery(provinciaSelect).next('.select2-container');
-
-                container.find('.select2-selection--single').css({
-                    height: `${targetHeight}px`
-                });
-                container.find('.select2-selection__rendered').css({
-                    lineHeight: `${renderedLineHeight}px`,
-                    paddingLeft: '12px',
-                    paddingRight: '28px'
-                });
-                container.find('.select2-selection__arrow').css({
-                    height: `${targetHeight}px`
-                });
-            };
-
-            const applySectorSelect2Height = () => {
-                if (!(window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) || !sectorSelect) {
-                    return;
-                }
-
-                const provinciaContainer = window.jQuery(provinciaSelect).next('.select2-container');
-                const provinciaSelection = provinciaContainer.find('.select2-selection--single');
-                const provinciaVisualHeight = provinciaSelection.length ? provinciaSelection.outerHeight() :
-                    getSelectTargetHeight();
-                const container = window.jQuery(sectorSelect).next('.select2-container');
-                const targetHeight = Math.max(Number(provinciaVisualHeight) || 0, 38);
-                const renderedLineHeight = Math.max(targetHeight - 2, 36);
-                container.find('.select2-selection--single').css({
-                    height: `${targetHeight}px`
-                });
-                container.find('.select2-selection__rendered').css({
-                    lineHeight: `${renderedLineHeight}px`,
-                    paddingLeft: '12px',
-                    paddingRight: '28px'
-                });
-                container.find('.select2-selection__arrow').css({
-                    height: `${targetHeight}px`
-                });
-            };
+            const allSectorOptions = sectorSelect ? Array.from(sectorSelect.options).map((option) => ({
+                value: option.value,
+                text: option.text,
+                provincia: option.dataset.provincia || ''
+            })) : [];
 
             const refreshSectorOptions = () => {
                 if (!provinciaSelect || !sectorSelect) {
@@ -877,56 +831,35 @@
                 const currentValue = sectorSelect.value;
                 let hasCurrent = false;
 
-                Array.from(sectorSelect.options).forEach((option) => {
-                    if (!option.value) {
-                        option.hidden = false;
+                sectorSelect.innerHTML = '';
+
+                allSectorOptions.forEach((item) => {
+                    if (item.value && provinciaValue && item.provincia !== provinciaValue) {
                         return;
                     }
 
-                    const matches = !provinciaValue || option.dataset.provincia === provinciaValue;
-                    option.hidden = !matches;
+                    const option = document.createElement('option');
+                    option.value = item.value;
+                    option.text = item.text;
 
-                    if (!matches && option.selected) {
-                        option.selected = false;
+                    if (item.provincia) {
+                        option.dataset.provincia = item.provincia;
                     }
 
-                    if (matches && option.value === currentValue) {
+                    if (item.value && item.value === currentValue) {
+                        option.selected = true;
                         hasCurrent = true;
                     }
+
+                    sectorSelect.appendChild(option);
                 });
 
                 if (!hasCurrent) {
                     sectorSelect.value = '';
                 }
-
-                if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
-                    window.jQuery(sectorSelect).trigger('change.select2');
-                }
             };
 
-            if (window.jQuery && window.jQuery.fn && window.jQuery.fn.select2) {
-                if (!window.jQuery(provinciaSelect).hasClass('select2-hidden-accessible')) {
-                    window.jQuery(provinciaSelect).select2({
-                        width: '100%',
-                        placeholder: 'Selecciona una provincia'
-                    });
-                }
-
-                if (!window.jQuery(sectorSelect).hasClass('select2-hidden-accessible')) {
-                    window.jQuery(sectorSelect).select2({
-                        width: '100%',
-                        placeholder: 'Selecciona un sector'
-                    });
-                }
-
-                applyProvinciaSelect2Height();
-                applySectorSelect2Height();
-                window.jQuery(provinciaSelect).on('change.select2', applySectorSelect2Height);
-            }
-
-            provinciaSelect?.addEventListener('change', () => {
-                refreshSectorOptions();
-            });
+            provinciaSelect?.addEventListener('change', refreshSectorOptions);
             refreshSectorOptions();
         })();
     </script>

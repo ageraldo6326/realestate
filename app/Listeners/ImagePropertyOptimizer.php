@@ -5,8 +5,8 @@ namespace App\Listeners;
 use App\Events\PropertySaved;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Storage;
 
 class ImagePropertyOptimizer implements ShouldQueue
 {
@@ -28,149 +28,67 @@ class ImagePropertyOptimizer implements ShouldQueue
      */
     public function handle(PropertySaved $event)
     {
-
-
-
-
         try {
+            $withWatermark = (bool) $event->propiedad->marcadeagua;
 
-            if ($event->propiedad->foto_portada != null && $event->propiedad->foto_portada != "") {
-                if ($event->propiedad->marcadeagua == 1) {
+            foreach (['foto_portada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8'] as $field) {
+                $relativePath = (string) data_get($event->propiedad, $field);
 
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto_portada))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto_portada));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto_portada))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto_portada));
+                if ($relativePath === '') {
+                    continue;
                 }
-            }
 
-            if ($event->propiedad->foto1 != null && $event->propiedad->foto1 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto1))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto1));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto1))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto1));
+                $absolutePath = public_path(ltrim($relativePath, '/'));
+                if (!file_exists($absolutePath)) {
+                    continue;
                 }
-            }
 
-            if ($event->propiedad->foto2 != null && $event->propiedad->foto2 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto2))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto2));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto2))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto2));
-                }
-            }
-
-            if ($event->propiedad->foto3 != null && $event->propiedad->foto3 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto3))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto3));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto3))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto3));
-                }
-            }
-
-            if ($event->propiedad->foto4 != null && $event->propiedad->foto4 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto4))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto4));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto4))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto4));
-                }
-            }
-
-            if ($event->propiedad->foto5 != null && $event->propiedad->foto5 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto5))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto5));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto5))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto5));
-                }
-            }
-
-            if ($event->propiedad->foto6 != null && $event->propiedad->foto6 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto6))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto6));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto6))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto6));
-                }
-            }
-
-            if ($event->propiedad->foto7 != null && $event->propiedad->foto7 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto7))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto7));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto7))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto7));
-                }
-            }
-
-            if ($event->propiedad->foto8 != null && $event->propiedad->foto8 != "") {
-                if ($event->propiedad->marcadeagua == 1) {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto8))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->insert(Storage::disk('local')->get('inmobiliaria/logo.png'), 'center', 10, 10, 20)
-                        ->save(public_path('assets/' . $event->propiedad->foto8));
-                } else {
-                    Image::make(Storage::disk('local')->get($event->propiedad->foto8))
-                        ->encode('webp', 90)
-                        ->limitColors(255)->fit(850, 650)
-                        ->save(public_path('assets/' . $event->propiedad->foto8));
-                }
+                $this->processImage($absolutePath, $withWatermark, (int) $event->propiedad->id, $field, $relativePath);
             }
         } catch (\Throwable $th) {
             Log::error($th);
+        }
+    }
+
+    protected function processImage(string $absolutePath, bool $withWatermark, int $propertyId, string $field, string $relativePath): void
+    {
+        try {
+            $backupPath = $absolutePath . '.orig';
+
+            if ($withWatermark) {
+                if (!file_exists($backupPath)) {
+                    copy($absolutePath, $backupPath);
+                }
+
+                $logoPath = public_path('assets/inmobiliaria/logo.png');
+                if (!file_exists($logoPath)) {
+                    return;
+                }
+
+                $base = Image::make($backupPath)->fit(850, 650);
+                $targetLogoWidth = max(90, (int) round($base->width() * 0.18));
+                $watermark = Image::make($logoPath)
+                    ->widen($targetLogoWidth, function ($constraint) {
+                        $constraint->upsize();
+                    })
+                    ->opacity(50);
+
+                $base->insert($watermark, 'center')->save($absolutePath, 90);
+                return;
+            }
+
+            if (file_exists($backupPath)) {
+                copy($backupPath, $absolutePath);
+            } elseif (Storage::disk('local')->exists(ltrim($relativePath, '/'))) {
+                file_put_contents($absolutePath, Storage::disk('local')->get(ltrim($relativePath, '/')));
+            }
+        } catch (\Throwable $exception) {
+            Log::warning('No se pudo procesar imagen de propiedad.', [
+                'propiedad_id' => $propertyId,
+                'field' => $field,
+                'path' => $relativePath,
+                'error' => $exception->getMessage(),
+            ]);
         }
     }
 }

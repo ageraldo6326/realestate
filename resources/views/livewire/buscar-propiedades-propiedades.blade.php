@@ -1,12 +1,39 @@
 <div>
     @php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+        $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
+            $fallback ??= asset('assets/prop-apto-1.jpg');
+
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            $appendVersion = function (string $url) use ($version): string {
+                if (!$version) {
+                    return $url;
+                }
+
+                $separator = str_contains($url, '?') ? '&' : '?';
+
+                return $url . $separator . 'v=' . rawurlencode((string) $version);
+            };
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $appendVersion($value);
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/img/', '/assets/', 'img/', 'assets/'])) {
+                return $appendVersion(asset(ltrim($value, '/')));
+            }
+
+            return $appendVersion(asset('assets/' . ltrim($value, '/')));
+        };
     @endphp
 
     <!-- FILTER BAR -->
     <div class="filter-bar">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-3 col-sm-6">
+        <div class="row g-2 align-items-end flex-nowrap">
+            <div class="col">
                 <label class="form-label" for="lw-provincia">Provincia</label>
                 <select id="lw-provincia" class="form-select" wire:model="provincia_id_criterio">
                     <option value="">Todas las provincias</option>
@@ -15,7 +42,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col">
                 <label class="form-label" for="lw-sector-barrio">Sector</label>
                 <select id="lw-sector-barrio" class="form-select" wire:model="sector_barrio_criterio">
                     <option value="">Todos los sectores</option>
@@ -24,7 +51,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 col-sm-6">
+            <div class="col">
                 <label class="form-label" for="lw-tipo">Tipo</label>
                 <select id="lw-tipo" class="form-select" wire:model="tipo_id_criterio">
                     <option value="">Todos los tipos</option>
@@ -33,15 +60,14 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <label class="form-label" for="lw-min">Precio mínimo</label>
-                <input id="lw-min" type="number" class="form-control" placeholder="Desde..."
-                    wire:model.debounce.500ms="precio_inicial">
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <label class="form-label" for="lw-max">Precio máximo</label>
-                <input id="lw-max" type="number" class="form-control" placeholder="Hasta..."
-                    wire:model.debounce.500ms="precio_final">
+            <div class="col" style="min-width:220px;">
+                <label class="form-label">Margen de precio</label>
+                <div class="d-flex gap-1">
+                    <input id="lw-min" type="number" class="form-control" placeholder="Desde..."
+                        wire:model.debounce.500ms="precio_inicial" aria-label="Precio mínimo">
+                    <input id="lw-max" type="number" class="form-control" placeholder="Hasta..."
+                        wire:model.debounce.500ms="precio_final" aria-label="Precio máximo">
+                </div>
             </div>
         </div>
     </div>
@@ -64,7 +90,7 @@
                     <div class="card-img-wrap">
                         <a href="{{ route('propiedad', $propiedad->slug) }}" aria-label="{{ $propiedad->titulo }}">
                             <img loading="lazy"
-                                src="{{ !empty($propiedad->foto_portada) ? asset('assets/' . $propiedad->foto_portada) : $propertyPlaceholder }}"
+                                src="{{ $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder) }}"
                                 onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                 alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
                         </a>

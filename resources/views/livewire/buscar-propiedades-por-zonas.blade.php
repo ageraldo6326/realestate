@@ -1,6 +1,33 @@
 <div>
     @php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
+        $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
+            $fallback ??= asset('assets/prop-apto-1.jpg');
+
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            $appendVersion = function (string $url) use ($version): string {
+                if (!$version) {
+                    return $url;
+                }
+
+                $separator = str_contains($url, '?') ? '&' : '?';
+
+                return $url . $separator . 'v=' . rawurlencode((string) $version);
+            };
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $appendVersion($value);
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/img/', '/assets/', 'img/', 'assets/'])) {
+                return $appendVersion(asset(ltrim($value, '/')));
+            }
+
+            return $appendVersion(asset('assets/' . ltrim($value, '/')));
+        };
     @endphp
 
     <!-- SECTION HEADER -->
@@ -18,7 +45,7 @@
                     <div class="card-img-wrap">
                         <a href="{{ route('propiedad', $propiedad->slug) }}" aria-label="{{ $propiedad->titulo }}">
                             <img loading="lazy"
-                                src="{{ !empty($propiedad->foto_portada) ? asset('assets/' . $propiedad->foto_portada) : $propertyPlaceholder }}"
+                                src="{{ $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder) }}"
                                 onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                 alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
                         </a>

@@ -12,6 +12,33 @@
     @php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $agentPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
+        $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
+            $fallback ??= asset('assets/prop-apto-1.jpg');
+
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            $appendVersion = function (string $url) use ($version): string {
+                if (!$version) {
+                    return $url;
+                }
+
+                $separator = str_contains($url, '?') ? '&' : '?';
+
+                return $url . $separator . 'v=' . rawurlencode((string) $version);
+            };
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $appendVersion($value);
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/img/', '/assets/', 'img/', 'assets/'])) {
+                return $appendVersion(asset(ltrim($value, '/')));
+            }
+
+            return $appendVersion(asset('assets/' . ltrim($value, '/')));
+        };
         $images = collect([
             $propiedad->foto_portada,
             $propiedad->foto1,
@@ -34,7 +61,7 @@
             ? 'https://api.whatsapp.com/send/?phone=' . $telefonoAsesor . '&text=' . urlencode($whatsAppMessage)
             : null;
 
-        $avatarSource = optional($usuario)->foto ?: ($propiedad->foto_vendedor ?? '');
+        $avatarSource = optional($usuario)->foto ?: $propiedad->foto_vendedor ?? '';
         if (!empty($avatarSource) && \Illuminate\Support\Str::startsWith($avatarSource, ['http://', 'https://'])) {
             $agentAvatarUrl = $avatarSource;
         } elseif (!empty($avatarSource) && \Illuminate\Support\Str::startsWith($avatarSource, '/')) {
@@ -124,7 +151,7 @@
                                         @foreach ($images as $index => $image)
                                             <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                                                 <img loading="lazy"
-                                                    src="{{ !empty($image) ? asset('assets/' . $image) : $propertyPlaceholder }}"
+                                                    src="{{ $resolvePropertyImage($image, optional($propiedad)->updated_at, $propertyPlaceholder) }}"
                                                     onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                                     alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}"
                                                     class="w-100 d-block" style="height: 400px; object-fit: cover;">
@@ -156,7 +183,7 @@
                                                 style="width: 80px; height: 60px;"
                                                 aria-label="Ir a imagen {{ $index + 1 }}">
                                                 <img loading="lazy"
-                                                    src="{{ !empty($image) ? asset('assets/' . $image) : $propertyPlaceholder }}"
+                                                    src="{{ $resolvePropertyImage($image, optional($propiedad)->updated_at, $propertyPlaceholder) }}"
                                                     onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                                     alt="Miniatura {{ $index + 1 }}" class="w-100 h-100"
                                                     style="object-fit: cover;">
@@ -271,7 +298,7 @@
                     @if (!empty($propiedad->video1))
                         @php
                             $rawVideo = trim($propiedad->video1);
-                            $videoId  = $rawVideo;
+                            $videoId = $rawVideo;
 
                             if (str_contains($rawVideo, 'watch?v=')) {
                                 parse_str(parse_url($rawVideo, PHP_URL_QUERY), $qs);
@@ -308,8 +335,7 @@
                     <!-- Agent Card (Sticky) -->
                     <aside class="agent-card card shadow-sm border-0 sticky-lg-top mb-4" style="top: 20px;">
                         <div class="card-body text-center">
-                            <img class="rounded-circle mb-3"
-                                src="{{ $agentAvatarUrl }}"
+                            <img class="rounded-circle mb-3" src="{{ $agentAvatarUrl }}"
                                 onerror="this.onerror=null;this.src='{{ $agentPlaceholder }}';"
                                 alt="{{ $usuario->name ?? 'Asesor inmobiliario' }}"
                                 title="{{ $usuario->name ?? 'Asesor inmobiliario' }}" loading="lazy"
@@ -412,7 +438,7 @@
                                 <a href="{{ route('propiedad', $prop->slug) }}" class="text-decoration-none text-dark">
                                     <div class="position-relative overflow-hidden" style="height: 200px;">
                                         <img loading="lazy"
-                                            src="{{ !empty($prop->foto_portada) ? asset('assets/' . $prop->foto_portada) : $propertyPlaceholder }}"
+                                            src="{{ $resolvePropertyImage($prop->foto_portada, optional($prop)->updated_at, $propertyPlaceholder) }}"
                                             onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $prop->titulo }}" class="w-100 h-100"
                                             style="object-fit: cover; transition: transform 0.3s ease;">
