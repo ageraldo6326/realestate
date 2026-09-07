@@ -116,7 +116,7 @@ Route::middleware(['auth', 'enforce.superadmin.password.rotation'])->group(funct
         ->name('admin.superadmin.password.update');
 });
 
-Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:admin']], function () {
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:admin|superadmin']], function () {
 
 
 
@@ -170,7 +170,7 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
 
 //  Opciones para asesores
 
-Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:asesor|admin']], function () {
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:asesor|admin|superadmin']], function () {
 
     Route::get('/admin/dashboard', function () {
         $user    = Auth::user();
@@ -219,7 +219,7 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
 });
 
 
-Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
+Route::group(['middleware' => ['auth', 'role:asesor|admin|superadmin']], function () {
 
     Route::post('/admin/ai/generar-contenido', [AiContentController::class, 'generate'])
         ->middleware('throttle:20,1')
