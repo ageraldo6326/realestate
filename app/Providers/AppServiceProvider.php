@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
 use App\Services\Branding\CompanyBrandingService;
@@ -32,7 +33,9 @@ class AppServiceProvider extends ServiceProvider
         $this->ensurePublicAssetDirectories();
 
         Paginator::useBootstrap();
-        $inmo = InmobiliariaService::get();
+        $inmo = Schema::hasTable('inmobiliarias')
+            ? InmobiliariaService::get()
+            : null;
         $frontendTheme = app(CompanyBrandingService::class)->resolveCssVariables($inmo);
         View::share('inmo', $inmo);
         View::share('frontendTheme', $frontendTheme);
