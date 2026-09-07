@@ -9,7 +9,7 @@ class UpdateUsuarioRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return (bool) optional($this->user())->hasRole('admin');
+        return (bool) optional($this->user())->hasAnyRole(['admin', 'superadmin']);
     }
 
     protected function prepareForValidation(): void
