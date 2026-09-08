@@ -79,8 +79,8 @@
     </div>
 
     <!-- INDICADOR DE CARGA: solo durante actualizaciones de filtros -->
-    <div wire:loading.delay.shortest
-        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final,updatingProvinciaIdCriterio"
+    <div wire:loading.flex.delay.shortest
+        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final"
         class="lw-loading">
         <div class="spinner-border spinner-border-sm" role="status" style="color:var(--clr-accent)">
             <span class="visually-hidden">Cargando...</span>
@@ -261,7 +261,6 @@
         }
 
         .lw-loading {
-            display: flex;
             align-items: center;
             gap: .75rem;
             padding: .75rem 0;
