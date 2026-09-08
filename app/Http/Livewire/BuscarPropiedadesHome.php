@@ -11,11 +11,21 @@ use Illuminate\Support\Facades\DB;
 
 class BuscarPropiedadesHome extends Component
 {
-    public $provincia_id_criterio = "", $sector_barrio_criterio = "", $tipo_id_criterio = "", $precio_inicial = "", $precio_final = "";
+    public $titulo_criterio = '';
+    public $provincia_id_criterio = '';
+    public $sector_barrio_criterio = '';
+    public $tipo_id_criterio = '';
+    public $precio_inicial = '';
+    public $precio_final = '';
 
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
+
+    public function updatingTituloCriterio(): void
+    {
+        $this->resetPage();
+    }
 
     public function updatingProvinciaIdCriterio()
     {
@@ -140,6 +150,10 @@ class BuscarPropiedadesHome extends Component
         );
 
         $propiedades->where('activa', '=', 1);
+
+        if (filled($this->titulo_criterio)) {
+            $propiedades->where('propiedads.titulo', 'like', '%' . trim($this->titulo_criterio) . '%');
+        }
 
         if (filled($this->provincia_id_criterio)) {
             $propiedades->where('propiedads.provincia', $this->provincia_id_criterio);

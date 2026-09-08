@@ -19,13 +19,6 @@ class HomeController extends Controller
 
         $portadas = CatalogoService::portadas();
 
-        $provincias = CatalogoService::provincias();
-        $sectores = CatalogoService::sectores();
-
-        $disponibles_para = CatalogoService::disponiblePara();
-
-        $tipos_propiedades = CatalogoService::tipos();
-
         $testimonios = CatalogoService::testimonios();
 
         $enfoques = CatalogoService::enfoques();
@@ -134,7 +127,7 @@ class HomeController extends Controller
 
         $pro_destacadas = $pro_destacadas->get();
 
-        return view('frontend.home', compact('portadas', 'provincias', 'sectores', 'pro_destacadas', 'disponibles_para', 'tipos_propiedades', 'testimonios', 'inmobiliaria', 'enfoques', 'posts'));
+        return view('frontend.home', compact('portadas', 'pro_destacadas', 'testimonios', 'inmobiliaria', 'enfoques', 'posts'));
     }
 
     public function Buscar($tabla, $campo, $valor)

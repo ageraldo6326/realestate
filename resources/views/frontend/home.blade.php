@@ -71,49 +71,6 @@
                     @endphp
                     <h1 class="hero-title">{{ $rest }} <span class="text-accent">{{ $last }}</span></h1>
                     <p class="hero-desc">{{ $heroDesc }}</p>
-                    <!-- Búsqueda rápida: lleva al listado de propiedades -->
-                    <div class="hero-search-box mt-4">
-                        <div class="search-widget">
-                            <form method="GET" action="{{ route('listapropiedades') }}" role="search">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-provincia">Provincia</label>
-                                        <select name="provincia_id" id="hero-provincia" class="form-select">
-                                            <option value="">Selecciona provincia</option>
-                                            @foreach ($provincias as $provincia)
-                                                <option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-sector">Sector</label>
-                                        <select name="sector_id" id="hero-sector" class="form-select">
-                                            <option value="">Selecciona sector</option>
-                                            @foreach ($sectores as $sector)
-                                                <option value="{{ $sector->id }}"
-                                                    data-provincia="{{ $sector->provincia_id }}">{{ $sector->sector }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-tipo">Tipo de propiedad</label>
-                                        <select name="tipo_id" id="hero-tipo" class="form-select">
-                                            <option value="">Selecciona tipo</option>
-                                            @foreach ($tipos_propiedades as $tipo)
-                                                <option value="{{ $tipo->id }}">{{ $tipo->tipo }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6 d-grid">
-                                        <button type="submit" class="btn-search">
-                                            <i class="fas fa-magnifying-glass"></i> Buscar
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -449,10 +406,6 @@
             max-width: 460px
         }
 
-        .hero-search-box .search-widget {
-            max-width: 560px
-        }
-
         .benefits-section {
             padding: 2.5rem 0;
             background: var(--clr-white);
@@ -761,34 +714,4 @@
         }
     </style>
 
-@endsection
-
-@section('extra_scripts')
-    <script>
-        (function() {
-            var provSel = document.getElementById('hero-provincia');
-            var sectorSel = document.getElementById('hero-sector');
-            if (!provSel || !sectorSel) return;
-
-            var allOptions = Array.from(sectorSel.options);
-
-            function filterSectores() {
-                var val = provSel.value;
-                sectorSel.innerHTML = '';
-                var first = new Option('Selecciona sector', '');
-                sectorSel.appendChild(first);
-                allOptions.forEach(function(opt) {
-                    if (opt.value === '') return;
-                    if (!val || opt.dataset.provincia === val) {
-                        sectorSel.appendChild(opt.cloneNode(true));
-                    }
-                });
-                sectorSel.value = '';
-            }
-
-            provSel.addEventListener('change', filterSectores);
-
-            if (provSel.value) filterSectores();
-        })();
-    </script>
 @endsection

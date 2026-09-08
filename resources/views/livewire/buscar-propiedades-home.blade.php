@@ -33,9 +33,15 @@
 
     <!-- FILTROS DE BÚSQUEDA -->
     <div class="lw-search-form mb-4">
-        <div class="row g-2 align-items-end flex-nowrap">
+        <div class="lw-search-grid">
+            <div class="lw-field lw-field-title">
+                <label class="form-label lw-label" for="lw-titulo">Título</label>
+                <input type="search" id="lw-titulo" class="form-control lw-input"
+                    placeholder="Ej. Apartamento en Piantini" wire:model.debounce.500ms="titulo_criterio"
+                    autocomplete="off">
+            </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-provincia">Provincia</label>
                 <select id="lw-provincia" class="form-select lw-select" wire:model="provincia_id_criterio">
                     <option value="">Todas las provincias</option>
@@ -45,7 +51,7 @@
                 </select>
             </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-sector-barrio">Sector</label>
                 <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio">
                     <option value="">Todos los sectores</option>
@@ -55,7 +61,7 @@
                 </select>
             </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-tipo">Tipo de propiedad</label>
                 <select id="lw-tipo" class="form-select lw-select" wire:model="tipo_id_criterio">
                     <option value="">Todos los tipos</option>
@@ -65,9 +71,9 @@
                 </select>
             </div>
 
-            <div class="col" style="min-width:220px;">
+            <div class="lw-field lw-field-price">
                 <label class="form-label lw-label">Margen de precio</label>
-                <div class="d-flex gap-1">
+                <div class="lw-price-grid">
                     <input type="text" id="lw-precio-ini" class="form-control lw-input" placeholder="Mín"
                         wire:model.debounce.500ms="precio_inicial" aria-label="Precio mínimo">
                     <input type="text" id="lw-precio-fin" class="form-control lw-input" placeholder="Máx"
@@ -80,7 +86,7 @@
 
     <!-- INDICADOR DE CARGA: solo durante actualizaciones de filtros -->
     <div wire:loading.delay.shortest
-        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final"
+        wire:target="titulo_criterio,provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final"
         class="lw-loading" role="status" aria-live="polite">
         <div class="lw-loading-content">
             <div class="spinner-border spinner-border-sm" aria-hidden="true" style="color:var(--clr-accent)"></div>
@@ -90,7 +96,7 @@
 
     <!-- RESULTADOS -->
     <div wire:loading.class.delay.shortest="lw-results-loading"
-        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final">
+        wire:target="titulo_criterio,provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final">
 
         @if ($propiedades->count())
             <p class="lw-results-count">
@@ -233,6 +239,23 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .lw-search-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1rem;
+            align-items: end
+        }
+
+        .lw-field {
+            min-width: 0
+        }
+
+        .lw-price-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: .625rem
+        }
+
         .lw-label {
             font-size: .7rem;
             font-weight: 700;
@@ -245,6 +268,7 @@
 
         .lw-select,
         .lw-input {
+            width: 100%;
             border: 1.5px solid var(--clr-border);
             border-radius: var(--radius-sm);
             font-size: .875rem;
@@ -333,6 +357,33 @@
 
         .lw-empty p {
             font-size: .88rem
+        }
+
+        @media (min-width: 576px) {
+            .lw-price-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+        }
+
+        @media (min-width: 768px) {
+            .lw-search-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .lw-field-title {
+                grid-column: 1 / -1
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .lw-search-grid {
+                grid-template-columns: minmax(220px, 1.25fr) repeat(3, minmax(150px, 1fr)) minmax(260px, 1.2fr)
+            }
+
+            .lw-field-title,
+            .lw-field-price {
+                grid-column: auto
+            }
         }
     </style>
 
