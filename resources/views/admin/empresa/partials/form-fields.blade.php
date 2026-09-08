@@ -67,7 +67,7 @@
                 <div class="form-group mb-3">
                     <label for="quienessomos" class="font-weight-bold">Quienes somos</label>
                     <textarea class="form-control @error('quienessomos') is-invalid @enderror" id="quienessomos" name="quienessomos"
-                        rows="5">{{ old('quienessomos', optional($company)->quienessomos) }}</textarea>
+                        rows="10">{{ old('quienessomos', optional($company)->quienessomos) }}</textarea>
                 </div>
 
                 <div class="form-group mb-0">
@@ -405,6 +405,51 @@
 
                 bindDropzoneToInput('company-logo-dropzone', 'logo');
                 bindDropzoneToInput('company-favicon-dropzone', 'favicon');
+
+                const aboutField = document.getElementById('quienessomos');
+
+                if (aboutField && typeof ClassicEditor !== 'undefined') {
+                    ClassicEditor
+                        .create(aboutField, {
+                            toolbar: [
+                                'heading', '|', 'bold', 'italic', 'link',
+                                'bulletedList', 'numberedList', 'blockQuote'
+                            ],
+                            heading: {
+                                options: [
+                                    {
+                                        model: 'paragraph',
+                                        title: 'Párrafo',
+                                        class: 'ck-heading_paragraph'
+                                    },
+                                    {
+                                        model: 'heading1',
+                                        view: 'h1',
+                                        title: 'Encabezado 1',
+                                        class: 'ck-heading_heading1'
+                                    },
+                                    {
+                                        model: 'heading2',
+                                        view: 'h2',
+                                        title: 'Encabezado 2',
+                                        class: 'ck-heading_heading2'
+                                    }
+                                ]
+                            }
+                        })
+                        .then((editor) => {
+                            editor.editing.view.change((writer) => {
+                                writer.setStyle('min-height', '320px', editor.editing.view.document.getRoot());
+                            });
+
+                            aboutField.closest('form')?.addEventListener('submit', () => {
+                                editor.updateSourceElement();
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('CKEditor 5 error en Quienes somos:', error);
+                        });
+                }
 
                 document.querySelectorAll('[data-sync-color]').forEach((picker) => {
                     const targetId = picker.dataset.syncColor;
