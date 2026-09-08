@@ -30,12 +30,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     @php
-        $faviconPath = $inmo->favicon ?? null;
-        $faviconUrl = $faviconPath
-            ? (\Illuminate\Support\Str::startsWith($faviconPath, ['http://', 'https://', '//', 'data:'])
-                ? $faviconPath
-                : url('/assets/' . ltrim($faviconPath, '/')))
-            : asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+        $faviconUrl = optional($inmo)->publicFaviconUrl()
+            ?: asset('vendor/adminlte/dist/img/AdminLTELogo.png');
     @endphp
     <link rel="shortcut icon" href="{{ $faviconUrl }}" type="image/x-icon">
 

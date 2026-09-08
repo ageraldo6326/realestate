@@ -8,7 +8,7 @@
 
     
     <!-- Place favicon.png in the root directory -->
-    <link rel="shortcut icon" href="{{ $inmobiliaria->favicon}}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ $inmobiliaria->publicFaviconUrl() }}" type="image/x-icon" />
     <!-- Font Icons css -->
     <link rel="stylesheet" href="/css/font-icons.css">
     <!-- plugins css -->
@@ -40,7 +40,7 @@
         <div class="row">
             <div class="col-md-9">
                 <picture>
-                    <img src="{{$inmobiliaria->logo}}" class="img-fluid">
+                    <img src="{{ $inmobiliaria->publicLogoUrl() }}" class="img-fluid" alt="Logo de empresa">
                   </picture>
             </div>
             <div class="col-md-3">

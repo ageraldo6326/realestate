@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Inmobiliaria extends Model
 {
@@ -48,4 +49,33 @@ class Inmobiliaria extends Model
         'previous_theme_color_neutral',
         'previous_theme_source',
     ];
+
+    public function publicLogoUrl(): ?string
+    {
+        return $this->publicAssetUrl($this->logo);
+    }
+
+    public function publicFaviconUrl(): ?string
+    {
+        return $this->publicAssetUrl($this->favicon);
+    }
+
+    private function publicAssetUrl(?string $path): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://', '//', 'data:'])) {
+            return $path;
+        }
+
+        if (Str::startsWith($path, ['/img/', 'img/', '/assets/', 'assets/', '/storage/', 'storage/'])) {
+            return url('/' . ltrim($path, '/'));
+        }
+
+        return asset('assets/' . ltrim($path, '/'));
+    }
 }

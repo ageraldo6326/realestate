@@ -9,7 +9,7 @@
 
 
     <!-- Place favicon.png in the root directory -->
-    <link rel="shortcut icon" href="{{ $inmobiliaria->favicon}}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ $inmobiliaria->publicFaviconUrl() }}" type="image/x-icon" />
     <!-- Font Icons css -->
     <link rel="stylesheet" href="/css/font-icons.css">
     <!-- plugins css -->

@@ -29,6 +29,10 @@ systemctl reload apache2
 
 Si `git status --short` muestra archivos modificados, no ejecutar `git pull` hasta revisar esos cambios. No ejecutar `php artisan key:generate` si `APP_KEY` ya está definido en el archivo `.env` de producción.
 
+## Carga de logo y favicon
+
+Selecciona el archivo desde el campo **Logo** o **Favicon** del formulario; no se carga escribiendo una URL. Los archivos nuevos se guardan en `public/img` y se sirven desde una URL como `/img/logo-<hash>.png`. Una URL bajo `/admin/inmobiliaria/...` es una ruta administrativa y no corresponde a un archivo público.
+
 ## Crear superusuario
 
 El usuario necesita solamente el rol `superadmin` de Spatie y `activo=1`. La aplicacion le concede acceso global desde un unico punto para los middlewares de rol/permisos y para Policies/Gates. Usa un correo y una contraseña únicos; nunca incluyas credenciales reales en Git.

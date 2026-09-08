@@ -27,7 +27,7 @@
                         @foreach ($inmobiliarias as $inmobiliaria)
                         <tr>
                             <td scope="row">{{ $inmobiliaria->id }}</td>
-                            <td><img src="{{ asset('assets/'.$inmobiliaria->logo) }}" class="rounded zoom" height="80rem" width="100" alt=""></td>
+                            <td><img src="{{ $inmobiliaria->publicLogoUrl() }}" class="rounded zoom" height="80rem" width="100" alt="Logo"></td>
                             <td>{{ $inmobiliaria->nombre }}</td>
                             <td class="d-none d-md-table-cell">{{ $inmobiliaria->titulo }}</td>
 

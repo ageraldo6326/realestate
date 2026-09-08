@@ -83,7 +83,7 @@ class EmpresaController extends Controller
                 'exception' => $exception,
             ]);
 
-            return back()->withInput()->with('error', 'No fue posible guardar la configuracion de empresa.');
+            return back()->withInput()->with('error', $this->companySaveErrorMessage($exception));
         }
 
         InmobiliariaService::forget();
@@ -110,7 +110,7 @@ class EmpresaController extends Controller
                 'exception' => $exception,
             ]);
 
-            return back()->withInput()->with('error', 'No fue posible actualizar la configuracion de empresa.');
+            return back()->withInput()->with('error', $this->companySaveErrorMessage($exception));
         }
 
         InmobiliariaService::forget();
@@ -198,7 +198,14 @@ class EmpresaController extends Controller
         $suggestedPalette = [];
 
         if ($logoFile) {
-            $suggestedPalette = $this->logoPaletteExtractor->extractFromUploadedFile($logoFile);
+            try {
+                $suggestedPalette = $this->logoPaletteExtractor->extractFromUploadedFile($logoFile);
+            } catch (\Throwable $exception) {
+                Log::warning('No se pudo extraer la paleta del logo. El archivo se guardara sin cambiar el tema.', [
+                    'exception' => $exception,
+                ]);
+            }
+
             $this->brandingService->storeLogoPalette($company, $suggestedPalette);
             $company->theme_last_logo_hash = hash_file('sha256', $logoFile->getRealPath()) ?: null;
             $company->logo = $this->storePublicImage($logoFile, 'logo');
@@ -245,14 +252,16 @@ class EmpresaController extends Controller
     {
         $directory = public_path('img');
 
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+        if (!$file->isValid()) {
+            throw new \RuntimeException('El archivo de imagen recibido no es valido.');
         }
 
-        foreach ([$baseName . '.*', $baseName . '-*.*'] as $pattern) {
-            foreach (glob($directory . DIRECTORY_SEPARATOR . $pattern) ?: [] as $existingFile) {
-                @unlink($existingFile);
-            }
+        if (!is_dir($directory) && !@mkdir($directory, 0775, true) && !is_dir($directory)) {
+            throw new \RuntimeException('No se pudo crear el directorio publico de imagenes.');
+        }
+
+        if (!is_writable($directory)) {
+            throw new \RuntimeException('El directorio publico de imagenes no tiene permisos de escritura.');
         }
 
         $extension = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: 'png');
@@ -260,8 +269,19 @@ class EmpresaController extends Controller
         $filename = $baseName . '-' . substr($hash, 0, 12) . '.' . $extension;
         $path = $directory . DIRECTORY_SEPARATOR . $filename;
 
-        copy($file->getRealPath(), $path);
+        if (!@copy($file->getRealPath(), $path)) {
+            throw new \RuntimeException('No se pudo guardar la imagen en el directorio publico.');
+        }
 
         return '/img/' . $filename;
+    }
+
+    private function companySaveErrorMessage(\Throwable $exception): string
+    {
+        if ($exception instanceof \RuntimeException) {
+            return 'No fue posible guardar el logo o favicon. Verifica los permisos de escritura de public/img.';
+        }
+
+        return 'No fue posible guardar la configuracion de empresa. Revisa el registro de errores del servidor.';
     }
 }

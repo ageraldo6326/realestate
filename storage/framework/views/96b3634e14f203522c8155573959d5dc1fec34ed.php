@@ -1,0 +1,2 @@
+<?php echo $__env->make('livewire.buscar-tipo-propiedad', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\livewire\tipo-propiedades.blade.php ENDPATH**/ ?>

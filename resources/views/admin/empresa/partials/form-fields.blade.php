@@ -227,10 +227,10 @@
                         name="logo" accept="image/*">
                 </div>
 
-                @if (optional($company)->logo)
+                @if ($companyLogoUrl = optional($company)->publicLogoUrl())
                     <div class="preview-box mb-3">
                         <span class="preview-label">Logo actual</span>
-                        <img src="{{ $company->logo }}" class="img-fluid rounded" alt="Logo de empresa">
+                        <img src="{{ $companyLogoUrl }}" class="img-fluid rounded" alt="Logo de empresa">
                     </div>
                 @endif
 
@@ -246,10 +246,10 @@
                         name="favicon" accept="image/*">
                 </div>
 
-                @if (optional($company)->favicon)
+                @if ($companyFaviconUrl = optional($company)->publicFaviconUrl())
                     <div class="preview-box">
                         <span class="preview-label">Favicon actual</span>
-                        <img src="{{ $company->favicon }}" class="img-fluid rounded" alt="Favicon de empresa">
+                        <img src="{{ $companyFaviconUrl }}" class="img-fluid rounded" alt="Favicon de empresa">
                     </div>
                 @endif
 

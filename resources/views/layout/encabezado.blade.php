@@ -22,7 +22,7 @@
 
 
     <!-- Place favicon.png in the root directory -->
-    <link rel="shortcut icon" href="{{ asset('assets/'.$inmo->favicon) }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ optional($inmo)->publicFaviconUrl() }}" type="image/x-icon" />
 
 
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-nice-select@1.4.4/dist/css/bootstrap-nice-select.min.css">
@@ -99,7 +99,7 @@
                     <div class="col">
                         <div class="site-logo-wrap">
                             <div class="site-logo">
-                                <a href=" {{ route("home") }} "><img loading="lazy" srcset=" @if (isset($inmo->telefono)) {{ asset('assets/'.$inmo->logo) }}  @endif " alt="Logo"></a>
+                                <a href=" {{ route("home") }} "><img loading="lazy" src="{{ optional($inmo)->publicLogoUrl() }}" alt="Logo"></a>
                             </div>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
 
             <div class="ltn__utilize-menu-head">
                 <div class="site-logo">                    
-                    <a href=" {{ route("home") }} "><img loading="lazy" src=" @if (isset($inmo->telefono)) {{ 'assets/'.$inmo->logo }} @endif " alt="Logo"></a>
+                    <a href=" {{ route("home") }} "><img loading="lazy" src="{{ optional($inmo)->publicLogoUrl() }}" alt="Logo"></a>
                 </div>
                 <button class="ltn__utilize-close">×</button>
             </div>

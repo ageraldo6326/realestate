@@ -23,7 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Place favicon.png in the root directory -->
-    <link rel="shortcut icon" href="{{ asset('assets/'.$inmo->favicon) }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ optional($inmo)->publicFaviconUrl() }}" type="image/x-icon" />
     <!-- Font Icons css -->
     <link rel="stylesheet" href="/css/font-icons.css">
     <!-- plugins css -->
@@ -95,7 +95,7 @@
                     <div class="col">
                         <div class="site-logo-wrap">
                             <div class="site-logo">
-                                <a href=" {{ route("home") }} "><img src="{{ asset('assets/'.$inmo->logo) }}" alt="Logo"></a>
+                                <a href=" {{ route("home") }} "><img src="{{ optional($inmo)->publicLogoUrl() }}" alt="Logo"></a>
                             </div>
                         </div>
                     </div>

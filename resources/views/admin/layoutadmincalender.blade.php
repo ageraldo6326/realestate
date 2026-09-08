@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/adminlte/plugins/fullcalendar/main.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/adminlte/dist/css/adminlte.min.css">
-    <link rel="shortcut icon" href="{{ $inmo->favicon}}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ optional($inmo)->publicFaviconUrl() }}" type="image/x-icon" />
 </head>
 
 <body class="hold-transition sidebar-mini">

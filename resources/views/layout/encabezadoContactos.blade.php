@@ -20,7 +20,7 @@
     <link rel="canonical" href="{{ preg_replace('/^http:/i', 'https:', url()->current()) }}" />
 
     <!-- Place favicon.png in the root directory -->
-    <link rel="shortcut icon" href="{{'assets/'.$inmo->favicon}}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ optional($inmo)->publicFaviconUrl() }}" type="image/x-icon" />
     <!-- Font Icons css -->
     <link rel="stylesheet" href="/css/font-icons.css">
     <!-- plugins css -->
@@ -92,7 +92,7 @@
                     <div class="col">
                         <div class="site-logo-wrap">
                             <div class="site-logo">
-                                <a href=" {{ route("home") }} "><img src="{{ asset('assets/'.$inmo->logo) }}" alt="Logo" title="Logo"></a>
+                                <a href=" {{ route("home") }} "><img src="{{ optional($inmo)->publicLogoUrl() }}" alt="Logo" title="Logo"></a>
                             </div>
                         </div>
                     </div>
