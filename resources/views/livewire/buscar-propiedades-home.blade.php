@@ -79,13 +79,13 @@
     </div>
 
     <!-- INDICADOR DE CARGA: solo durante actualizaciones de filtros -->
-    <div wire:loading.flex.delay.shortest
+    <div wire:loading.delay.shortest
         wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final"
-        class="lw-loading">
-        <div class="spinner-border spinner-border-sm" role="status" style="color:var(--clr-accent)">
-            <span class="visually-hidden">Cargando...</span>
+        class="lw-loading" role="status" aria-live="polite">
+        <div class="lw-loading-content">
+            <div class="spinner-border spinner-border-sm" aria-hidden="true" style="color:var(--clr-accent)"></div>
+            <span>Buscando propiedades...</span>
         </div>
-        <span>Buscando propiedades...</span>
     </div>
 
     <!-- RESULTADOS -->
@@ -260,7 +260,8 @@
             outline: none
         }
 
-        .lw-loading {
+        .lw-loading-content {
+            display: flex;
             align-items: center;
             gap: .75rem;
             padding: .75rem 0;
