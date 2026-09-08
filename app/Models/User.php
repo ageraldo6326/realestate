@@ -106,6 +106,15 @@ class User extends Authenticatable
         return $email !== '' ? mb_strtolower($email) : null;
     }
 
+    /**
+     * El rol superadmin es la unica fuente de autoridad global.
+     * El correo configurado se usa solamente para proteger esa cuenta.
+     */
+    public function isSuperadmin(): bool
+    {
+        return $this->hasRole('superadmin');
+    }
+
     public static function superadminMutationsAllowed(): bool
     {
         return (bool) config('security.allow_superadmin_mutations', false);

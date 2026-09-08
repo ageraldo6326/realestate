@@ -173,10 +173,7 @@ class ClientesController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $roleChecker = 'hasAnyRole';
-        $isAdmin = $user && method_exists($user, $roleChecker)
-            ? $user->{$roleChecker}(['admin', 'superadmin'])
-            : false;
+        $isAdmin = $user && $user->can('access-admin');
         $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;

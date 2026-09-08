@@ -21,7 +21,7 @@ class RolesMiddleware
         /** @var User|null $usuario */
         $usuario = Auth::user();
 
-        if ($usuario && $usuario->hasAnyRole(['admin', 'superadmin']) && (int) $usuario->activo === 1) {
+        if ($usuario && $usuario->can('access-admin') && (int) $usuario->activo === 1) {
             return $next($request);
         }
 

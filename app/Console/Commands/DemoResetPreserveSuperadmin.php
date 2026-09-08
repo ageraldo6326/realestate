@@ -18,7 +18,7 @@ class DemoResetPreserveSuperadmin extends Command
    */
   protected $signature = 'demo:reset-preserve-superadmin
                             {--email=admin@realestate.local : Email del superadmin a preservar/crear}
-                            {--password=Admin12345 : Password por defecto si el superadmin no existe}
+                            {--password= : Password inicial si el superadmin no existe}
                             {--force : Ejecutar sin confirmacion interactiva}';
 
   /**
@@ -43,6 +43,11 @@ class DemoResetPreserveSuperadmin extends Command
 
     try {
       $existing = User::where('email', $email)->first();
+
+      if (!$existing && trim($password) === '') {
+        $this->error('Debes indicar --password con una clave inicial segura para crear el superadmin.');
+        return self::FAILURE;
+      }
 
       $superadminData = [
         'name' => $existing?->name ?? 'Super Admin',
@@ -74,12 +79,12 @@ class DemoResetPreserveSuperadmin extends Command
       $this->info('3/4 Re-creando superadmin...');
       $superadmin = User::create($superadminData);
 
-      $this->info('4/4 Asignando rol admin (Spatie)...');
+      $this->info('4/4 Asignando rol superadmin (Spatie)...');
       $role = Role::firstOrCreate([
-        'name' => 'admin',
+        'name' => 'superadmin',
         'guard_name' => 'web',
       ]);
-      $superadmin->assignRole($role);
+      $superadmin->syncRoles([$role]);
 
       $this->newLine();
       $this->info('Base limpia y superadmin restaurado correctamente.');
@@ -89,7 +94,7 @@ class DemoResetPreserveSuperadmin extends Command
           ['Email', $superadmin->email],
           ['Activo', (string) $superadmin->activo],
           ['Rol legacy (users.rol)', (string) $superadmin->rol],
-          ['Rol Spatie', 'admin'],
+          ['Rol Spatie', 'superadmin'],
         ]
       );
 

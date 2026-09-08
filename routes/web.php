@@ -116,7 +116,7 @@ Route::middleware(['auth', 'enforce.superadmin.password.rotation'])->group(funct
         ->name('admin.superadmin.password.update');
 });
 
-Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:admin|superadmin']], function () {
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:admin']], function () {
 
 
 
@@ -170,11 +170,11 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
 
 //  Opciones para asesores
 
-Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:asesor|admin|superadmin']], function () {
+Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', 'role:asesor|admin']], function () {
 
     Route::get('/admin/dashboard', function () {
         $user    = Auth::user();
-        $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
+        $isAdmin = $user && $user->can('access-admin');
 
         // Evita mostrar dashboard global a asesores: redirige al tablero filtrado por usuario.
         if (!$isAdmin) {
@@ -219,7 +219,7 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
 });
 
 
-Route::group(['middleware' => ['auth', 'role:asesor|admin|superadmin']], function () {
+Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
 
     Route::post('/admin/ai/generar-contenido', [AiContentController::class, 'generate'])
         ->middleware('throttle:20,1')

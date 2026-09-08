@@ -22,7 +22,7 @@ class DashboardVentasController extends Controller
     {
 
         $user = Auth::user();
-        $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
+        $isAdmin = $user && $user->can('access-admin');
 
         $periodo = $request->input('periodo');
 

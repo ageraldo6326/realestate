@@ -1514,10 +1514,6 @@ class PropiedadesController extends Controller
             return false;
         }
 
-        if (method_exists($user, 'hasAnyRole')) {
-            return (bool) $user->hasAnyRole(['admin', 'superadmin']);
-        }
-
-        return (int) ($user->rol ?? 0) === 1;
+        return (bool) $user->can('access-admin');
     }
 }

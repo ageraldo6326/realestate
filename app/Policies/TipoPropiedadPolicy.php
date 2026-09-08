@@ -18,8 +18,7 @@ class TipoPropiedadPolicy
    */
   public function viewAny(User $user)
   {
-    // Solo administradores y superadmins pueden ver
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**
@@ -31,7 +30,7 @@ class TipoPropiedadPolicy
    */
   public function view(User $user, TiposDePropiedad $tipoPropiedad)
   {
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**
@@ -42,7 +41,7 @@ class TipoPropiedadPolicy
    */
   public function create(User $user)
   {
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**
@@ -54,7 +53,7 @@ class TipoPropiedadPolicy
    */
   public function update(User $user, TiposDePropiedad $tipoPropiedad)
   {
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**
@@ -66,7 +65,7 @@ class TipoPropiedadPolicy
    */
   public function delete(User $user, TiposDePropiedad $tipoPropiedad)
   {
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**
@@ -78,7 +77,7 @@ class TipoPropiedadPolicy
    */
   public function restore(User $user, TiposDePropiedad $tipoPropiedad)
   {
-    return $user->hasRole(['admin', 'superadmin']);
+    return $user->hasRole('admin');
   }
 
   /**

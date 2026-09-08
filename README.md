@@ -16,9 +16,11 @@ npm run production
 php artisan optimize:clear
 php artisan migrate --force
 php artisan storage:link
+php artisan permission:cache-reset
 
-chown -R www-data:www-data storage bootstrap/cache
-chmod -R 775 storage bootstrap/cache
+mkdir -p public/img
+chown -R www-data:www-data storage bootstrap/cache public/img
+chmod -R 775 storage bootstrap/cache public/img
 
 php artisan optimize
 php artisan queue:restart
@@ -29,7 +31,7 @@ Si `git status --short` muestra archivos modificados, no ejecutar `git pull` has
 
 ## Crear superusuario
 
-El usuario debe tener los roles `admin` y `superadmin` de Spatie, además de `activo=1`. El rol `admin` mantiene compatibilidad con rutas administrativas heredadas; `superadmin` identifica la cuenta de mayor privilegio. Usa un correo y una contraseña únicos; nunca incluyas credenciales reales en Git.
+El usuario necesita solamente el rol `superadmin` de Spatie y `activo=1`. La aplicacion le concede acceso global desde un unico punto para los middlewares de rol/permisos y para Policies/Gates. Usa un correo y una contraseña únicos; nunca incluyas credenciales reales en Git.
 
 1. En el `.env` de producción, define el correo del superusuario y una contraseña inicial segura. Este archivo no se sube al repositorio:
 
@@ -51,18 +53,13 @@ php artisan tinker
 ```php
 app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
-$adminRole = \Spatie\Permission\Models\Role::firstOrCreate([
-    'name' => 'admin',
-    'guard_name' => 'web',
-]);
-
 $superadminRole = \Spatie\Permission\Models\Role::firstOrCreate([
     'name' => 'superadmin',
     'guard_name' => 'web',
 ]);
 
 $user = \App\Models\User::withTrashed()->firstOrNew([
-    'email' => 'admin@realstate.voipcom.net',
+    'email' => 'admin@tu-dominio.com',
 ]);
 
 if ($user->exists && $user->trashed()) {
@@ -70,12 +67,12 @@ if ($user->exists && $user->trashed()) {
 }
 
 $user->name = 'Administrador';
-$user->password = \Illuminate\Support\Facades\Hash::make('Adminaia123@');
+$user->password = \Illuminate\Support\Facades\Hash::make('REEMPLAZAR_POR_UNA_CLAVE_LARGA_Y_UNICA');
 $user->activo = true;
 $user->rol = 1;
 $user->mostrar = true;
 $user->save();
-$user->syncRoles([$adminRole, $superadminRole]);
+$user->syncRoles([$superadminRole]);
 ```
 
 4. Sal con `exit`, reconstruye la caché e inicia sesión. Si la rotación está activa, cambia la contraseña inicial de inmediato. Después puedes vaciar `SUPERADMIN_BOOTSTRAP_PASSWORD` en `.env` y ejecutar `php artisan optimize`.

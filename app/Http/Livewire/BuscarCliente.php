@@ -63,7 +63,7 @@ class BuscarCliente extends Component
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
-        $isAdmin = $user && $user->hasAnyRole(['admin', 'superadmin']);
+        $isAdmin = $user && $user->can('access-admin');
         $contactOwnershipDays = (int) (optional(InmobiliariaService::get())->dias_propiedad_contactos ?? 90);
         if ($contactOwnershipDays < 1) {
             $contactOwnershipDays = 90;
