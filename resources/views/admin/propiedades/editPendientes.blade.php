@@ -767,6 +767,8 @@
                                     {{-- Fin de una linea de los detalles --}}
                                 </div>
                             </div>
+                        @endif
+
                             <button type="submit" class="btn btn-primary m-3" value="grabar"
                                 name="grabar">Grabar</button>
                 </form>
