@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Propiedad;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class SitemapService
 {
@@ -202,14 +203,38 @@ class SitemapService
     private function writePublicSitemap(string $xml): void
     {
         $targetPath = public_path('sitemap.xml');
-        $tmpPath = public_path('sitemap.xml.tmp');
+        $directory = dirname($targetPath);
+        $tmpPath = null;
 
-        file_put_contents($tmpPath, $xml, LOCK_EX);
-        @rename($tmpPath, $targetPath);
+        try {
+            if (!is_dir($directory) || !is_writable($directory)) {
+                throw new \RuntimeException('El directorio público no permite escribir el sitemap.');
+            }
 
-        if (file_exists($tmpPath)) {
-            @copy($tmpPath, $targetPath);
-            @unlink($tmpPath);
+            $tmpPath = tempnam($directory, 'sitemap-');
+
+            if ($tmpPath === false) {
+                throw new \RuntimeException('No se pudo crear el archivo temporal del sitemap.');
+            }
+
+            if (file_put_contents($tmpPath, $xml, LOCK_EX) === false) {
+                throw new \RuntimeException('No se pudo escribir el archivo temporal del sitemap.');
+            }
+
+            if (!rename($tmpPath, $targetPath)) {
+                throw new \RuntimeException('No se pudo publicar el sitemap en el directorio público.');
+            }
+
+            $tmpPath = null;
+        } catch (\Throwable $exception) {
+            Log::warning('No se pudo actualizar la copia pública del sitemap.', [
+                'path' => $targetPath,
+                'exception' => $exception->getMessage(),
+            ]);
+        } finally {
+            if (is_string($tmpPath) && is_file($tmpPath)) {
+                @unlink($tmpPath);
+            }
         }
     }
 }
