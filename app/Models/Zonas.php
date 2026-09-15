@@ -26,6 +26,17 @@ class Zonas extends Model
         'is_public' => 'boolean',
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function (self $zone): void {
+            app(\App\Services\SitemapInvalidationService::class)->invalidate('zone.updated', $zone);
+        });
+
+        static::deleted(function (self $zone): void {
+            app(\App\Services\SitemapInvalidationService::class)->invalidate('zone.deleted', $zone);
+        });
+    }
+
     public function setZonaAttribute($value): void
     {
         $normalized = preg_replace('/\s+/u', ' ', trim((string) $value));

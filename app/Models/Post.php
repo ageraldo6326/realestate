@@ -31,6 +31,17 @@ class Post extends Model
         'published_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(function (self $post): void {
+            app(\App\Services\SitemapInvalidationService::class)->invalidate('post.updated', $post);
+        });
+
+        static::deleted(function (self $post): void {
+            app(\App\Services\SitemapInvalidationService::class)->invalidate('post.deleted', $post);
+        });
+    }
+
     public function scopePublished(Builder $query): Builder
     {
         return $query

@@ -14,6 +14,7 @@
             'usuarios.edit',
             'inmobiliaria.index',
             'inmobiliaria.edit',
+            'seo-audit.index',
             'zonas.index',
             'zonas.create',
             'zonas.edit',
@@ -111,6 +112,11 @@
                                     class="nav-link {{ request()->routeIs('inmobiliaria.*') ? 'active' : '' }}"><i
                                         class="nav-icon fas fa-globe fa-fw"></i>
                                     <p>Configuración del sitio público</p>
+                                </a></li>
+                            <li class="nav-item"><a href="{{ route('seo-audit.index') }}"
+                                    class="nav-link {{ request()->routeIs('seo-audit.*') ? 'active' : '' }}"><i
+                                        class="nav-icon fas fa-search fa-fw"></i>
+                                    <p>SEO e indexación</p>
                                 </a></li>
                             <li class="nav-item"><a href="{{ route('zonas.index') }}"
                                     class="nav-link {{ request()->routeIs('zonas.*') ? 'active' : '' }}"><i

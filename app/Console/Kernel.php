@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('seo:audit --trigger=scheduled')
+            ->dailyAt((string) config('seo.audit_daily_at', '03:30'))
+            ->withoutOverlapping();
     }
 
     /**

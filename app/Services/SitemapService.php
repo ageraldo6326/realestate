@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Models\Propiedad;
+use App\Models\SitemapVersion;
 use App\Models\TiposDePropiedad;
 use App\Models\Zonas;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class SitemapService
@@ -130,7 +132,10 @@ class SitemapService
                 }
             });
 
-        return $this->renderXml(array_values($entries));
+        $xml = $this->renderXml(array_values($entries));
+        $this->recordVersion($company, $baseUrl, $xml, count($entries));
+
+        return $xml;
     }
 
     private function addEntry(array &$entries, string $loc, ?string $lastmod, float $priority): void
@@ -191,5 +196,31 @@ class SitemapService
     private function joinUrl(string $baseUrl, string $path): string
     {
         return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
+    }
+
+    private function recordVersion($company, string $baseUrl, string $xml, int $urlCount): void
+    {
+        if (!Schema::hasTable('sitemap_versions')) {
+            return;
+        }
+
+        $checksum = hash('sha256', $xml);
+        $latest = SitemapVersion::query()
+            ->where('inmobiliaria_id', optional($company)->id)
+            ->latest('id')
+            ->first();
+
+        if ($latest && $latest->checksum === $checksum) {
+            return;
+        }
+
+        SitemapVersion::query()->create([
+            'inmobiliaria_id' => optional($company)->id,
+            'canonical_host' => (string) parse_url($baseUrl, PHP_URL_HOST),
+            'checksum' => $checksum,
+            'url_count' => $urlCount,
+            'status' => 'generated',
+            'generated_at' => now(),
+        ]);
     }
 }

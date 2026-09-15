@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\ZonasController;
 use App\Http\Controllers\CrearVentasController;
 use App\Http\Controllers\Admin\EntrarController;
 use App\Http\Controllers\Admin\EmpresaController;
+use App\Http\Controllers\Admin\SeoAuditController;
 use App\Http\Controllers\Admin\EstadosController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Frontend\BlogController;
@@ -165,6 +166,8 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
     Route::match(['post', 'put'], '/admin/inmobiliaria/{id}/restore-default', [EmpresaController::class, 'restoreDefaultTheme'])->name('inmobiliaria.restore-default');
     Route::match(['post', 'put'], '/admin/inmobiliaria/{id}/restore-previous', [EmpresaController::class, 'restorePreviousTheme'])->name('inmobiliaria.restore-previous');
     Route::resource('/admin/inmobiliaria', EmpresaController::class);
+    Route::get('/admin/seo-indexacion', [SeoAuditController::class, 'index'])->name('seo-audit.index');
+    Route::post('/admin/seo-indexacion/auditar', [SeoAuditController::class, 'run'])->name('seo-audit.run');
     Route::resource('/admin/zonas', ZonasController::class);
     Route::resource('/admin/tipopropiedades', TiposPropiedadesController::class);
     Route::resource('/admin/estados', EstadosController::class);

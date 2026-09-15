@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class Propiedad extends Model
 {
@@ -75,11 +74,13 @@ class Propiedad extends Model
             if ($propiedad->wasRecentlyCreated || $propiedad->wasChanged([
                 'slug', 'activa', 'aprobada', 'vendida', 'zona_id', 'tipo', 'updated_at',
             ])) {
-                Cache::forget('seo.sitemap.xml');
+                app(\App\Services\SitemapInvalidationService::class)->invalidate('property.updated', $propiedad);
             }
         });
 
-        static::deleted(static fn (): bool => Cache::forget('seo.sitemap.xml'));
+        static::deleted(function (self $propiedad): void {
+            app(\App\Services\SitemapInvalidationService::class)->invalidate('property.deleted', $propiedad);
+        });
     }
 
     protected function syncAssignedAdvisor(): void

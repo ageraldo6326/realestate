@@ -5,7 +5,7 @@
         ? $authUser->resolvePhotoUrl()
         : \App\Models\User::defaultPhotoUrl();
 
-    $sistemaRoutes = ['usuarios.index', 'usuarios.create', 'usuarios.edit', 'inmobiliaria.index', 'inmobiliaria.edit', 'zonas.index', 'zonas.create', 'zonas.edit', 'tipopropiedades.index', 'tipopropiedades.create', 'tipopropiedades.edit', 'estados.index', 'estados.create', 'estados.edit', 'disponiblepara.index', 'disponiblepara.create', 'disponiblepara.edit', 'tipostareas.index', 'tipostareas.create', 'tipostareas.edit'];
+    $sistemaRoutes = ['usuarios.index', 'usuarios.create', 'usuarios.edit', 'inmobiliaria.index', 'inmobiliaria.edit', 'seo-audit.index', 'zonas.index', 'zonas.create', 'zonas.edit', 'tipopropiedades.index', 'tipopropiedades.create', 'tipopropiedades.edit', 'estados.index', 'estados.create', 'estados.edit', 'disponiblepara.index', 'disponiblepara.create', 'disponiblepara.edit', 'tipostareas.index', 'tipostareas.create', 'tipostareas.edit'];
     $websiteRoutes = ['portadas.index', 'portadas.create', 'portadas.edit', 'testimonios.index', 'testimonios.create', 'testimonios.edit', 'posts.index', 'posts.create', 'posts.edit', 'enfoques.index', 'enfoques.create', 'enfoques.edit'];
     $reportesRoutes = ['clientespotenciales', 'clientescerrados', 'fuenteclientes', 'tareasporcategorias', 'propiedadesclick', 'dashboardventas'];
     $crmRoutes = ['clientes.*', 'asignar', 'import.index', 'verificar', 'propiedades.*', 'mostrarinventario', 'todo.*', 'calendario', 'registrarventa'];
@@ -26,6 +26,7 @@
                 $makeGroup('sistema', 'Sistema', 'fas fa-cog', [
                     $makeLink('usuarios', 'Usuarios', 'fas fa-users', route('usuarios.index'), request()->routeIs('usuarios.*'), ['equipo']),
                     $makeLink('sitio-publico', 'Configuración del sitio público', 'fas fa-globe', route('inmobiliaria.index'), request()->routeIs('inmobiliaria.*'), ['inmobiliaria', 'seo', 'dominio']),
+                    $makeLink('seo-audit', 'SEO e indexación', 'fas fa-search', route('seo-audit.index'), request()->routeIs('seo-audit.*'), ['sitemap', 'auditoría', 'indexación']),
                     $makeLink('zonas', 'Zonas', 'fas fa-map-marker-alt', route('zonas.index'), request()->routeIs('zonas.*'), ['ubicaciones']),
                     $makeLink('tipos-propiedad', 'Tipos de propiedad', 'fas fa-city', route('tipopropiedades.index'), request()->routeIs('tipopropiedades.*'), ['categorías']),
                     $makeLink('estados', 'Estados', 'fas fa-toggle-on', route('estados.index'), request()->routeIs('estados.*'), ['estatus']),

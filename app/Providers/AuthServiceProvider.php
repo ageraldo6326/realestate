@@ -34,5 +34,13 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('access-admin', function (User $user): bool {
             return $user->hasRole('admin');
         });
+
+        Gate::define('seo-audit.view', function (User $user): bool {
+            return $user->hasRole('admin');
+        });
+
+        Gate::define('seo-audit.run', function (User $user): bool {
+            return $user->hasRole('admin');
+        });
     }
 }

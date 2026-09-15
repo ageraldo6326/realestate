@@ -101,7 +101,7 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
-        $this->sitemapService->forget();
+        app(\App\Services\SitemapInvalidationService::class)->invalidate('site.configuration.updated');
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'La configuracion de empresa se guardo correctamente.');
     }
@@ -135,7 +135,7 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
-        $this->sitemapService->forget();
+        app(\App\Services\SitemapInvalidationService::class)->invalidate('site.configuration.updated');
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'La configuracion de empresa se actualizo correctamente.');
     }
