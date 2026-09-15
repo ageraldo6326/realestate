@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\InmobiliariaService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,11 +22,12 @@ class PublicSeoHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        $canonicalHost = strtolower((string) parse_url((string) config('seo.canonical_url'), PHP_URL_HOST));
+        $company = InmobiliariaService::get();
+        $canonicalHost = strtolower((string) parse_url(InmobiliariaService::canonicalUrl($company), PHP_URL_HOST));
         $requestHost = strtolower($request->getHost());
         $isCanonicalHost = $canonicalHost !== '' && hash_equals($canonicalHost, $requestHost);
 
-        if (!config('seo.indexing_enabled') || !$isCanonicalHost || $response->getStatusCode() >= 400) {
+        if (!InmobiliariaService::indexingEnabled($company) || !$isCanonicalHost || $response->getStatusCode() >= 400) {
             $response->headers->set('X-Robots-Tag', 'noindex, nofollow');
         }
 

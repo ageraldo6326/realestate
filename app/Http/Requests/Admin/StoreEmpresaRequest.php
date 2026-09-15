@@ -25,12 +25,16 @@ class StoreEmpresaRequest extends FormRequest
             'tiktok' => $this->normalizeText($this->input('tiktok')),
             'whatsapp' => $this->normalizeText($this->input('whatsapp')),
             'quienessomos' => $this->normalizeTextarea($this->input('quienessomos')),
+            'seo_canonical_url' => rtrim($this->normalizeText($this->input('seo_canonical_url')) ?? '', '/'),
+            'seo_alternate_hosts' => $this->normalizeHosts($this->input('seo_alternate_hosts')),
+            'search_console_verification_token' => $this->normalizeText($this->input('search_console_verification_token')),
             'theme_color_primary' => $this->normalizeHex($this->input('theme_color_primary')),
             'theme_color_secondary' => $this->normalizeHex($this->input('theme_color_secondary')),
             'theme_color_accent' => $this->normalizeHex($this->input('theme_color_accent')),
             'theme_color_neutral' => $this->normalizeHex($this->input('theme_color_neutral')),
             'theme_logo_behavior' => $this->input('theme_logo_behavior', 'apply_logo_palette'),
             'aprobacion' => $this->normalizeBoolean($this->input('aprobacion')),
+            'seo_indexable' => $this->normalizeBoolean($this->input('seo_indexable')),
         ]);
     }
 
@@ -48,6 +52,12 @@ class StoreEmpresaRequest extends FormRequest
             'tiktok' => ['nullable', 'string', 'max:255'],
             'whatsapp' => ['nullable', 'string', 'max:255'],
             'quienessomos' => ['nullable', 'string'],
+            'seo_canonical_url' => ['nullable', 'required_if:seo_indexable,1', 'url', 'max:255', 'regex:/^https:\/\//i'],
+            'seo_alternate_hosts' => ['nullable', 'array', 'max:20'],
+            'seo_alternate_hosts.*' => ['string', 'max:255', 'regex:/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i'],
+            'seo_indexable' => ['nullable', 'boolean'],
+            'social_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'search_console_verification_token' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-z0-9_-]+$/'],
             'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'favicon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,ico', 'max:2048'],
             'theme_color_primary' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
@@ -64,6 +74,9 @@ class StoreEmpresaRequest extends FormRequest
         return [
             'logo.mimes' => 'El logo debe estar en formato jpg, jpeg, png o webp.',
             'favicon.mimes' => 'El favicon debe estar en formato jpg, jpeg, png, webp o ico.',
+            'seo_canonical_url.regex' => 'El dominio canonico debe usar HTTPS.',
+            'seo_alternate_hosts.*.regex' => 'Cada host alterno debe ser un dominio sin protocolo ni rutas.',
+            'search_console_verification_token.regex' => 'El token de Search Console solo puede contener letras, numeros, guiones y guiones bajos.',
             'theme_color_primary.regex' => 'El color primario debe estar en formato hexadecimal valido.',
             'theme_color_secondary.regex' => 'El color secundario debe estar en formato hexadecimal valido.',
             'theme_color_accent.regex' => 'El color de acento debe estar en formato hexadecimal valido.',
@@ -107,5 +120,15 @@ class StoreEmpresaRequest extends FormRequest
         }
 
         return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    private function normalizeHosts($value): array
+    {
+        $lines = is_array($value) ? $value : preg_split('/[\r\n,]+/', (string) $value);
+        $hosts = array_map(function ($host): string {
+            return strtolower(trim(preg_replace('#^https?://#i', '', (string) $host), '/'));
+        }, $lines ?: []);
+
+        return array_values(array_unique(array_filter($hosts)));
     }
 }

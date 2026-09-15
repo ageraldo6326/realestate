@@ -15,6 +15,8 @@
         'theme_color_accent' => 'Acento',
         'theme_color_neutral' => 'Neutro',
     ];
+    $alternateHosts = old('seo_alternate_hosts', optional($company)->seo_alternate_hosts ?? []);
+    $alternateHostsText = implode("\n", is_array($alternateHosts) ? $alternateHosts : []);
 @endphp
 
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
@@ -74,6 +76,48 @@
                     <label for="metadescription" class="font-weight-bold">Meta Description</label>
                     <textarea class="form-control @error('metadescription') is-invalid @enderror" id="metadescription"
                         name="metadescription" rows="3">{{ old('metadescription', optional($company)->metadescription) }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h2 class="section-title">Dominio e indexacion SEO</h2>
+                <p class="brand-muted">Configura aqui la URL publica. No cambies <code>APP_URL</code>, rutas, canonicals ni el sitemap manualmente.</p>
+
+                <div class="form-group mb-3">
+                    <label for="seo_canonical_url" class="font-weight-bold">Dominio canonico</label>
+                    <input type="url" class="form-control @error('seo_canonical_url') is-invalid @enderror"
+                        id="seo_canonical_url" name="seo_canonical_url" placeholder="https://www.ejemplo.com"
+                        value="{{ old('seo_canonical_url', optional($company)->seo_canonical_url ?: optional($company)->dominio) }}">
+                    <small class="form-text text-muted">Usa HTTPS y la unica version publica que debe aparecer en Google.</small>
+                    @error('seo_canonical_url')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="seo_alternate_hosts" class="font-weight-bold">Hosts alternos</label>
+                    <textarea class="form-control @error('seo_alternate_hosts') is-invalid @enderror" id="seo_alternate_hosts"
+                        name="seo_alternate_hosts" rows="3" placeholder="ejemplo.com">{{ $alternateHostsText }}</textarea>
+                    <small class="form-text text-muted">Un host por linea, sin protocolo ni rutas. Deben redirigir 301 al dominio canonico desde el servidor.</small>
+                    @error('seo_alternate_hosts')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
+                    @error('seo_alternate_hosts.*')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="search_console_verification_token" class="font-weight-bold">Token de Google Search Console</label>
+                    <input type="text" class="form-control @error('search_console_verification_token') is-invalid @enderror"
+                        id="search_console_verification_token" name="search_console_verification_token" maxlength="255"
+                        value="{{ old('search_console_verification_token', optional($company)->search_console_verification_token) }}">
+                    <small class="form-text text-muted">Copia solo el token entregado por Google; ALIS publica la etiqueta de verificacion.</small>
+                    @error('search_console_verification_token')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
         </div>
@@ -253,6 +297,23 @@
                     </div>
                 @endif
 
+                <div class="form-group mb-0">
+                    <label for="social_image" class="font-weight-bold">Imagen social predeterminada</label>
+                    <input class="form-control-file @error('social_image') is-invalid @enderror" type="file" id="social_image"
+                        name="social_image" accept="image/jpeg,image/png,image/webp">
+                    <small class="form-text text-muted">Recomendada: 1200 x 630 px. Se usa en Open Graph cuando el contenido no tiene imagen propia.</small>
+                    @error('social_image')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                @if ($companySocialImageUrl = optional($company)->publicSocialImageUrl())
+                    <div class="preview-box mt-3">
+                        <span class="preview-label">Imagen social actual</span>
+                        <img src="{{ $companySocialImageUrl }}" class="img-fluid rounded" alt="Imagen social de empresa">
+                    </div>
+                @endif
+
                 <hr>
 
                 <h3 class="h6 font-weight-bold mb-3">Si subes un logo nuevo</h3>
@@ -298,6 +359,22 @@
                         formmethod="POST" formnovalidate data-skip-loading="1" @disabled(!$company || !$hasPreviousTheme)>
                         Volver a version anterior
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h2 class="section-title">Estado de indexacion</h2>
+                <p class="brand-muted">Activalo solo despues de validar dominio, SSL, redirecciones 301, robots, sitemap y las paginas publicas.</p>
+                <div class="d-flex align-items-center justify-content-between">
+                    <label for="seo_indexable" class="mb-0 font-weight-bold">Permitir indexacion</label>
+                    <div class="custom-control custom-switch mb-0">
+                        <input type="hidden" name="seo_indexable" value="0">
+                        <input type="checkbox" class="custom-control-input" name="seo_indexable" id="seo_indexable"
+                            value="1" @checked((bool) old('seo_indexable', optional($company)->seo_indexable ?? false))>
+                        <label for="seo_indexable" class="custom-control-label"></label>
+                    </div>
                 </div>
             </div>
         </div>

@@ -51,9 +51,10 @@ class SeoMetadataService
             $name . ' | Bienes raíces en República Dominicana',
             $description,
             $canonical,
-            $logo,
+            $this->socialImage($company),
             'website',
-            [$organization]
+            [$organization],
+            $company
         );
     }
 
@@ -63,12 +64,13 @@ class SeoMetadataService
             'Propiedades en venta y alquiler | ' . $this->companyName($company),
             'Explora propiedades disponibles en venta y alquiler y encuentra la opción ideal para vivir o invertir.',
             $this->canonicalForRoute('listapropiedades', [], $page),
-            $this->absoluteAssetUrl(optional($company)->logo),
+            $this->socialImage($company),
             'website',
             [$this->breadcrumb([
                 ['name' => 'Inicio', 'url' => $this->canonicalForRoute('home')],
                 ['name' => 'Propiedades', 'url' => $this->canonicalForRoute('listapropiedades')],
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -80,7 +82,7 @@ class SeoMetadataService
             $property->metadescription ?? $property->metadescripcion ?? null,
             $property->descripcion_corta ?? $property->descripcion ?? $title
         );
-        $image = $this->absoluteAssetUrl($property->foto_portada ?? null);
+        $image = $this->absoluteAssetUrl($property->foto_portada ?? null) ?: $this->socialImage($company);
 
         $schema = array_filter([
             '@context' => 'https://schema.org',
@@ -117,7 +119,7 @@ class SeoMetadataService
         return $this->metadata($title, $description, $canonical, $image, 'product', [
             $schema,
             $this->breadcrumb($breadcrumbs),
-        ]);
+        ], $company);
     }
 
     public function forZone(Zonas $zone, $company, ?int $page = null): array
@@ -129,13 +131,14 @@ class SeoMetadataService
             $zone->seo_title ?: 'Propiedades en ' . $zone->zona . ' | ' . $this->companyName($company),
             $this->description($zone->meta_description, 'Descubre propiedades disponibles en ' . $zone->zona . '.'),
             $canonical,
-            $this->absoluteAssetUrl($zone->image),
+            $this->absoluteAssetUrl($zone->image) ?: $this->socialImage($company),
             'website',
             [$this->breadcrumb([
                 ['name' => 'Inicio', 'url' => $this->canonicalForRoute('home')],
                 ['name' => 'Propiedades', 'url' => $this->canonicalForRoute('listapropiedades')],
                 ['name' => $name, 'url' => $canonical],
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -145,12 +148,13 @@ class SeoMetadataService
             'Blog inmobiliario | ' . $this->companyName($company),
             'Consejos, noticias y análisis para comprar, vender e invertir en bienes raíces.',
             $this->canonicalForRoute('blog', [], $page),
-            $this->absoluteAssetUrl(optional($company)->logo),
+            $this->socialImage($company),
             'website',
             [$this->breadcrumb([
                 ['name' => 'Inicio', 'url' => $this->canonicalForRoute('home')],
                 ['name' => 'Blog', 'url' => $this->canonicalForRoute('blog')],
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -158,7 +162,7 @@ class SeoMetadataService
     {
         $canonical = $this->canonicalForRoute('post.show', ['slug' => $post->slug]);
         $description = $this->description($post->metadescription, $post->contenido);
-        $image = $this->absoluteAssetUrl($post->foto);
+        $image = $this->absoluteAssetUrl($post->foto) ?: $this->socialImage($company);
         $publishedAt = optional($post->published_at ?: $post->created_at)->toAtomString();
         $modifiedAt = optional($post->updated_at)->toAtomString();
 
@@ -187,7 +191,8 @@ class SeoMetadataService
                 ['name' => 'Inicio', 'url' => $this->canonicalForRoute('home')],
                 ['name' => 'Blog', 'url' => $this->canonicalForRoute('blog')],
                 ['name' => $post->titulo, 'url' => $canonical],
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -200,13 +205,14 @@ class SeoMetadataService
             $type->tipo . ' en venta | ' . $this->companyName($company),
             'Explora ' . strtolower((string) $type->tipo) . ' disponibles y recibe asesoría inmobiliaria profesional.',
             $canonical,
-            $this->absoluteAssetUrl(optional($company)->logo),
+            $this->socialImage($company),
             'website',
             [$this->breadcrumb([
                 ['name' => 'Inicio', 'url' => $this->canonicalForRoute('home')],
                 ['name' => 'Propiedades', 'url' => $this->canonicalForRoute('listapropiedades')],
                 ['name' => (string) $type->tipo, 'url' => $canonical],
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -220,7 +226,7 @@ class SeoMetadataService
             'Contacto | ' . $name,
             'Contacta a nuestro equipo para comprar, vender o alquilar propiedades en República Dominicana.',
             $canonical,
-            $logo,
+            $this->socialImage($company),
             'website',
             [array_filter([
                 '@context' => 'https://schema.org',
@@ -231,7 +237,8 @@ class SeoMetadataService
                 'email' => optional($company)->correo,
                 'telephone' => optional($company)->telefono,
                 'address' => optional($company)->direccion,
-            ])]
+            ])],
+            $company
         );
     }
 
@@ -241,7 +248,8 @@ class SeoMetadataService
         string $canonical,
         ?string $image,
         string $type,
-        array $schema
+        array $schema,
+        $company = null
     ): array {
         return [
             'title' => $this->title($title),
@@ -249,7 +257,7 @@ class SeoMetadataService
             'canonical' => $canonical,
             'image' => $image,
             'type' => $type,
-            'robots' => config('seo.indexing_enabled') ? 'index, follow' : 'noindex, nofollow',
+            'robots' => InmobiliariaService::indexingEnabled($company) ? 'index, follow' : 'noindex, nofollow',
             'schema' => array_values(array_filter($schema)),
         ];
     }
@@ -272,7 +280,7 @@ class SeoMetadataService
 
     private function absoluteUrl(string $path): string
     {
-        $baseUrl = rtrim((string) config('seo.canonical_url', config('app.url')), '/');
+        $baseUrl = rtrim(InmobiliariaService::canonicalUrl(InmobiliariaService::get()), '/');
 
         return $baseUrl . '/' . ltrim($path, '/');
     }
@@ -294,6 +302,11 @@ class SeoMetadataService
         }
 
         return $this->absoluteUrl($path);
+    }
+
+    private function socialImage($company): ?string
+    {
+        return $this->absoluteAssetUrl(optional($company)->social_image ?: optional($company)->logo);
     }
 
     private function title(string $value): string

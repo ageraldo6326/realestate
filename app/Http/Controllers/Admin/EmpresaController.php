@@ -10,6 +10,7 @@ use App\Models\Inmobiliaria;
 use App\Services\Branding\CompanyBrandingService;
 use App\Services\Branding\LogoPaletteExtractor;
 use App\Services\InmobiliariaService;
+use App\Services\SitemapService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +23,18 @@ class EmpresaController extends Controller
 
     private LogoPaletteExtractor $logoPaletteExtractor;
 
-    public function __construct(CompanyBrandingService $brandingService, LogoPaletteExtractor $logoPaletteExtractor)
+    private SitemapService $sitemapService;
+
+    public function __construct(
+        CompanyBrandingService $brandingService,
+        LogoPaletteExtractor $logoPaletteExtractor,
+        SitemapService $sitemapService
+    )
     {
         $this->middleware('auth');
         $this->brandingService = $brandingService;
         $this->logoPaletteExtractor = $logoPaletteExtractor;
+        $this->sitemapService = $sitemapService;
     }
 
     /**
@@ -73,7 +81,13 @@ class EmpresaController extends Controller
             $inmobiliaria = DB::transaction(function () use ($request): Inmobiliaria {
                 $company = InmobiliariaService::get() ?? new Inmobiliaria();
 
-                $this->persistCompany($company, $request->validated(), $request->file('logo'), $request->file('favicon'));
+                $this->persistCompany(
+                    $company,
+                    $request->validated(),
+                    $request->file('logo'),
+                    $request->file('favicon'),
+                    $request->file('social_image')
+                );
                 $company->save();
 
                 return $company;
@@ -87,6 +101,7 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
+        $this->sitemapService->forget();
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'La configuracion de empresa se guardo correctamente.');
     }
@@ -101,7 +116,13 @@ class EmpresaController extends Controller
 
         try {
             DB::transaction(function () use ($inmobiliaria, $request): void {
-                $this->persistCompany($inmobiliaria, $request->validated(), $request->file('logo'), $request->file('favicon'));
+                $this->persistCompany(
+                    $inmobiliaria,
+                    $request->validated(),
+                    $request->file('logo'),
+                    $request->file('favicon'),
+                    $request->file('social_image')
+                );
                 $inmobiliaria->save();
             });
         } catch (\Throwable $exception) {
@@ -114,6 +135,7 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
+        $this->sitemapService->forget();
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'La configuracion de empresa se actualizo correctamente.');
     }
@@ -141,6 +163,7 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
+        $this->sitemapService->forget();
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'Se restauro la paleta default del sistema.');
     }
@@ -172,11 +195,18 @@ class EmpresaController extends Controller
         }
 
         InmobiliariaService::forget();
+        $this->sitemapService->forget();
 
         return redirect()->route('inmobiliaria.edit', $inmobiliaria->id)->with('status', 'Se restauro la version anterior del tema.');
     }
 
-    private function persistCompany(Inmobiliaria $company, array $data, ?UploadedFile $logoFile, ?UploadedFile $faviconFile): void
+    private function persistCompany(
+        Inmobiliaria $company,
+        array $data,
+        ?UploadedFile $logoFile,
+        ?UploadedFile $faviconFile,
+        ?UploadedFile $socialImageFile
+    ): void
     {
         $company->nombre = $data['nombre'];
         $company->correo = $data['correo'];
@@ -189,6 +219,11 @@ class EmpresaController extends Controller
         $company->tiktok = $data['tiktok'] ?? null;
         $company->whatsapp = $data['whatsapp'] ?? null;
         $company->quienessomos = $data['quienessomos'] ?? null;
+        $company->seo_canonical_url = $data['seo_canonical_url'] ?: null;
+        $company->dominio = $company->seo_canonical_url;
+        $company->seo_alternate_hosts = $data['seo_alternate_hosts'] ?? [];
+        $company->seo_indexable = (bool) ($data['seo_indexable'] ?? false);
+        $company->search_console_verification_token = $data['search_console_verification_token'] ?? null;
         $company->aprobacion = array_key_exists('aprobacion', $data)
             ? (bool) $data['aprobacion']
             : (bool) ($company->exists ? $company->aprobacion : true);
@@ -213,6 +248,10 @@ class EmpresaController extends Controller
 
         if ($faviconFile) {
             $company->favicon = $this->storePublicImage($faviconFile, 'favicon');
+        }
+
+        if ($socialImageFile) {
+            $company->social_image = $this->storePublicImage($socialImageFile, 'social');
         }
 
         $manualTheme = $this->brandingService->getManualThemeInput($data);

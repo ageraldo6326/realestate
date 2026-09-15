@@ -40,7 +40,7 @@ class SitemapService
     private function buildXml(): string
     {
         $company = InmobiliariaService::get();
-        $baseUrl = $this->normalizeBaseUrl((string) config('seo.canonical_url', config('app.url')));
+        $baseUrl = $this->normalizeBaseUrl(InmobiliariaService::canonicalUrl($company));
         $defaultLastmod = $this->toW3cDate(optional($company)->updated_at ?? now());
         $entries = [];
 

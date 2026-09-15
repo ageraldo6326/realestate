@@ -12,6 +12,8 @@ class Inmobiliaria extends Model
 
     protected $casts = [
         'aprobacion' => 'boolean',
+        'seo_alternate_hosts' => 'array',
+        'seo_indexable' => 'boolean',
     ];
 
     protected $fillable = [
@@ -33,6 +35,11 @@ class Inmobiliaria extends Model
         'aprobacion',
         'dias_propiedad_contactos',
         'dominio',
+        'seo_canonical_url',
+        'seo_alternate_hosts',
+        'seo_indexable',
+        'social_image',
+        'search_console_verification_token',
         'logo_color_1',
         'logo_color_2',
         'logo_color_3',
@@ -58,6 +65,11 @@ class Inmobiliaria extends Model
     public function publicFaviconUrl(): ?string
     {
         return $this->publicAssetUrl($this->favicon);
+    }
+
+    public function publicSocialImageUrl(): ?string
+    {
+        return $this->publicAssetUrl($this->social_image);
     }
 
     private function publicAssetUrl(?string $path): ?string

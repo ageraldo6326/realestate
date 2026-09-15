@@ -48,7 +48,7 @@
     $seoType = $seoData['type'] ?? 'website';
     $seoRobots = $seoData['robots'] ?? ($sectionRobots !== ''
         ? $sectionRobots
-        : (config('seo.indexing_enabled') ? 'index, follow' : 'noindex, nofollow'));
+        : (\App\Services\InmobiliariaService::indexingEnabled($inmo) ? 'index, follow' : 'noindex, nofollow'));
     $seoSchemas = $seoData['schema'] ?? [];
 @endphp
 
@@ -62,6 +62,9 @@
     <meta name="robots" content="{{ $seoRobots }}">
     <meta name="keywords" content="{{ $companyKeywords }}">
     <link rel="canonical" href="{{ $seoCanonical }}" />
+    @if ($searchConsoleVerificationToken = \App\Services\InmobiliariaService::searchConsoleVerificationToken($inmo))
+        <meta name="google-site-verification" content="{{ $searchConsoleVerificationToken }}">
+    @endif
 
     @if ($companyFaviconUrl)
         <link rel="shortcut icon" href="{{ $companyFaviconUrl }}" type="image/x-icon" />
