@@ -193,16 +193,15 @@
             <div class="row align-items-end">
                 <div class="col-lg-8 mb-3 mb-lg-0">
                     <span class="badge badge-light text-primary px-3 py-2 rounded-pill mb-3">Configuracion del CRM</span>
-                    <h1 class="h3 font-weight-bold mb-2">{{ $isEdit ? 'Editar empresa' : 'Crear empresa' }}</h1>
-                    <p class="mb-0 text-white-50">Gestiona informacion institucional, redes y activos visuales con una
-                        vista dedicada consistente con el modulo Usuarios.</p>
+                    <h1 class="h3 font-weight-bold mb-2">Configuración del sitio público</h1>
+                    <p class="mb-0 text-white-50">Gestiona la marca, el dominio, SEO, indexación y activos visuales del portal público.</p>
                 </div>
                 <div class="col-lg-4">
                     <div class="empresa-stat">
                         <div class="text-uppercase small text-white-50">Modo</div>
-                        <div class="h4 mb-1 font-weight-bold">{{ $isEdit ? 'Edicion' : 'Alta' }}</div>
+                        <div class="h4 mb-1 font-weight-bold">{{ $isEdit ? 'Edición' : 'Configuración inicial' }}</div>
                         <div class="small text-white-50">
-                            {{ $isEdit ? 'Registro principal de empresa' : 'Configuracion inicial de empresa' }}</div>
+                            {{ $isEdit ? 'Ajustes activos del portal' : 'Preparación inicial del portal' }}</div>
                     </div>
                 </div>
             </div>

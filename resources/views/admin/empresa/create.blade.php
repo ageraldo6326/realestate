@@ -1,13 +1,13 @@
 @extends('admin.layoutadmin')
 
-@section('title', 'Empresa')
+@section('title', 'Configuración del sitio público')
 
 @section('breadcrumb')
     <li class="breadcrumb-item">Configuración</li>
-    <li class="breadcrumb-item active">Empresa</li>
+    <li class="breadcrumb-item active">Configuración del sitio público</li>
 @endsection
 
-@section('page_title', 'Empresa')
+@section('page_title', 'Configuración del sitio público')
 
 @section('content')
     @include('admin.empresa._form', [

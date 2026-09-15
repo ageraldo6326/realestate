@@ -109,8 +109,8 @@
                                 </a></li>
                             <li class="nav-item"><a href="{{ route('inmobiliaria.index') }}"
                                     class="nav-link {{ request()->routeIs('inmobiliaria.*') ? 'active' : '' }}"><i
-                                        class="nav-icon fas fa-building fa-fw"></i>
-                                    <p>Empresa</p>
+                                        class="nav-icon fas fa-globe fa-fw"></i>
+                                    <p>Configuración del sitio público</p>
                                 </a></li>
                             <li class="nav-item"><a href="{{ route('zonas.index') }}"
                                     class="nav-link {{ request()->routeIs('zonas.*') ? 'active' : '' }}"><i

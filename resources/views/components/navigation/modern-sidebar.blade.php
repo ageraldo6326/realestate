@@ -25,7 +25,7 @@
             'items' => [
                 $makeGroup('sistema', 'Sistema', 'fas fa-cog', [
                     $makeLink('usuarios', 'Usuarios', 'fas fa-users', route('usuarios.index'), request()->routeIs('usuarios.*'), ['equipo']),
-                    $makeLink('empresa', 'Empresa', 'fas fa-building', route('inmobiliaria.index'), request()->routeIs('inmobiliaria.*'), ['inmobiliaria']),
+                    $makeLink('sitio-publico', 'Configuración del sitio público', 'fas fa-globe', route('inmobiliaria.index'), request()->routeIs('inmobiliaria.*'), ['inmobiliaria', 'seo', 'dominio']),
                     $makeLink('zonas', 'Zonas', 'fas fa-map-marker-alt', route('zonas.index'), request()->routeIs('zonas.*'), ['ubicaciones']),
                     $makeLink('tipos-propiedad', 'Tipos de propiedad', 'fas fa-city', route('tipopropiedades.index'), request()->routeIs('tipopropiedades.*'), ['categorías']),
                     $makeLink('estados', 'Estados', 'fas fa-toggle-on', route('estados.index'), request()->routeIs('estados.*'), ['estatus']),

@@ -108,5 +108,6 @@ class SiteSeoConfigurationTest extends TestCase
         $this->assertStringContainsString('name="seo_indexable"', $html);
         $this->assertStringContainsString('name="search_console_verification_token"', $html);
         $this->assertStringContainsString('name="social_image"', $html);
+        $this->assertStringContainsString('Dominio e indexacion SEO', $html);
     }
 }
