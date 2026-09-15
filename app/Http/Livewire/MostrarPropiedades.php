@@ -8,17 +8,36 @@ use Illuminate\Support\Facades\DB;
 
 class MostrarPropiedades extends Component
 {
-    public $criterio;
-
     use WithPagination;
+
+    public $criterio = '';
+
+    protected $paginationTheme = 'bootstrap';
+
+    protected $queryString = [
+        'criterio' => ['except' => ''],
+    ];
+
+    public function updatedCriterio(): void
+    {
+        $this->resetPage();
+    }
+
+    public function clearSearch(): void
+    {
+        $this->criterio = '';
+        $this->resetPage();
+    }
 
     public function render()
     {
         $propiedades = DB::table('propiedads')
             ->select(
                 'propiedads.id',
-                'aprobada',
-                'foto_portada',
+                'propiedads.referencia',
+                'propiedads.aprobada',
+                'propiedads.activa',
+                'propiedads.foto_portada',
                 'propiedads.provincia',
                 'propiedads.ciudad',
                 'propiedads.sector_id',
@@ -26,49 +45,32 @@ class MostrarPropiedades extends Component
                 'sectores.sector as sector_nombre',
                 'barrios.barrio as barrio_nombre',
                 'provincias.provincia as provincia_nombre',
-                'direccion',
-                'precio',
-                'titulo',
-                'descripcion_corta',
-                'descripcion',
-                'metadescripcion',
-                'habitaciones',
-                'banos',
-                'parqueos',
-                'metraje',
-                'metraje_construccion',
-                'asignada_a',
-                'captada_por',
-                'tipo',
-                'foto_vendedor',
-                'disponible_para',
-                'destacada',
-                'foto1',
-                'foto2',
-                'foto3',
-                'foto4',
-                'foto5',
-                'foto6',
-                'foto7',
-                'foto8',
-                'video1',
-                'video2',
-                'video3',
-                'video4',
-                'Moneda',
-                'vendida',
-                'clicks',
-                'metadescription',
-                'propiedads.created_at',
-                'propiedads.updated_at'
+                'tipos_de_propiedads.tipo as tipo_nombre',
+                'disponible_paras.disponible_para as disponible_para_nombre',
+                'propiedads.direccion',
+                'propiedads.precio',
+                'propiedads.titulo',
+                'propiedads.habitaciones',
+                'propiedads.banos',
+                'propiedads.parqueos',
+                'propiedads.metraje',
+                'propiedads.asignada_a',
+                'propiedads.tipo',
+                'propiedads.disponible_para',
+                'propiedads.Moneda',
+                'propiedads.vendida',
+                'propiedads.created_at'
             )
             ->leftJoin('provincias', 'propiedads.provincia', '=', 'provincias.id')
             ->leftJoin('sectores', 'propiedads.sector_id', '=', 'sectores.id')
             ->leftJoin('barrios', 'propiedads.barrio_id', '=', 'barrios.id')
-            ->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id');
+            ->leftJoin('tipos_de_propiedads', 'propiedads.tipo', '=', 'tipos_de_propiedads.id')
+            ->leftJoin('disponible_paras', 'propiedads.disponible_para', '=', 'disponible_paras.id');
 
-        if ($this->criterio !== '') {
-            $criterio = '%' . trim($this->criterio) . '%';
+        $searchTerm = trim((string) $this->criterio);
+
+        if ($searchTerm !== '') {
+            $criterio = '%' . $searchTerm . '%';
             $propiedades->where(function ($query) use ($criterio) {
                 $query->where('titulo', 'like', $criterio)
                     ->orWhere('propiedads.referencia', 'like', $criterio)
