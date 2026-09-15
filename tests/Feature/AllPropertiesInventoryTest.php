@@ -134,6 +134,8 @@ class AllPropertiesInventoryTest extends TestCase
             ->test(MostrarPropiedades::class)
             ->assertSee('Apartamento Mirador Sur')
             ->assertSee('Casa en Piantini')
+            ->assertSee('Crear propiedad')
+            ->assertSee(route('propiedades.create'), false)
             ->assertSee('Aprobada')
             ->assertSee('No publicada')
             ->assertSee('Vendida')
