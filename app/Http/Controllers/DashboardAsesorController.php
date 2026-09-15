@@ -98,30 +98,10 @@ class DashboardAsesorController extends Controller
 
         ////////////////////////////////
 
-        $ventas_por_mes = \App\Models\meses::query();
-
-        $ventas_por_mes->leftjoin(DB::raw('ventas'), DB::raw('meses.numero'), '=', DB::raw('MONTH(ventas.fechaVentaCierre)'));
-        $ventas_por_mes->select(
-            DB::raw('YEAR(ventas.fechaVentaCierre) AS year'),
-            DB::raw('MONTH(ventas.fechaVentaCierre) AS month'),
-            DB::raw('meses.mes'),
-            DB::raw('COALESCE(COUNT(*),0) AS total_ventas')
-        );
-        $ventas_por_mes->groupBy(DB::raw('year'), DB::raw('month'), DB::raw('meses.mes'));
-        $ventas_por_mes->orderBy(DB::raw('meses.numero'));
+        $ventas_por_mes = $this->monthlySalesQuery('COUNT(*)');
         $ventas_por_mes->where('id_asesor', '=', Auth::user()->email);
 
-        $ventas_por_mes_monto = \App\Models\meses::query();
-
-        $ventas_por_mes_monto->leftjoin(DB::raw('ventas'), DB::raw('meses.numero'), '=', DB::raw('MONTH(ventas.fechaVentaCierre)'));
-        $ventas_por_mes_monto->select(
-            DB::raw('YEAR(ventas.fechaVentaCierre) AS year'),
-            DB::raw('MONTH(ventas.fechaVentaCierre) AS month'),
-            DB::raw('meses.mes'),
-            DB::raw('COALESCE(SUM(precio),0) AS total_ventas')
-        );
-        $ventas_por_mes_monto->groupBy(DB::raw('year'), DB::raw('month'), DB::raw('meses.mes'));
-        $ventas_por_mes_monto->orderBy(DB::raw('meses.numero'));
+        $ventas_por_mes_monto = $this->monthlySalesQuery('SUM(precio)');
         $ventas_por_mes_monto->where('id_asesor', '=', Auth::user()->email);
 
         $ventas = Venta::query();
@@ -398,5 +378,22 @@ class DashboardAsesorController extends Controller
         $contactos_altas = $contactos_altas->first();
 
         return view("admin.dashboard.dashboardasesor", compact('ventas', 'data_fuente_de_las_ventas', 'labels_fuente_de_las_ventas', 'data_tipo_de_las_ventas', 'labels_tipo_de_las_ventas', 'data_zona_de_las_ventas', 'labels_zona_de_las_ventas', 'data_estado_de_las_ventas', 'labels_estado_de_las_ventas', 'data_ventas_por_mes', 'labels_ventas_por_mes', 'data_ventas_por_mes_monto', 'labels_ventas_por_mes_monto', 'periodo', 'contactos', 'contactos_altas', 'fi', 'ff'));
+    }
+
+    /**
+     * Crea la consulta mensual con un orden compatible con ONLY_FULL_GROUP_BY.
+     */
+    protected function monthlySalesQuery(string $aggregateExpression)
+    {
+        return \App\Models\meses::query()
+            ->leftJoin(DB::raw('ventas'), DB::raw('meses.numero'), '=', DB::raw('MONTH(ventas.fechaVentaCierre)'))
+            ->select(
+                DB::raw('YEAR(ventas.fechaVentaCierre) AS year'),
+                DB::raw('MONTH(ventas.fechaVentaCierre) AS month'),
+                DB::raw('meses.mes'),
+                DB::raw('COALESCE(' . $aggregateExpression . ',0) AS total_ventas')
+            )
+            ->groupBy(DB::raw('year'), DB::raw('month'), DB::raw('meses.mes'), DB::raw('meses.numero'))
+            ->orderBy(DB::raw('meses.numero'));
     }
 }
