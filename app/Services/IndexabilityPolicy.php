@@ -21,6 +21,14 @@ class IndexabilityPolicy
         $canonical = app(CanonicalUrlService::class)->for($type, $entity);
         $findings = [];
 
+        if (!InmobiliariaService::indexingEnabled(InmobiliariaService::get())) {
+            $findings[] = $this->finding(
+                'SEO-ROBOTS-001',
+                'critical',
+                'La indexación pública está desactivada; el sitio envía noindex y robots bloquea el rastreo.'
+            );
+        }
+
         if (!Str::startsWith($canonical, 'https://') || $this->isDevelopmentUrl($canonical)) {
             $findings[] = $this->finding(
                 'SEO-DOMAIN-001',

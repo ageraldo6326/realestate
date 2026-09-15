@@ -90,6 +90,19 @@ class SeoAuditModuleTest extends TestCase
         $this->assertStringContainsString('Resultados por URL', $html);
     }
 
+    public function test_public_seo_verification_fails_when_indexing_is_disabled(): void
+    {
+        Inmobiliaria::query()->create([
+            'seo_canonical_url' => 'https://realestate.voipcom.net',
+            'seo_indexable' => false,
+        ]);
+        InmobiliariaService::forget();
+
+        $this->artisan('seo:verify-public')
+            ->expectsOutput('La indexación pública está desactivada (seo_indexable = false).')
+            ->assertExitCode(1);
+    }
+
     private function createContentTables(): void
     {
         Schema::create('inmobiliarias', function (Blueprint $table): void {
