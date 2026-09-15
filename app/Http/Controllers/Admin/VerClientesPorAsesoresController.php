@@ -19,6 +19,6 @@ class VerClientesPorAsesoresController extends Controller
         })->where('clientes.created_at', '>=', $fecha_ini)
             ->where('clientes.created_at', '<=', $fecha_fin)->get();
 
-        return view('consultas.consultaClientesPorAsesorDetalle', compact('clientes'));
+        return view('consultas.consultaClientesPorAsesorDetalle', compact('clientes', 'asesorid', 'fecha_ini', 'fecha_fin'));
     }
 }
