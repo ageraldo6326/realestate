@@ -367,12 +367,23 @@
             <div class="card-body p-4">
                 <h2 class="section-title">Estado de indexacion</h2>
                 <p class="brand-muted">Activalo solo despues de validar dominio, SSL, redirecciones 301, robots, sitemap y las paginas publicas.</p>
+                @php
+                    $seoIndexable = filter_var(
+                        old('seo_indexable', optional($company)->seo_indexable),
+                        FILTER_VALIDATE_BOOLEAN
+                    );
+                @endphp
                 <div class="d-flex align-items-center justify-content-between">
-                    <label for="seo_indexable" class="mb-0 font-weight-bold">Permitir indexacion</label>
+                    <div>
+                        <label for="seo_indexable" class="mb-0 font-weight-bold">Permitir indexacion</label>
+                        <small class="d-block {{ $seoIndexable ? 'text-success' : 'text-muted' }}" id="seo-indexable-status">
+                            {{ $seoIndexable ? 'Activo: Google puede rastrear el dominio canónico.' : 'Inactivo: el sitio envía noindex.' }}
+                        </small>
+                    </div>
                     <div class="custom-control custom-switch mb-0">
                         <input type="hidden" name="seo_indexable" value="0">
                         <input type="checkbox" class="custom-control-input" name="seo_indexable" id="seo_indexable"
-                            value="1" @checked((bool) old('seo_indexable', optional($company)->seo_indexable ?? false))>
+                            value="1" aria-describedby="seo-indexable-status" @if ($seoIndexable) checked @endif>
                         <label for="seo_indexable" class="custom-control-label"></label>
                     </div>
                 </div>
