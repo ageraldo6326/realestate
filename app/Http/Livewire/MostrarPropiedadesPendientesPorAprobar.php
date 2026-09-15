@@ -2,45 +2,93 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Propiedad;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\DB;
 
 class MostrarPropiedadesPendientesPorAprobar extends Component
 {
-
-    public $criterio;
     use WithPagination;
-        
-    public function render()
-    {        
-        $name = $this->criterio;
-        
-        if ($this->criterio=="") {
-            $propiedades = DB::table('propiedads')
-            ->select('propiedads.id', 'aprobada', 'foto_portada', 'provincia','zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
-            ->leftJoin('zonas','propiedads.zona_id','=','zonas.id')
-            ->leftJoin('estados','propiedads.estado_id','=','estados.id')
-            ->orderBy('created_at','desc')
-            ->where('aprobada','!=',1)
-            ->paginate(20);
-        } else {
-            $propiedades = DB::table('propiedads')
-            ->select('propiedads.id', 'aprobada', 'foto_portada', 'provincia', 'zona_id', 'zona', 'direccion', 'precio', 'titulo', 'descripcion_corta', 'descripcion', 'metadescripcion', 'habitaciones', 'banos', 'parqueos', 'metraje', 'metraje_construccion', 'asignada_a', 'captada_por', 'tipo', 'foto_vendedor', 'disponible_para', 'destacada', 'foto1', 'foto2', 'foto3', 'foto4', 'foto5', 'foto6', 'foto7', 'foto8', 'video1', 'video2', 'video3', 'video4', 'Moneda', 'vendida', 'lobby', 'plantaelectrica', 'camaravigilancia', 'escaleraemergencia', 'maderapreciosa', 'balcon', 'walkincloset', 'jacuzzi', 'areainfantil', 'banovisitas', 'cisterna', 'inversorareacomun', 'gascomun', 'gazebo', 'pozo', 'piscina', 'familyroom', 'cuartodeservicio', 'patio', 'portonelectrico', 'seguridad24horas', 'ascensor', 'parqueostechados', 'preinstalacionairetinacoinversor', 'terraza', 'estudio', 'gimnasio', 'controldeacceso', 'clicks', 'metadescription', 'propiedads.created_at', 'propiedads.updated_at')
-            ->where('aprobada','!=',1)
-            ->where(function($query) use ($name){
-                $query->orwhere('titulo',"like","%$this->criterio%");
-                $query->orwhere('propiedads.referencia',$this->criterio);
-                $query->orwhere('zona','like',"%$this->criterio%");
-            })
-            ->leftJoin('zonas','propiedads.zona_id','=','zonas.id')
-            ->leftJoin('estados','propiedads.estado_id','=','estados.id')
-            ->orderBy('created_at','desc')
-            ->paginate(20);
-        };
-        
-        return view('livewire.mostrar-propiedades-pendientes-por-aprobar',compact("propiedades"));
+
+    public $criterio = '';
+    public $estado = 'todos';
+
+    protected $queryString = [
+        'criterio' => ['except' => ''],
+        'estado' => ['except' => 'todos'],
+    ];
+
+    public function mount(): void
+    {
+        abort_unless(Gate::allows('access-admin'), 403);
     }
 
+    public function updatedCriterio(): void
+    {
+        $this->resetPage();
+    }
 
+    public function updatedEstado(): void
+    {
+        $this->resetPage();
+    }
+
+    public function setEstado(string $estado): void
+    {
+        if (!in_array($estado, ['todos', 'pendientes', 'aprobadas'], true)) {
+            return;
+        }
+
+        $this->estado = $estado;
+    }
+
+    public function clearFilters(): void
+    {
+        $this->criterio = '';
+        $this->estado = 'todos';
+        $this->resetPage();
+    }
+
+    public function render()
+    {
+        $baseQuery = Propiedad::query()
+            ->select(['id', 'referencia', 'foto_portada', 'titulo', 'direccion', 'precio', 'Moneda', 'aprobada', 'activa', 'clicks', 'zona_id', 'captada_por', 'created_at'])
+            ->with(['zona:id,zona', 'captador:id,name,email'])
+            ->latest();
+
+        $total = (clone $baseQuery)->count();
+        $pendientes = (clone $baseQuery)->where('aprobada', false)->count();
+        $aprobadas = $total - $pendientes;
+        $propiedades = $this->applyFilters($baseQuery)->paginate(12);
+
+        return view('livewire.mostrar-propiedades-pendientes-por-aprobar', compact('propiedades', 'total', 'pendientes', 'aprobadas'));
+    }
+
+    private function applyFilters(Builder $query): Builder
+    {
+        $criterio = trim((string) $this->criterio);
+
+        if ($criterio !== '') {
+            $query->where(function (Builder $propertyQuery) use ($criterio): void {
+                $propertyQuery
+                    ->where('titulo', 'like', '%' . $criterio . '%')
+                    ->orWhere('referencia', 'like', '%' . $criterio . '%')
+                    ->orWhereHas('zona', function (Builder $zonaQuery) use ($criterio): void {
+                        $zonaQuery->where('zona', 'like', '%' . $criterio . '%');
+                    });
+            });
+        }
+
+        if ($this->estado === 'pendientes') {
+            $query->where('aprobada', false);
+        }
+
+        if ($this->estado === 'aprobadas') {
+            $query->where('aprobada', true);
+        }
+
+        return $query;
+    }
 }

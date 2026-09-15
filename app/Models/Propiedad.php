@@ -181,4 +181,9 @@ class Propiedad extends Model
     {
         return $this->belongsTo(User::class, 'asignada_a_id');
     }
+
+    public function captador(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'captada_por');
+    }
 }

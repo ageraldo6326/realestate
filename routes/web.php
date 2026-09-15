@@ -102,7 +102,6 @@ Route::get('/quienessomos', [QuienesSomosController::class, 'index'])->name("qui
 
 
 
-Route::get('/admin/vercualquierpropiedad/{id}', [PropiedadesController::class, 'vercualquierpropiedad'])->name("vercualquierpropiedad");
 Route::get('/admin/verpropiedades', [PropiedadesController::class, 'verpropiedades'])->name("verpropiedades");
 
 
@@ -132,6 +131,8 @@ Route::group(['middleware' => ['auth', 'enforce.superadmin.password.rotation', '
     Route::get('/admin/contactostodos', [ContactosTodosController::class, 'index'])->name('contactostodos');
 
     Route::get('/admin/poraprobar/', [PropiedadesController::class, 'aprobar'])->name("poraprobar");
+    Route::patch('/admin/propiedades/{id}/aprobacion', [PropiedadesController::class, 'updateApproval'])
+        ->name('admin.propiedades.aprobacion');
     Route::get('/admin/borrarpropiedad/{id}', [PropiedadesController::class, 'borrarpropiedad'])->name("borrarpropiedad");
     Route::get('/admin/consultarpropiedades', [PropiedadesController::class, 'consultarpropiedades'])->name("consultarpropiedades");
     Route::get('/admin/editarpendientes/{id}', [PropiedadesController::class, 'editPendiente'])->name("editarpendientes");
@@ -230,6 +231,8 @@ Route::group(['middleware' => ['auth', 'role:asesor|admin']], function () {
     Route::get('/admin/clientes/asignar', [ClientesController::class, 'asignar'])->name("asignar");
 
     Route::resource('/admin/propiedades', PropiedadesController::class);
+    Route::get('/admin/vercualquierpropiedad/{id}', [PropiedadesController::class, 'vercualquierpropiedad'])
+        ->name('vercualquierpropiedad');
     Route::get('/admin/api/sectores', [PropiedadesController::class, 'sectoresPorProvincia'])->name('admin.api.sectores');
     Route::get('/admin/api/barrios', [PropiedadesController::class, 'barriosPorSector'])->name('admin.api.barrios');
     Route::resource('/admin/todo', TodoController::class);

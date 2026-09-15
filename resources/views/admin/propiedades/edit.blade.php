@@ -11,6 +11,9 @@
 
 @section('content')
     @php
+        $reviewMode = $reviewMode ?? false;
+        $formAction = $formAction ?? route('propiedades.update', $propiedad->id);
+        $returnUrl = $returnUrl ?? route('propiedades.index');
         $isAdmin =
             auth()->check() &&
             auth()
@@ -80,9 +83,8 @@
         <section class="create-hero mb-4">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div>
-                    <h1 class="create-title mb-1">Editar Propiedad</h1>
-                    <p class="create-subtitle mb-0">Actualiza la informacion comercial, SEO y multimedia usando el mismo
-                        flujo visual de creacion.</p>
+                    <h1 class="create-title mb-1">{{ $reviewMode ? 'Revisar y editar propiedad' : 'Editar Propiedad' }}</h1>
+                    <p class="create-subtitle mb-0">{{ $reviewMode ? 'Revisa la información completa antes de aprobar o retirar la aprobación.' : 'Actualiza la informacion comercial, SEO y multimedia usando el mismo flujo visual de creacion.' }}</p>
                 </div>
                 <div class="d-flex align-items-center flex-wrap gap-2">
                     <span class="badge badge-light text-primary px-3 py-2 rounded-pill">ID {{ $propiedad->id }}</span>
@@ -106,7 +108,7 @@
             </ul>
         </div>
 
-        <form action="{{ route('propiedades.update', $propiedad->id) }}" method="POST" enctype="multipart/form-data"
+        <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data"
             novalidate>
             @csrf
             @method('put')
@@ -518,7 +520,7 @@
                 <div class="col-12">
                     <div class="d-grid gap-2 gap-sm-3" style="grid-auto-flow: column; grid-auto-columns: 1fr;">
                         <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
-                        <a href="{{ route('propiedades.index') }}" class="btn btn-light border">Cancelar</a>
+                        <a href="{{ $returnUrl }}" class="btn btn-light border">Cancelar</a>
                     </div>
                 </div>
             </div>

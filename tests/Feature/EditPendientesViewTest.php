@@ -31,7 +31,7 @@ class EditPendientesViewTest extends TestCase
             'precio' => 15000000,
         ]);
 
-        $html = view('admin.propiedades.editPendientes', [
+        $html = view('admin.propiedades.edit', [
             'propiedad' => $propiedad,
             'provincias' => collect(),
             'sectores' => collect(),
@@ -42,9 +42,42 @@ class EditPendientesViewTest extends TestCase
             'estados_propiedad' => collect(),
             'inmobiliaria' => new Inmobiliaria(['aprobacion' => true]),
             'errors' => new ViewErrorBag(),
+            'reviewMode' => true,
+            'formAction' => route('updatependientes', $propiedad->id),
+            'returnUrl' => route('poraprobar'),
         ])->render();
 
         $this->assertStringContainsString('Apartamento de prueba para editar', $html);
-        $this->assertStringContainsString('name="grabar"', $html);
+        $this->assertStringContainsString('Revisar y editar propiedad', $html);
+        $this->assertStringContainsString(route('updatependientes', $propiedad->id), $html);
+        $this->assertStringContainsString('ClassicEditor', $html);
+    }
+
+    public function test_property_review_view_renders_without_exposing_rich_html(): void
+    {
+        $user = new User([
+            'name' => 'Usuario de revisión',
+            'email' => 'revision@example.test',
+        ]);
+        $user->setRelation('roles', collect());
+        $this->actingAs($user);
+
+        $propiedad = new Propiedad([
+            'id' => 9,
+            'titulo' => 'Apartamento seguro para revisión',
+            'descripcion_corta' => 'Resumen visible de la propiedad.',
+            'descripcion' => '<script>alert("xss")</script><p>Descripción segura</p>',
+            'Moneda' => 'RD$',
+            'precio' => 12500000,
+        ]);
+
+        $html = view('admin.propiedades.revision', [
+            'propiedad' => $propiedad,
+            'inmobiliaria' => new Inmobiliaria(['aprobacion' => true]),
+        ])->render();
+
+        $this->assertStringContainsString('Apartamento seguro para revisión', $html);
+        $this->assertStringContainsString('Descripción segura', $html);
+        $this->assertStringNotContainsString('<script>alert("xss")</script>', $html);
     }
 }
