@@ -105,7 +105,8 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <img src="{{ $usuario->resolvePhotoUrl() }}" alt="{{ $usuario->name }}"
-                                                class="users-avatar mr-3">
+                                                class="users-avatar mr-3"
+                                                onerror="this.onerror=null;this.src='{{ \App\Models\User::defaultPhotoUrl() }}';">
                                             <div>
                                                 <div class="font-weight-bold">{{ $usuario->name }}</div>
                                                 <div class="small text-muted">ID: {{ $usuario->id }}</div>

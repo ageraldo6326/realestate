@@ -2,18 +2,10 @@
     @php
         $authUser = Auth::user();
         $isAdmin = $authUser && $authUser->hasAnyRole(['admin', 'superadmin']);
-        $userPhotoPath = Auth::user()->foto ?? null;
-        $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
-        
-        if ($userPhotoPath) {
-            if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-                $userPhotoUrl = $userPhotoPath;
-            } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-                $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-            } else {
-                $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-            }
-        }
+        $currentUser = Auth::user();
+        $userPhotoUrl = $currentUser
+            ? $currentUser->resolvePhotoUrl()
+            : \App\Models\User::defaultPhotoUrl();
 
         // Grupos de rutas para activar el estado del menú padre
         $sistemaRoutes = [
@@ -88,7 +80,8 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="{{ $userPhotoUrl }}" class="img-circle elevation-2" alt="{{ Auth::user()->name }}"
-                    style="width:36px;height:36px;object-fit:cover;">
+                    style="width:36px;height:36px;object-fit:cover;"
+                    onerror="this.onerror=null;this.src='{{ \App\Models\User::defaultPhotoUrl() }}';">
             </div>
             <div class="info">
                 <a href="#" class="d-block text-white font-weight-500">{{ Auth::user()->name }}</a>

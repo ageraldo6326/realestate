@@ -79,9 +79,14 @@ class User extends Authenticatable
         return optional(Auth::user())->resolvePhotoUrl();
     }
 
+    public static function defaultPhotoUrl(): string
+    {
+        return asset('assets/usuario/default.webp');
+    }
+
     public function resolvePhotoUrl(?string $fallback = null): string
     {
-        $defaultFallback = $fallback ?: asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+        $defaultFallback = $fallback ?: self::defaultPhotoUrl();
         $photo = trim((string) $this->foto);
 
         if ($photo === '') {
@@ -94,6 +99,10 @@ class User extends Authenticatable
 
         if (Str::startsWith($photo, ['/assets/', 'assets/', '/img/', 'img/'])) {
             return asset(ltrim($photo, '/'));
+        }
+
+        if (! Str::contains($photo, '/')) {
+            return asset('assets/usuario/' . ltrim($photo, '/'));
         }
 
         return asset('assets/' . ltrim($photo, '/'));

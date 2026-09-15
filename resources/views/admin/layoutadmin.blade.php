@@ -57,18 +57,10 @@
 
 <body class="hold-transition sidebar-mini layout-fixed {{ config('ui.modern_sidebar') ? 'modern-sidebar-enabled' : '' }}">
     @php
-        $userPhotoPath = Auth::user()->foto ?? null;
-        $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
-
-        if ($userPhotoPath) {
-            if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-                $userPhotoUrl = $userPhotoPath;
-            } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-                $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-            } else {
-                $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-            }
-        }
+        $currentUser = Auth::user();
+        $userPhotoUrl = $currentUser
+            ? $currentUser->resolvePhotoUrl()
+            : \App\Models\User::defaultPhotoUrl();
     @endphp
     <div class="wrapper">
 
@@ -126,7 +118,8 @@
                         id="navbarUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         <img src="{{ $userPhotoUrl }}" alt="{{ Auth::user()->name }}" class="img-circle mr-2"
-                            style="width:32px;height:32px;object-fit:cover;">
+                            style="width:32px;height:32px;object-fit:cover;"
+                            onerror="this.onerror=null;this.src='{{ \App\Models\User::defaultPhotoUrl() }}';">
                         <span class="d-none d-md-inline font-weight-500 text-sm">{{ Auth::user()->name }}</span>
                         <i class="fas fa-chevron-down ml-1 text-xs text-muted"></i>
                     </a>

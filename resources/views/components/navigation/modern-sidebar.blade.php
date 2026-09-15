@@ -1,18 +1,9 @@
 @php
     $authUser = Auth::user();
     $isAdmin = $authUser && $authUser->hasAnyRole(['admin', 'superadmin']);
-    $userPhotoPath = $authUser->foto ?? null;
-    $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
-
-    if ($userPhotoPath) {
-        if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-            $userPhotoUrl = $userPhotoPath;
-        } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-            $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-        } else {
-            $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-        }
-    }
+    $userPhotoUrl = $authUser
+        ? $authUser->resolvePhotoUrl()
+        : \App\Models\User::defaultPhotoUrl();
 
     $sistemaRoutes = ['usuarios.index', 'usuarios.create', 'usuarios.edit', 'inmobiliaria.index', 'inmobiliaria.edit', 'zonas.index', 'zonas.create', 'zonas.edit', 'tipopropiedades.index', 'tipopropiedades.create', 'tipopropiedades.edit', 'estados.index', 'estados.create', 'estados.edit', 'disponiblepara.index', 'disponiblepara.create', 'disponiblepara.edit', 'tipostareas.index', 'tipostareas.create', 'tipostareas.edit'];
     $websiteRoutes = ['portadas.index', 'portadas.create', 'portadas.edit', 'testimonios.index', 'testimonios.create', 'testimonios.edit', 'posts.index', 'posts.create', 'posts.edit', 'enfoques.index', 'enfoques.create', 'enfoques.edit'];
@@ -172,7 +163,8 @@
 
     <div class="app-modern-sidebar__profile">
         <div class="app-modern-sidebar__profile-main">
-            <img src="{{ $userPhotoUrl }}" class="app-modern-sidebar__avatar" alt="{{ $authUser->name }}">
+            <img src="{{ $userPhotoUrl }}" class="app-modern-sidebar__avatar" alt="{{ $authUser->name }}"
+                onerror="this.onerror=null;this.src='{{ \App\Models\User::defaultPhotoUrl() }}';">
             <div class="app-modern-sidebar__profile-copy">
                 <span>{{ $authUser->name }}</span>
                 <small>{{ $isAdmin ? 'Administrador' : 'Asesor' }}</small>

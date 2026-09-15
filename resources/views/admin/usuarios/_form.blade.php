@@ -4,8 +4,8 @@
     $isProtectedSuperadmin = (bool) ($isProtectedSuperadmin ?? false);
 
     $currentPhoto = $usuarioActual
-        ? $usuarioActual->resolvePhotoUrl(asset('vendor/adminlte/dist/img/AdminLTELogo.png'))
-        : asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+        ? $usuarioActual->resolvePhotoUrl()
+        : \App\Models\User::defaultPhotoUrl();
     $approvalMode = old(
         'modo_aprobacion_propiedades',
         $isEdit
@@ -748,8 +748,9 @@
                         <div class="card-body">
                             <h2 class="h5 mb-3">Foto de perfil</h2>
                             <img id="user-photo-preview-{{ $mode }}" class="users-avatar-preview mb-3"
-                                src="{{ old('fotourl') ? asset('vendor/adminlte/dist/img/AdminLTELogo.png') : $currentPhoto }}"
-                                data-default-src="{{ $currentPhoto }}" alt="Vista previa del usuario">
+                                src="{{ old('fotourl') ? \App\Models\User::defaultPhotoUrl() : $currentPhoto }}"
+                                data-default-src="{{ $currentPhoto }}" alt="Vista previa del usuario"
+                                onerror="this.onerror=null;this.src='{{ \App\Models\User::defaultPhotoUrl() }}';">
 
                             <div class="form-group mb-2">
                                 <div id="user-photo-dropzone-{{ $mode }}" class="users-dropzone"></div>
