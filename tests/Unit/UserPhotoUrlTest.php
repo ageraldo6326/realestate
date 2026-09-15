@@ -14,6 +14,7 @@ class UserPhotoUrlTest extends TestCase
         $this->assertSame($expectedUrl, (new User())->resolvePhotoUrl());
         $this->assertSame($expectedUrl, (new User(['foto' => 'default.webp']))->resolvePhotoUrl());
         $this->assertSame($expectedUrl, User::defaultPhotoUrl());
+        $this->assertFileExists(public_path('assets/usuario/default.webp'));
     }
 
     public function test_it_preserves_existing_user_photo_paths_and_external_urls(): void

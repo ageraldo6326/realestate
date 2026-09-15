@@ -1,6 +1,7 @@
 /public/img/propiedades/
 /node_modules
-/public/assets/usuario/
+/public/assets/usuario/*
+!/public/assets/usuario/default.webp
 /public/media/
 /public/hot
 /public/storage
