@@ -27,7 +27,7 @@ class TiposDePropiedad extends Model
      */
     public function propiedades()
     {
-        return $this->hasMany(\App\Models\Propiedad::class, 'tipo_propiedad_id', 'id');
+        return $this->hasMany(\App\Models\Propiedad::class, 'tipo', 'id');
     }
 
     /**

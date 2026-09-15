@@ -7,13 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Services\CatalogoService;
 use App\Services\InmobiliariaService;
+use App\Services\SeoMetadataService;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     //
 
-    public function index()
+    public function index(SeoMetadataService $seoMetadata)
     {
         $inmobiliaria = InmobiliariaService::get();
 
@@ -25,12 +26,12 @@ class HomeController extends Controller
 
         $posts = Post::query()
             ->select('id', 'titulo', 'slug', 'foto', 'autor', 'created_at')
-            ->where('activo', 1)
+            ->published()
             ->latest()
             ->limit(6)
             ->get();
 
-        $pro_destacadas = Propiedad::query();
+        $pro_destacadas = Propiedad::query()->publiclyVisible();
 
         $pro_destacadas->select(
             'propiedads.estado_id',
@@ -117,17 +118,14 @@ class HomeController extends Controller
         $pro_destacadas->leftJoin('users as creator_user', 'propiedads.captada_por', '=', 'creator_user.id');
         $pro_destacadas->leftJoin('disponible_paras', 'propiedads.disponible_para', '=', 'disponible_paras.id');
         $pro_destacadas->where('destacada', '=', 1);
-        $pro_destacadas->where('activa', '=', 1);
         $pro_destacadas->whereNull('assigned_user.deleted_at');
         $pro_destacadas->limit(3);
-        if ((bool) optional($inmobiliaria)->aprobacion) {
-            $pro_destacadas->where('aprobada', 1);
-        }
         $pro_destacadas->orderBy('propiedads.created_at', 'desc');
 
         $pro_destacadas = $pro_destacadas->get();
+        $seo = $seoMetadata->forHome($inmobiliaria);
 
-        return view('frontend.home', compact('portadas', 'pro_destacadas', 'testimonios', 'inmobiliaria', 'enfoques', 'posts'));
+        return view('frontend.home', compact('portadas', 'pro_destacadas', 'testimonios', 'inmobiliaria', 'enfoques', 'posts', 'seo'));
     }
 
     public function Buscar($tabla, $campo, $valor)

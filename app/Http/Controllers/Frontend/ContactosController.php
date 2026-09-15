@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\InmobiliariaService;
+use App\Services\SeoMetadataService;
 
 class ContactosController extends Controller
 {
@@ -13,12 +14,13 @@ class ContactosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SeoMetadataService $seoMetadataService)
     {
         //
         $inmobiliaria = InmobiliariaService::get();
+        $seo = $seoMetadataService->forContact($inmobiliaria);
 
-        return view("frontend.contacto", compact("inmobiliaria"));
+        return view("frontend.contacto", compact("inmobiliaria", "seo"));
     }
 
     /**

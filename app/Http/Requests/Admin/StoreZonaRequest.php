@@ -16,6 +16,12 @@ class StoreZonaRequest extends FormRequest
     {
         $this->merge([
             'zona' => $this->normalize($this->input('zona')),
+            'seo_h1' => $this->normalize($this->input('seo_h1')),
+            'seo_title' => $this->normalize($this->input('seo_title')),
+            'meta_description' => $this->normalize($this->input('meta_description')),
+            'seo_description' => trim((string) $this->input('seo_description')) ?: null,
+            'image_alt' => $this->normalize($this->input('image_alt')),
+            'is_public' => $this->boolean('is_public'),
         ]);
     }
 
@@ -29,6 +35,13 @@ class StoreZonaRequest extends FormRequest
                 'max:50',
                 Rule::unique('zonas', 'zona'),
             ],
+            'is_public' => ['nullable', 'boolean'],
+            'seo_h1' => ['nullable', 'string', 'max:120'],
+            'seo_title' => ['nullable', 'string', 'max:70'],
+            'meta_description' => ['nullable', 'string', 'max:160'],
+            'seo_description' => ['nullable', 'string', 'max:10000'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+            'image_alt' => ['nullable', 'string', 'max:160'],
         ];
     }
 

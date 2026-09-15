@@ -21,7 +21,7 @@
 
 <section class="page-hero" aria-label="Propiedades por Zona">
     <div class="container">
-        <h1 class="page-hero-title">{{ $zona->zona ?? 'Propiedades' }}</h1>
+        <h1 class="page-hero-title">{{ $zona->seo_h1 ?: ($zona->zona ?? 'Propiedades') }}</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
@@ -34,6 +34,11 @@
 
 <section class="listings-section">
     <div class="container">
+        @if ($zona->seo_description)
+            <div class="bg-white border rounded-3 p-4 mb-4 lh-lg">
+                {!! app(\App\Services\HtmlContentSanitizer::class)->sanitize($zona->seo_description) !!}
+            </div>
+        @endif
         @livewire('buscar-propiedades-por-zonas', ['zona_id' => $zona_id, 'zona' => $zona])
     </div>
 </section>

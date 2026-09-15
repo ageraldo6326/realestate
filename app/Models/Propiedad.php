@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class Propiedad extends Model
 {
@@ -68,6 +70,16 @@ class Propiedad extends Model
             $propiedad->syncAssignedAdvisor();
             $propiedad->stripMissingOptionalColumns();
         });
+
+        static::saved(function (self $propiedad): void {
+            if ($propiedad->wasRecentlyCreated || $propiedad->wasChanged([
+                'slug', 'activa', 'aprobada', 'vendida', 'zona_id', 'tipo', 'updated_at',
+            ])) {
+                Cache::forget('seo.sitemap.xml');
+            }
+        });
+
+        static::deleted(static fn (): bool => Cache::forget('seo.sitemap.xml'));
     }
 
     protected function syncAssignedAdvisor(): void
@@ -180,6 +192,16 @@ class Propiedad extends Model
     public function asesorPorId(): BelongsTo
     {
         return $this->belongsTo(User::class, 'asignada_a_id');
+    }
+
+    public function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query
+            ->where('propiedads.activa', true)
+            ->where('propiedads.aprobada', true)
+            ->where('propiedads.vendida', false)
+            ->whereNotNull('propiedads.slug')
+            ->where('propiedads.slug', '<>', '');
     }
 
     public function captador(): BelongsTo

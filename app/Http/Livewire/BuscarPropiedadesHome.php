@@ -67,7 +67,7 @@ class BuscarPropiedadesHome extends Component
         $enfoques = CatalogoService::enfoques();
         $posts = CatalogoService::posts();
 
-        $propiedades = Propiedad::query();
+        $propiedades = Propiedad::query()->publiclyVisible();
 
         $propiedades->select(
             'propiedads.id',
@@ -149,8 +149,6 @@ class BuscarPropiedadesHome extends Component
             DB::raw('COALESCE(assigned_user.foto, creator_user.foto) as asesor_foto')
         );
 
-        $propiedades->where('activa', '=', 1);
-
         if (filled($this->titulo_criterio)) {
             $propiedades->where('propiedads.titulo', 'like', '%' . trim($this->titulo_criterio) . '%');
         }
@@ -169,10 +167,6 @@ class BuscarPropiedadesHome extends Component
 
         if (filled($this->precio_inicial) && filled($this->precio_final)) {
             $propiedades->whereBetween('precio', [str_replace(',', '', $this->precio_inicial), str_replace(',', '', $this->precio_final)]);
-        }
-
-        if ((bool) optional($inmobiliaria)->aprobacion) {
-            $propiedades->where('aprobada', '=', 1);
         }
 
         $propiedades->leftJoin('provincias', 'propiedads.provincia', '=', 'provincias.id');

@@ -164,10 +164,17 @@
 
                     <div class="card content-form-panel mb-4">
                         <div class="card-body">
+                            <div class="form-group">
+                                <label for="seo_title" class="content-form-label">Título SEO</label>
+                                <input type="text" class="form-control content-form-control @error('seo_title') is-invalid @enderror"
+                                    id="seo_title" name="seo_title" maxlength="70"
+                                    value="{{ old('seo_title', optional($postActual)->seo_title) }}"
+                                    placeholder="Opcional; si se omite se utiliza el título del post">
+                            </div>
                             <div class="form-group mb-0">
                                 <label for="metadescription" class="content-form-label">Meta description</label>
                                 <textarea class="form-control content-form-control @error('metadescription') is-invalid @enderror" id="metadescription"
-                                    name="metadescription" rows="4">{{ old('metadescription', optional($postActual)->metadescription) }}</textarea>
+                                    name="metadescription" rows="4" maxlength="160">{{ old('metadescription', optional($postActual)->metadescription) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -185,6 +192,18 @@
                             @error('foto')
                                 <span class="invalid-feedback d-block">{{ $message }}</span>
                             @enderror
+                            <div class="form-group mt-3">
+                                <label for="image_alt" class="content-form-label">Texto alternativo</label>
+                                <input type="text" id="image_alt" name="image_alt" maxlength="160"
+                                    class="form-control content-form-control"
+                                    value="{{ old('image_alt', optional($postActual)->image_alt) }}">
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="image_credit" class="content-form-label">Crédito de imagen</label>
+                                <input type="text" id="image_credit" name="image_credit" maxlength="160"
+                                    class="form-control content-form-control"
+                                    value="{{ old('image_credit', optional($postActual)->image_credit) }}">
+                            </div>
                         </div>
                     </div>
 
@@ -197,6 +216,12 @@
 
                     <div class="card content-form-panel mb-4">
                         <div class="card-body">
+                            <div class="form-group">
+                                <label for="published_at" class="content-form-label">Fecha de publicación</label>
+                                <input type="datetime-local" id="published_at" name="published_at"
+                                    class="form-control content-form-control"
+                                    value="{{ old('published_at', optional(optional($postActual)->published_at)->format('Y-m-d\TH:i')) }}">
+                            </div>
                             <div class="custom-control custom-switch">
                                 <input class="custom-control-input" type="checkbox" id="activo" name="activo"
                                     value="1"

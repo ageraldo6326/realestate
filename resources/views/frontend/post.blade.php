@@ -1,6 +1,6 @@
 @extends('layout.layout-landing')
 
-@section('seo_title', $post->titulo . ' — ' . ($inmo->titulo ?? 'Portal Inmobiliario'))
+@section('seo_title', $post->titulo . ' — ' . ($inmobiliaria->titulo ?? 'Portal Inmobiliario'))
 @section('seo_description', Str::limit(strip_tags($post->contenido), 160))
 
 @section('extra_styles')
@@ -40,6 +40,15 @@
 
 @php
     $postPlaceholder = asset('assets/post-1.jpg');
+    $postImage = $post->foto;
+    if ($postImage && \Illuminate\Support\Str::startsWith($postImage, ['http://', 'https://', '//'])) {
+        $postImageUrl = $postImage;
+    } elseif ($postImage && \Illuminate\Support\Str::startsWith($postImage, ['/assets/', 'assets/', '/img/', 'img/', '/storage/', 'storage/'])) {
+        $postImageUrl = asset(ltrim($postImage, '/'));
+    } else {
+        $postImageUrl = $postImage ? asset('assets/' . ltrim($postImage, '/')) : $postPlaceholder;
+    }
+    $publicationDate = $post->published_at ?: $post->created_at;
 @endphp
 
 <section class="page-hero" aria-label="Artículo">
@@ -62,15 +71,22 @@
                 <article class="post-card">
                     <img class="post-hero-img"
                          loading="eager"
-                        src="{{ !empty($post->foto) ? asset('assets/'.$post->foto) : $postPlaceholder }}"
+                         decoding="async"
+                         fetchpriority="high"
+                         width="1200"
+                         height="630"
+                        src="{{ $postImageUrl }}"
                         onerror="this.onerror=null;this.src='{{ $postPlaceholder }}';"
-                         alt="{{ $post->titulo }}"
+                         alt="{{ $post->image_alt ?: $post->titulo }}"
                          title="{{ $post->titulo }}">
+                    @if ($post->image_credit)
+                        <div class="small text-muted px-4 pt-2">Imagen: {{ $post->image_credit }}</div>
+                    @endif
                     <div class="post-body">
                         <div class="post-meta">
                             <span class="post-meta-item">
                                 <i class="far fa-calendar-alt"></i>
-                                <time datetime="{{ $post->created_at->format('Y-m-d') }}">{{ $post->created_at->format('d/m/Y') }}</time>
+                                <time datetime="{{ optional($publicationDate)->format('Y-m-d') }}">{{ optional($publicationDate)->format('d/m/Y') }}</time>
                             </span>
                             @if($post->autor)
                             <span class="post-meta-item">
@@ -81,7 +97,7 @@
                         </div>
                         <h2 class="post-title">{{ $post->titulo }}</h2>
                         <div class="post-content">
-                            {!! $post->contenido !!}
+                            {!! app(\App\Services\HtmlContentSanitizer::class)->sanitize($post->contenido) !!}
                         </div>
                     </div>
                     <div class="post-footer">

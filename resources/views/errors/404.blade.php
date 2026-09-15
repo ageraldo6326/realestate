@@ -1,23 +1,16 @@
-@extends('layout.layout')
+@extends('layout.layout-landing')
 
+@section('seo_title', 'Página no encontrada')
+@section('seo_description', 'La página solicitada no está disponible.')
+@section('seo_robots', 'noindex, nofollow')
 
-
-@section('galeria')
-<div class="ltn__breadcrumb-area text-left bg-overlay-white-30 bg-image "  data-bs-bg="img/bg/14.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner">
-                    <h1 class="page-title">404 Pagina no encontrada</h1>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a href="{{ route('home') }}"><span class="ltn__secondary-color"><i class="fas fa-home"></i></span> Home</a></li>
-                            <li>404</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+@section('content')
+    <section class="py-5 bg-light" aria-labelledby="not-found-title">
+        <div class="container py-5 text-center">
+            <div class="display-1 fw-bold text-primary mb-3" aria-hidden="true">404</div>
+            <h1 id="not-found-title" class="h2 mb-3">Página no encontrada</h1>
+            <p class="text-muted mb-4">El enlace puede haber cambiado o el contenido ya no está disponible.</p>
+            <a href="{{ route('home') }}" class="btn btn-primary px-4">Volver al inicio</a>
         </div>
-    </div>
-</div>
+    </section>
 @endsection

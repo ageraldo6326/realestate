@@ -317,7 +317,7 @@
                                             {{ \Carbon\Carbon::parse($post->created_at)->format('d M, Y') }}</span>
                                     </div>
                                     <h3 class="blog-title"><a
-                                            href="{{ route('post.show', $post->slug) }}">{!! $post->titulo !!}</a></h3>
+                                            href="{{ route('post.show', $post->slug) }}">{{ $post->titulo }}</a></h3>
                                     <a href="{{ route('post.show', $post->slug) }}" class="blog-read-more">Leer más <i
                                             class="fas fa-arrow-right"></i></a>
                                 </div>

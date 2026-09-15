@@ -16,10 +16,11 @@ sudo install -d -o www-data -g www-data -m 2775 \
   storage/framework/views \
   storage/logs \
   bootstrap/cache \
-  public/img
-sudo chown -R www-data:www-data storage bootstrap/cache public/img
-sudo find storage bootstrap/cache public/img -type d -exec chmod 2775 {} +
-sudo find storage bootstrap/cache public/img -type f -exec chmod 664 {} +
+  public/img \
+  public/assets/usuario
+sudo chown -R www-data:www-data storage bootstrap/cache public/img public/assets/usuario
+sudo find storage bootstrap/cache public/img public/assets/usuario -type d -exec chmod 2775 {} +
+sudo find storage bootstrap/cache public/img public/assets/usuario -type f -exec chmod 664 {} +
 
 COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --optimize-autoloader
 
@@ -52,6 +53,22 @@ El error procede de un propietario o permisos incorrectos en `storage`/`bootstra
 ## Carga de logo y favicon
 
 Selecciona el archivo desde el campo **Logo** o **Favicon** del formulario; no se carga escribiendo una URL. Los archivos nuevos se guardan en `public/img` y se sirven desde una URL como `/img/logo-<hash>.png`. Una URL bajo `/admin/inmobiliaria/...` es una ruta administrativa y no corresponde a un archivo público.
+
+## Carga de fotos de usuarios
+
+Las fotos de perfil se convierten a WebP y se guardan en `public/assets/usuario`. El usuario del proceso PHP debe tener permisos de escritura sobre ese directorio; de lo contrario el sistema mostrará el avatar predeterminado y el log registrará `photo_processing.failed` con el mensaje `Can't write image data to path`.
+
+El bloque de despliegue anterior crea y asigna los permisos correctos. Para corregir un servidor ya desplegado, ejecuta:
+
+```bash
+cd /var/www/html/realestate
+sudo install -d -o www-data -g www-data -m 2775 public/assets/usuario
+sudo chown -R www-data:www-data public/assets/usuario
+sudo find public/assets/usuario -type d -exec chmod 2775 {} +
+sudo find public/assets/usuario -type f -exec chmod 664 {} +
+```
+
+Si PHP-FPM/Apache usa otro usuario, sustituye `www-data` por el usuario real del proceso. No uses `chmod 777`.
 
 ## Crear superusuario
 
@@ -100,3 +117,23 @@ $user->syncRoles([$superadminRole]);
 ```
 
 4. Sal con `exit`, reconstruye la caché e inicia sesión. Si la rotación está activa, cambia la contraseña inicial de inmediato. Después puedes vaciar `SUPERADMIN_BOOTSTRAP_PASSWORD` en `.env` y ejecutar `php artisan optimize`.
+
+## Publicación SEO y dominio canónico
+
+Las URL públicas canónicas se generan desde variables de entorno, no desde el dominio de la petición. En producción configura:
+
+```dotenv
+APP_URL=https://www.merkelbienesraices.com.do
+SEO_CANONICAL_URL=https://www.merkelbienesraices.com.do
+SEO_INDEXING_ENABLED=true
+```
+
+En desarrollo y en `realestate.voipcom.net` conserva `SEO_INDEXING_ENABLED=false`. Esto publica `robots.txt` con `Disallow: /`, añade `X-Robots-Tag: noindex, nofollow` y evita que staging compita con el dominio final. Después de cambiar estas variables ejecuta `php artisan optimize:clear` y `php artisan optimize` con el usuario del proceso PHP.
+
+El servidor web debe redirigir con 301, conservando ruta y query string, todas las variantes HTTP y sin `www` hacia `https://www.merkelbienesraices.com.do`. Laravel mantiene además estas compatibilidades:
+
+- `/propiedad/{slug}` → `/propiedades/{slug}`
+- `/post/{slug}` → `/blog/{slug}`
+- `/{zona}` → `/propiedades/zona/{slug}`
+
+Antes de habilitar la indexación confirma que `/robots.txt` y `/sitemap.xml` respondan 200 y que el sitemap no contenga el dominio de staging, propiedades ocultas/vendidas ni borradores.

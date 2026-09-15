@@ -6,6 +6,8 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\InmobiliariaService;
+use App\Services\SeoMetadataService;
+use Illuminate\Http\RedirectResponse;
 
 class BlogController extends Controller
 {
@@ -14,14 +16,15 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, SeoMetadataService $seoMetadataService)
     {
         //
         $inmobiliaria = InmobiliariaService::get();
 
-        $posts = Post::orderByDesc('created_at')->paginate();
+        $posts = Post::query()->published()->orderByDesc('published_at')->paginate(12);
+        $seo = $seoMetadataService->forBlog($inmobiliaria, (int) $request->query('page', 1));
 
-        return view("frontend.blog", compact("inmobiliaria","posts"));        
+        return view("frontend.blog", compact("inmobiliaria", "posts", "seo"));
     }
 
     /**
@@ -51,12 +54,21 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($slug)
+    public function show(string $slug, SeoMetadataService $seoMetadataService)
     {
-        $post = Post::where('slug', $slug)->first();
+        $post = Post::query()->published()->where('slug', $slug)->firstOrFail();
+        $inmobiliaria = InmobiliariaService::get();
+        $seo = $seoMetadataService->forPost($post, $inmobiliaria);
 
-        return view("frontend.post", compact("post"));
+        return view("frontend.post", compact("post", "inmobiliaria", "seo"));
 
+    }
+
+    public function legacyRedirect(string $slug): RedirectResponse
+    {
+        abort_unless(Post::query()->published()->where('slug', $slug)->exists(), 404);
+
+        return redirect()->route('post.show', ['slug' => $slug], 301);
     }
 
     /**

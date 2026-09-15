@@ -3,6 +3,7 @@
 use App\Models\Propiedad;
 use App\Models\Disponible_para;
 use App\Http\Controllers\Sitemap;
+use App\Http\Controllers\RobotsController;
 use App\Http\Livewire\Admin\Posts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -81,23 +82,29 @@ Route::any('/seo/sitemap', function () {
     return response('', 410);
 });
 
-Route::get('/sitemap.xml', [Sitemap::class, 'sitemap'])->name('sitemap.xml');
+Route::get('/sitemap.xml', [Sitemap::class, 'sitemap'])->middleware('public.seo.headers')->name('sitemap.xml');
 Route::redirect('/sitemap', '/sitemap.xml', 301);
+Route::get('/robots.txt', RobotsController::class)->middleware('public.seo.headers')->name('robots.txt');
 
 Route::get('/admin/clientes/veropciones/{id}', [ClientesController::class, "veropciones"])->name("veropciones");
 Route::get('/admin/clientes/veropcionesendolares/{id}', [ClientesController::class, "veropcionesendolares"])->name("veropcionesendolares");
 
 Route::get('/select', [SelectController::class, 'index'])->name('select');
 // frontend
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/propiedad/{id}', [Productdetails::class, 'show'])->name('propiedad');
-Route::get('/propiedades', [ListaPropiedadesController::class, 'index'])->name("listapropiedades");
-Route::get('/propiedades/agente/{id}', [ListaPropiedadesPorAgenteController::class, 'index'])->name("listapropiedadesporagentes");
-Route::get('/equipo', [EquipoController::class, 'index'])->name("equipo");
-Route::get('/contacto', [ContactosController::class, 'index'])->name("contactos");
-Route::get('/blog', [BlogController::class, 'index'])->name("blog");
-Route::get('/post/{slug}', [BlogController::class, 'show'])->name("post.show");
-Route::get('/quienessomos', [QuienesSomosController::class, 'index'])->name("quienessomos");
+Route::middleware('public.seo.headers')->group(function (): void {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/propiedades', [ListaPropiedadesController::class, 'index'])->name('listapropiedades');
+    Route::get('/propiedades/agente/{id}', [ListaPropiedadesPorAgenteController::class, 'index'])->name('listapropiedadesporagentes');
+    Route::get('/propiedades/zona/{zona}', [propiedadPorZonaController::class, 'index'])->name('propiedadesPorZona');
+    Route::get('/propiedades/{slug}', [Productdetails::class, 'show'])->name('propiedad');
+    Route::get('/propiedad/{slug}', [Productdetails::class, 'legacyRedirect'])->name('propiedad.legacy');
+    Route::get('/equipo', [EquipoController::class, 'index'])->name('equipo');
+    Route::get('/contacto', [ContactosController::class, 'index'])->name('contactos');
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('post.show');
+    Route::get('/post/{slug}', [BlogController::class, 'legacyRedirect'])->name('post.legacy');
+    Route::get('/quienessomos', [QuienesSomosController::class, 'index'])->name('quienessomos');
+});
 
 
 
@@ -321,8 +328,12 @@ Route::get('/assets/{path}', function ($path) {
 
 Route::get('/propiedadesPorAgente/{id_agente}', [propiedadesPorAgenteController::class, "show"])->name("propiedadesPorAgente");
 
-Route::get('/{zona}', [propiedadPorZonaController::class, "index"])->name("propiedadesPorZona");
+Route::get('/{zona}', [propiedadPorZonaController::class, 'legacyRedirect'])
+    ->middleware('public.seo.headers')
+    ->name('propiedadesPorZona.legacy');
 
-Route::get('/venta/{tipo}/', [propiedadPorZonaController::class, "tipo"])->name("propiedadesPorTipo");
+Route::get('/venta/{tipo}/', [propiedadPorZonaController::class, "tipo"])
+    ->middleware('public.seo.headers')
+    ->name("propiedadesPorTipo");
 
 Route::get('/tool/optimizar-imagenes', [OptimizarImagenesController::class, 'optimizar'])->name('optimizar-imagenes');

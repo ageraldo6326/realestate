@@ -37,6 +37,19 @@
     $companyLogoPlaceholder = asset('assets/inmobiliaria/logo.png');
     $themeVariables =
         $frontendTheme ?? app(\App\Services\Branding\CompanyBrandingService::class)->getDefaultCssVariables();
+    $seoData = $seo ?? [];
+    $sectionTitle = trim($__env->yieldContent('seo_title'));
+    $sectionDescription = trim($__env->yieldContent('seo_description'));
+    $sectionRobots = trim($__env->yieldContent('seo_robots'));
+    $seoTitle = $seoData['title'] ?? ($sectionTitle !== '' ? $sectionTitle : $companyTitle);
+    $seoDescription = $seoData['description'] ?? ($sectionDescription !== '' ? $sectionDescription : $companyDescription);
+    $seoCanonical = $seoData['canonical'] ?? app(\App\Services\SeoMetadataService::class)->canonicalForCurrentPath();
+    $seoImage = $seoData['image'] ?? $companyLogoUrl;
+    $seoType = $seoData['type'] ?? 'website';
+    $seoRobots = $seoData['robots'] ?? ($sectionRobots !== ''
+        ? $sectionRobots
+        : (config('seo.indexing_enabled') ? 'index, follow' : 'noindex, nofollow'));
+    $seoSchemas = $seoData['schema'] ?? [];
 @endphp
 
 <head>
@@ -44,20 +57,35 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('seo_title', $companyTitle)</title>
-    <meta name="description" content="@yield('seo_description', $companyDescription)">
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="robots" content="{{ $seoRobots }}">
     <meta name="keywords" content="{{ $companyKeywords }}">
-    <link rel="canonical" href="{{ preg_replace('/^http:/i', 'https:', url()->current()) }}" />
+    <link rel="canonical" href="{{ $seoCanonical }}" />
 
     @if ($companyFaviconUrl)
         <link rel="shortcut icon" href="{{ $companyFaviconUrl }}" type="image/x-icon" />
     @endif
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('seo_title', $companyTitle)">
-    <meta property="og:description" content="@yield('seo_description', $companyDescription)">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $seoTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:type" content="{{ $seoType }}">
+    <meta property="og:url" content="{{ $seoCanonical }}">
+    <meta property="og:site_name" content="{{ $companyTitle }}">
+    @if ($seoImage)
+        <meta property="og:image" content="{{ $seoImage }}">
+    @endif
+    <meta name="twitter:card" content="{{ $seoImage ? 'summary_large_image' : 'summary' }}">
+    <meta name="twitter:title" content="{{ $seoTitle }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    @if ($seoImage)
+        <meta name="twitter:image" content="{{ $seoImage }}">
+    @endif
+
+    @foreach ($seoSchemas as $seoSchema)
+        <script type="application/ld+json">{!! json_encode($seoSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
+    @endforeach
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -105,6 +133,22 @@
             color: var(--clr-dark);
             background: var(--clr-white);
             -webkit-font-smoothing: antialiased;
+        }
+
+        .skip-link {
+            position: fixed;
+            top: .75rem;
+            left: .75rem;
+            z-index: 10000;
+            padding: .7rem 1rem;
+            border-radius: .5rem;
+            color: #fff;
+            background: #111827;
+            transform: translateY(-160%);
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
         }
 
         img {
@@ -506,6 +550,8 @@
 </head>
 
 <body>
+
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
 
     <!-- ===================== NAVBAR ===================== -->
     <nav class="navbar navbar-expand-lg navbar-landing" aria-label="Navegación principal">

@@ -71,7 +71,7 @@ class BuscarPropiedadesPropiedades extends Component
         $enfoques = CatalogoService::enfoques();
         $posts = CatalogoService::posts();
 
-        $propiedades = Propiedad::query();
+        $propiedades = Propiedad::query()->publiclyVisible();
 
         $propiedades->select(
             'propiedads.id',
@@ -151,11 +151,6 @@ class BuscarPropiedadesPropiedades extends Component
             'propiedads.created_at',
             'propiedads.updated_at'
         );
-
-        $propiedades->where('activa', '=', 1);
-        if ((bool) optional($inmobiliaria)->aprobacion) {
-            $propiedades->where('aprobada', 1);
-        }
 
         if (filled($this->provincia_id_criterio)) {
             $propiedades->where('propiedads.provincia', $this->provincia_id_criterio);

@@ -9,6 +9,8 @@ use App\Http\Requests\Admin\StorePostRequest;
 use App\Http\Requests\Admin\UpdatePostRequest;
 use App\Services\Admin\ContentMediaService;
 use App\Services\CatalogoService;
+use App\Services\HtmlContentSanitizer;
+use App\Services\SitemapService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,25 +49,37 @@ class PostsController extends Controller
         return view('admin.posts.create');
     }
 
-    public function store(StorePostRequest $request, ContentMediaService $mediaService): RedirectResponse
+    public function store(
+        StorePostRequest $request,
+        ContentMediaService $mediaService,
+        HtmlContentSanitizer $sanitizer,
+        SitemapService $sitemapService
+    ): RedirectResponse
     {
         $validated = $request->validated();
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $request): void {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $request, $sanitizer): void {
+                $isPublished = (bool) ($validated['activo'] ?? false);
                 Post::query()->create([
                     'titulo' => $validated['titulo'],
                     'slug' => $this->generateUniqueSlug($validated['titulo']),
-                    'contenido' => $validated['contenido'],
+                    'contenido' => $sanitizer->sanitizePreservingLineBreaks($validated['contenido']),
                     'metadescription' => $validated['metadescription'],
+                    'seo_title' => $validated['seo_title'] ?? null,
                     'autor' => (string) optional($request->user())->name,
-                    'activo' => (bool) ($validated['activo'] ?? false),
+                    'activo' => $isPublished,
+                    'status' => $isPublished ? 'published' : 'draft',
+                    'published_at' => $isPublished ? ($validated['published_at'] ?? now()) : null,
+                    'image_alt' => $validated['image_alt'] ?? null,
+                    'image_credit' => $validated['image_credit'] ?? null,
                     'foto' => $uploadedPhoto ? $mediaService->storeImageAsWebp($uploadedPhoto, 'post', 1400, 900) : null,
                 ]);
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('posts.index')
@@ -94,19 +108,32 @@ class PostsController extends Controller
         return view('admin.posts.edit', compact('post'));
     }
 
-    public function update(UpdatePostRequest $request, Post $post, ContentMediaService $mediaService): RedirectResponse
+    public function update(
+        UpdatePostRequest $request,
+        Post $post,
+        ContentMediaService $mediaService,
+        HtmlContentSanitizer $sanitizer,
+        SitemapService $sitemapService
+    ): RedirectResponse
     {
         $validated = $request->validated();
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $post, $mediaService): void {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $post, $mediaService, $sanitizer): void {
+                $isPublished = (bool) ($validated['activo'] ?? false);
                 $payload = [
                     'titulo' => $validated['titulo'],
-                    'slug' => $this->generateUniqueSlug($validated['titulo'], (int) $post->id),
-                    'contenido' => $validated['contenido'],
+                    'contenido' => $sanitizer->sanitizePreservingLineBreaks($validated['contenido']),
                     'metadescription' => $validated['metadescription'],
-                    'activo' => (bool) ($validated['activo'] ?? false),
+                    'seo_title' => $validated['seo_title'] ?? null,
+                    'activo' => $isPublished,
+                    'status' => $isPublished ? 'published' : 'draft',
+                    'published_at' => $isPublished
+                        ? ($validated['published_at'] ?? $post->published_at ?? now())
+                        : null,
+                    'image_alt' => $validated['image_alt'] ?? null,
+                    'image_credit' => $validated['image_credit'] ?? null,
                 ];
 
                 if ($uploadedPhoto) {
@@ -117,6 +144,7 @@ class PostsController extends Controller
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('posts.index')
@@ -136,7 +164,7 @@ class PostsController extends Controller
         }
     }
 
-    public function destroy(Request $request, Post $post): RedirectResponse
+    public function destroy(Request $request, Post $post, SitemapService $sitemapService): RedirectResponse
     {
         try {
             DB::transaction(function () use ($post): void {
@@ -144,6 +172,7 @@ class PostsController extends Controller
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('posts.index')

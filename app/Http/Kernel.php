@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'enforce.superadmin.password.rotation' => \App\Http\Middleware\EnforceSuperadminPasswordRotation::class,
+        'public.seo.headers' => \App\Http\Middleware\PublicSeoHeaders::class,
     ];
 }

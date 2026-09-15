@@ -92,7 +92,7 @@ class CatalogoService
     public static function posts(): Collection
     {
         return Cache::remember('catalogo.posts', now()->addMinutes(30), function () {
-            return Post::query()->latest()->get();
+            return Post::query()->published()->orderByDesc('published_at')->get();
         });
     }
 

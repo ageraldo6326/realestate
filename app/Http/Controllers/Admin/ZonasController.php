@@ -9,11 +9,15 @@ use App\Models\Clientes;
 use App\Models\Propiedad;
 use App\Models\Zonas;
 use App\Services\CatalogoService;
+use App\Services\Admin\ContentMediaService;
+use App\Services\HtmlContentSanitizer;
+use App\Services\SitemapService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use Illuminate\Support\Str;
 
 class ZonasController extends Controller
 {
@@ -69,18 +73,34 @@ class ZonasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreZonaRequest $request): RedirectResponse
+    public function store(
+        StoreZonaRequest $request,
+        ContentMediaService $mediaService,
+        HtmlContentSanitizer $sanitizer,
+        SitemapService $sitemapService
+    ): RedirectResponse
     {
         $validated = $request->validated();
 
         try {
-            DB::transaction(function () use ($validated): void {
+            DB::transaction(function () use ($validated, $request, $mediaService, $sanitizer): void {
                 Zonas::query()->create([
                     'zona' => $validated['zona'],
+                    'slug' => $this->generateUniqueSlug($validated['zona']),
+                    'is_public' => (bool) ($validated['is_public'] ?? false),
+                    'seo_h1' => $validated['seo_h1'] ?? null,
+                    'seo_title' => $validated['seo_title'] ?? null,
+                    'meta_description' => $validated['meta_description'] ?? null,
+                    'seo_description' => $sanitizer->sanitizePreservingLineBreaks($validated['seo_description'] ?? null),
+                    'image' => $request->hasFile('image')
+                        ? $mediaService->storeImageAsWebp($request->file('image'), 'zonas', 1600, 900)
+                        : null,
+                    'image_alt' => $validated['image_alt'] ?? null,
                 ]);
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('zonas.index')
@@ -130,18 +150,37 @@ class ZonasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateZonaRequest $request, Zonas $zona): RedirectResponse
+    public function update(
+        UpdateZonaRequest $request,
+        Zonas $zona,
+        ContentMediaService $mediaService,
+        HtmlContentSanitizer $sanitizer,
+        SitemapService $sitemapService
+    ): RedirectResponse
     {
         $validated = $request->validated();
 
         try {
-            DB::transaction(function () use ($zona, $validated): void {
-                $zona->update([
+            DB::transaction(function () use ($zona, $validated, $request, $mediaService, $sanitizer): void {
+                $payload = [
                     'zona' => $validated['zona'],
-                ]);
+                    'is_public' => (bool) ($validated['is_public'] ?? false),
+                    'seo_h1' => $validated['seo_h1'] ?? null,
+                    'seo_title' => $validated['seo_title'] ?? null,
+                    'meta_description' => $validated['meta_description'] ?? null,
+                    'seo_description' => $sanitizer->sanitizePreservingLineBreaks($validated['seo_description'] ?? null),
+                    'image_alt' => $validated['image_alt'] ?? null,
+                ];
+
+                if ($request->hasFile('image')) {
+                    $payload['image'] = $mediaService->storeImageAsWebp($request->file('image'), 'zonas', 1600, 900);
+                }
+
+                $zona->update($payload);
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('zonas.index')
@@ -168,7 +207,7 @@ class ZonasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Zonas $zona): RedirectResponse
+    public function destroy(Request $request, Zonas $zona, SitemapService $sitemapService): RedirectResponse
     {
         try {
             $propiedadesVinculadas = Propiedad::query()->where('zona_id', $zona->id)->count();
@@ -185,6 +224,7 @@ class ZonasController extends Controller
             });
 
             CatalogoService::forgetAll();
+            $sitemapService->forget();
 
             return redirect()
                 ->route('zonas.index')
@@ -200,5 +240,19 @@ class ZonasController extends Controller
                 ->route('zonas.index')
                 ->with('error', 'No fue posible eliminar la zona. Intenta nuevamente.');
         }
+    }
+
+    private function generateUniqueSlug(string $name): string
+    {
+        $baseSlug = Str::slug($name) ?: 'zona';
+        $slug = $baseSlug;
+        $suffix = 2;
+
+        while (Zonas::query()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }

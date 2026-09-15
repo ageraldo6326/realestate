@@ -6,6 +6,7 @@ use App\Services\CatalogoService;
 use App\Services\InmobiliariaService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\SeoMetadataService;
 
 class ListaPropiedadesController extends Controller
 {
@@ -14,7 +15,7 @@ class ListaPropiedadesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, SeoMetadataService $seoMetadata)
     {
         $inmobiliaria = InmobiliariaService::get();
 
@@ -54,7 +55,9 @@ class ListaPropiedadesController extends Controller
 
         // Las propiedades se cargan via Livewire con paginacion y filtros para evitar cargas masivas.
         $propiedades = collect();
+        $page = max(1, (int) $request->query('page', 1));
+        $seo = $seoMetadata->forCatalog($inmobiliaria, $page);
 
-        return view('frontend.propiedades', compact('portadas', 'zonas', 'disponibles_para', 'tipos_propiedades', 'propiedades', 'inmobiliaria'));
+        return view('frontend.propiedades', compact('portadas', 'zonas', 'disponibles_para', 'tipos_propiedades', 'propiedades', 'inmobiliaria', 'seo'));
     }
 }
