@@ -1,4 +1,5 @@
 /public/img/propiedades/
+/public/sitemap.xml
 /node_modules
 /public/assets/usuario/*
 !/public/assets/usuario/default.webp

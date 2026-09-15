@@ -10,6 +10,15 @@ use Tests\TestCase;
 
 class SitemapEndpointTest extends TestCase
 {
+    public function test_sitemap_is_not_a_static_public_asset(): void
+    {
+        $this->assertFileDoesNotExist(public_path('sitemap.xml'));
+        $this->assertStringContainsString(
+            'RewriteRule ^(?:sitemap\\.xml|robots\\.txt)$ index.php [L]',
+            (string) file_get_contents(public_path('.htaccess'))
+        );
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

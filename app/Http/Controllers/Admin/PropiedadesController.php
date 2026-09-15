@@ -34,7 +34,7 @@ class PropiedadesController extends Controller
 
         app(SitemapService::class)->refresh();
 
-        return rtrim((string) $inmo->dominio, '/') . '/sitemap.xml';
+        return rtrim(InmobiliariaService::canonicalUrl($inmo), '/') . '/sitemap.xml';
     }
 
     public function duplicar(Request $request, $id)
