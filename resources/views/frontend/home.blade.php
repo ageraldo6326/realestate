@@ -51,9 +51,11 @@
         .navbar-collapse { display: none; flex-basis: 100%; flex-grow: 1; }
         .navbar-collapse.show { display: block; }
         .navbar-nav { display: flex; flex-direction: column; padding-left: 0; margin-bottom: 0; list-style: none; }
+        .nav-link { display: block; }
         .d-flex { display: flex !important; } .align-items-center { align-items: center !important; }
         .mx-auto { margin-right: auto !important; margin-left: auto !important; }
         .me-1 { margin-right: .25rem !important; } .gap-1 { gap: .25rem !important; } .gap-2 { gap: .5rem !important; }
+        .text-accent { color: var(--clr-accent) !important; }
         .hero-section { position: relative; isolation: isolate; min-height: 88vh; display: flex; align-items: center; overflow: hidden; background: var(--clr-dark); }
         .hero-media, .hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; }
         .hero-media img { object-fit: cover; object-position: center; }
@@ -63,6 +65,11 @@
         .hero-eyebrow { margin-bottom: 1rem; color: var(--clr-accent); font-size: .7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
         .hero-title { margin-bottom: 1rem; color: var(--clr-white); font-family: var(--ff-head); font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.15; }
         .hero-desc { max-width: 460px; margin-bottom: 0; color: rgba(255, 255, 255, .8); font-size: 1rem; line-height: 1.7; }
+        /* Evita calcular las secciones que quedan fuera de la primera ventana. */
+        .benefits-section { content-visibility: auto; contain-intrinsic-size: auto 310px; }
+        .featured-section, .search-results-section, .how-section, .blog-section, .testimonials-section { content-visibility: auto; contain-intrinsic-size: auto 800px; }
+        .cta-banner { content-visibility: auto; contain-intrinsic-size: auto 340px; }
+        .site-footer { content-visibility: auto; contain-intrinsic-size: auto 600px; }
         @media (min-width: 576px) { .container { max-width: 540px; } }
         @media (min-width: 768px) { .container { max-width: 720px; } }
         @media (min-width: 992px) { .container { max-width: 960px; } .navbar-expand-lg .navbar-toggler { display: none; } .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-lg .navbar-nav { flex-direction: row; } .col-lg-8 { flex: 0 0 auto; width: 66.666667%; } }
@@ -70,9 +77,6 @@
         @media (max-width: 575px) { .hero-section { min-height: auto; padding-top: 3rem; padding-bottom: 2rem; } .hero-title { font-size: 2rem; } }
     </style>
 
-    <link rel="preload" as="style" href="{{ asset('css/home-non-critical-v1.min.css') }}"
-        onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('css/home-non-critical-v1.min.css') }}"></noscript>
 @endsection
 
 @section('content')

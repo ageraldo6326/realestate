@@ -53,6 +53,15 @@
     <Files "home-non-critical-v1.min.css">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </Files>
+    <Files "home-framework-v1.min.css">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </Files>
+    <Files "landing-shared-v1.min.css">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </Files>
+    <Files "landing-footer-v1.min.css">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </Files>
 </IfModule>
 
 # Conserva el tamaño transferido de los assets locales equivalente al CDN.
