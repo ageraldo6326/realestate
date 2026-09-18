@@ -21,7 +21,8 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('width="640" height="480" decoding="async"', $home);
         $this->assertStringContainsString("asset('img/brand/logo-home-192.webp')", $header);
         $this->assertStringContainsString('width="48" height="48"', $header);
-        $this->assertStringContainsString('rel="preload" as="style"', $header);
+        $this->assertStringContainsString('rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"', $header);
+        $this->assertStringContainsString('display=optional', $header);
         $this->assertFileExists($root . '/public/img/brand/logo-home-192.webp');
         $this->assertFileExists($root . '/public/assets/portada-hero-640.webp');
         $this->assertFileExists($root . '/public/assets/portada-hero-1280.webp');
