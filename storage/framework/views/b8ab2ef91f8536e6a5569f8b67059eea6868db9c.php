@@ -1,6 +1,6 @@
 
 
-<?php $__env->startSection('seo_title', $post->titulo . ' — ' . ($inmo->titulo ?? 'Portal Inmobiliario')); ?>
+<?php $__env->startSection('seo_title', $post->titulo . ' — ' . ($inmobiliaria->titulo ?? 'Portal Inmobiliario')); ?>
 <?php $__env->startSection('seo_description', Str::limit(strip_tags($post->contenido), 160)); ?>
 
 <?php $__env->startSection('extra_styles'); ?>
@@ -40,6 +40,15 @@
 
 <?php
     $postPlaceholder = asset('assets/post-1.jpg');
+    $postImage = $post->foto;
+    if ($postImage && \Illuminate\Support\Str::startsWith($postImage, ['http://', 'https://', '//'])) {
+        $postImageUrl = $postImage;
+    } elseif ($postImage && \Illuminate\Support\Str::startsWith($postImage, ['/assets/', 'assets/', '/img/', 'img/', '/storage/', 'storage/'])) {
+        $postImageUrl = asset(ltrim($postImage, '/'));
+    } else {
+        $postImageUrl = $postImage ? asset('assets/' . ltrim($postImage, '/')) : $postPlaceholder;
+    }
+    $publicationDate = $post->published_at ?: $post->created_at;
 ?>
 
 <section class="page-hero" aria-label="Artículo">
@@ -62,15 +71,22 @@
                 <article class="post-card">
                     <img class="post-hero-img"
                          loading="eager"
-                        src="<?php echo e(!empty($post->foto) ? asset('assets/'.$post->foto) : $postPlaceholder); ?>"
+                         decoding="async"
+                         fetchpriority="high"
+                         width="1200"
+                         height="630"
+                        src="<?php echo e($postImageUrl); ?>"
                         onerror="this.onerror=null;this.src='<?php echo e($postPlaceholder); ?>';"
-                         alt="<?php echo e($post->titulo); ?>"
+                         alt="<?php echo e($post->image_alt ?: $post->titulo); ?>"
                          title="<?php echo e($post->titulo); ?>">
+                    <?php if($post->image_credit): ?>
+                        <div class="small text-muted px-4 pt-2">Imagen: <?php echo e($post->image_credit); ?></div>
+                    <?php endif; ?>
                     <div class="post-body">
                         <div class="post-meta">
                             <span class="post-meta-item">
                                 <i class="far fa-calendar-alt"></i>
-                                <time datetime="<?php echo e($post->created_at->format('Y-m-d')); ?>"><?php echo e($post->created_at->format('d/m/Y')); ?></time>
+                                <time datetime="<?php echo e(optional($publicationDate)->format('Y-m-d')); ?>"><?php echo e(optional($publicationDate)->format('d/m/Y')); ?></time>
                             </span>
                             <?php if($post->autor): ?>
                             <span class="post-meta-item">
@@ -82,7 +98,7 @@
                         </div>
                         <h2 class="post-title"><?php echo e($post->titulo); ?></h2>
                         <div class="post-content">
-                            <?php echo $post->contenido; ?>
+                            <?php echo app(\App\Services\HtmlContentSanitizer::class)->sanitize($post->contenido); ?>
 
                         </div>
                     </div>
@@ -98,4 +114,5 @@
 </section>
 
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layout.layout-landing', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\frontend\post.blade.php ENDPATH**/ ?>

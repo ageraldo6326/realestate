@@ -42,7 +42,7 @@
         <?php endif; ?>
     </div>
 
-    <?php if (! $__env->hasRenderedOnce('0461dc6a-b2ce-4801-9832-c29a0b80bce4')): $__env->markAsRenderedOnce('0461dc6a-b2ce-4801-9832-c29a0b80bce4'); ?>
+    <?php if (! $__env->hasRenderedOnce('63c290c8-6d07-4e62-af44-87fb725e6c84')): $__env->markAsRenderedOnce('63c290c8-6d07-4e62-af44-87fb725e6c84'); ?>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <?php endif; ?>
 

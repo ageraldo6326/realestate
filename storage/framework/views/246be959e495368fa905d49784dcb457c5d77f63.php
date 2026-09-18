@@ -106,7 +106,8 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <img src="<?php echo e($usuario->resolvePhotoUrl()); ?>" alt="<?php echo e($usuario->name); ?>"
-                                                class="users-avatar mr-3">
+                                                class="users-avatar mr-3"
+                                                onerror="this.onerror=null;this.src='<?php echo e(\App\Models\User::defaultPhotoUrl()); ?>';">
                                             <div>
                                                 <div class="font-weight-bold"><?php echo e($usuario->name); ?></div>
                                                 <div class="small text-muted">ID: <?php echo e($usuario->id); ?></div>

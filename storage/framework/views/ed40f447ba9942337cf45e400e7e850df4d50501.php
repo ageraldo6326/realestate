@@ -55,8 +55,12 @@
             })
             ->values();
 
+        $rawDescription = (string) $propiedad->descripcion;
+        $descriptionHtml = app(\App\Services\HtmlContentSanitizer::class)
+            ->sanitizePreservingLineBreaks($rawDescription);
+        $canonicalUrl = $seo['canonical'] ?? url()->current();
         $telefonoAsesor = $usuario->telefono ?? ($inmobiliaria->telefono ?? '');
-        $whatsAppMessage = ($propiedad->descripcion_corta ?: $propiedad->titulo) . ' ' . url()->current();
+        $whatsAppMessage = ($propiedad->descripcion_corta ?: $propiedad->titulo) . ' ' . $canonicalUrl;
         $whatsAppUrl = $telefonoAsesor
             ? 'https://api.whatsapp.com/send/?phone=' . $telefonoAsesor . '&text=' . urlencode($whatsAppMessage)
             : null;
@@ -110,6 +114,9 @@
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="<?php echo e(url('/')); ?>">Inicio</a></li>
                 <li class="breadcrumb-item"><a href="<?php echo e(route('listapropiedades')); ?>">Propiedades</a></li>
+                <?php if($propiedad->zona_publica && $propiedad->zona_slug): ?>
+                    <li class="breadcrumb-item"><a href="<?php echo e(route('propiedadesPorZona', $propiedad->zona_slug)); ?>"><?php echo e($propiedad->zona); ?></a></li>
+                <?php endif; ?>
                 <li class="breadcrumb-item active" aria-current="page"><?php echo e($propiedad->titulo); ?></li>
             </ol>
         </div>
@@ -125,7 +132,13 @@
                 </div>
                 <h1 class="h3 mb-2"><?php echo e($propiedad->titulo); ?></h1>
                 <p class="text-white-75 mb-0">
-                    <i class="fas fa-map-marker-alt"></i> <?php echo e($propiedad->zona); ?> |
+                    <i class="fas fa-map-marker-alt"></i>
+                    <?php if($propiedad->zona_publica && $propiedad->zona_slug): ?>
+                        <a class="text-white" href="<?php echo e(route('propiedadesPorZona', $propiedad->zona_slug)); ?>"><?php echo e($propiedad->zona); ?></a>
+                    <?php else: ?>
+                        <?php echo e($propiedad->zona); ?>
+
+                    <?php endif; ?> |
                     <i class="fas fa-building"></i> <?php echo e($propiedad->tipo); ?> |
                     <span class="text-accent fw-bold"><?php echo e($propiedad->Moneda); ?>
 
@@ -136,7 +149,7 @@
     </section>
 
     <!-- Main Content -->
-    <main class="property-detail py-5 bg-body-secondary">
+    <section class="property-detail py-5 bg-body-secondary" aria-label="Detalle de la propiedad">
         <div class="container-lg">
             <div class="row g-4">
 
@@ -151,7 +164,8 @@
                                     <div class="carousel-inner">
                                         <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
-                                                <img loading="lazy"
+                                                <img loading="<?php echo e($index === 0 ? 'eager' : 'lazy'); ?>" decoding="async"
+                                                    <?php if($index === 0): ?> fetchpriority="high" <?php endif; ?> width="1200" height="800"
                                                     src="<?php echo e($resolvePropertyImage($image, optional($propiedad)->updated_at, $propertyPlaceholder)); ?>"
                                                     onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
                                                     alt="<?php echo e($propiedad->titulo); ?>" title="<?php echo e($propiedad->titulo); ?>"
@@ -201,7 +215,7 @@
                         <div class="card-body">
                             <h2 class="card-title h5 mb-3">Descripción</h2>
                             <div class="text-muted mb-4">
-                                <?php echo $propiedad->descripcion; ?>
+                                <?php echo $descriptionHtml; ?>
 
                             </div>
 
@@ -399,23 +413,23 @@
                         <div class="card-body">
                             <h3 class="card-title h6 mb-3">Compartir propiedad</h3>
                             <div class="d-flex gap-2 flex-wrap">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo e(urlencode(url()->current())); ?>"
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo e(urlencode($canonicalUrl)); ?>"
                                     target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm"
                                     aria-label="Compartir en Facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                <a href="https://twitter.com/intent/tweet?url=<?php echo e(urlencode(url()->current())); ?>&text=<?php echo e(urlencode($propiedad->titulo)); ?>"
+                                <a href="https://twitter.com/intent/tweet?url=<?php echo e(urlencode($canonicalUrl)); ?>&text=<?php echo e(urlencode($propiedad->titulo)); ?>"
                                     target="_blank" rel="noopener noreferrer" class="btn btn-outline-info btn-sm"
                                     aria-label="Compartir en Twitter">
                                     <i class="fab fa-twitter"></i>
                                 </a>
-                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo e(urlencode(url()->current())); ?>"
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo e(urlencode($canonicalUrl)); ?>"
                                     target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm"
                                     aria-label="Compartir en LinkedIn">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
                                 <button type="button" class="btn btn-outline-secondary btn-sm"
-                                    onclick="navigator.clipboard.writeText('<?php echo e(url()->current()); ?>'); alert('Link copiado')"
+                                    onclick="navigator.clipboard.writeText(<?php echo \Illuminate\Support\Js::from($canonicalUrl)->toHtml() ?>); alert('Link copiado')"
                                     aria-label="Copiar enlace">
                                     <i class="fas fa-link"></i>
                                 </button>
@@ -427,7 +441,7 @@
 
             </div>
         </div>
-    </main>
+    </section>
 
     <!-- Related Properties Section -->
     <?php if(!$propiedades_relacionadas->isEmpty()): ?>

@@ -64,15 +64,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-cliente')->html();
-} elseif ($_instance->childHasBeenRendered('FbItMEV')) {
-    $componentId = $_instance->getRenderedChildComponentId('FbItMEV');
-    $componentTag = $_instance->getRenderedChildComponentTagName('FbItMEV');
+} elseif ($_instance->childHasBeenRendered('OCpP2JG')) {
+    $componentId = $_instance->getRenderedChildComponentId('OCpP2JG');
+    $componentTag = $_instance->getRenderedChildComponentTagName('OCpP2JG');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('FbItMEV');
+    $_instance->preserveRenderedChild('OCpP2JG');
 } else {
     $response = \Livewire\Livewire::mount('buscar-cliente');
     $html = $response->html();
-    $_instance->logRenderedChild('FbItMEV', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('OCpP2JG', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

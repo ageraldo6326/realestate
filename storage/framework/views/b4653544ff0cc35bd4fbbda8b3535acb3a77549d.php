@@ -58,18 +58,10 @@
 
 <body class="hold-transition sidebar-mini layout-fixed <?php echo e(config('ui.modern_sidebar') ? 'modern-sidebar-enabled' : ''); ?>">
     <?php
-        $userPhotoPath = Auth::user()->foto ?? null;
-        $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
-
-        if ($userPhotoPath) {
-            if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-                $userPhotoUrl = $userPhotoPath;
-            } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-                $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-            } else {
-                $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-            }
-        }
+        $currentUser = Auth::user();
+        $userPhotoUrl = $currentUser
+            ? $currentUser->resolvePhotoUrl()
+            : \App\Models\User::defaultPhotoUrl();
     ?>
     <div class="wrapper">
 
@@ -99,15 +91,15 @@
                         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('theme-toggle')->html();
-} elseif ($_instance->childHasBeenRendered('9I3CzRA')) {
-    $componentId = $_instance->getRenderedChildComponentId('9I3CzRA');
-    $componentTag = $_instance->getRenderedChildComponentTagName('9I3CzRA');
+} elseif ($_instance->childHasBeenRendered('UOj6A49')) {
+    $componentId = $_instance->getRenderedChildComponentId('UOj6A49');
+    $componentTag = $_instance->getRenderedChildComponentTagName('UOj6A49');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('9I3CzRA');
+    $_instance->preserveRenderedChild('UOj6A49');
 } else {
     $response = \Livewire\Livewire::mount('theme-toggle');
     $html = $response->html();
-    $_instance->logRenderedChild('9I3CzRA', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('UOj6A49', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -141,7 +133,8 @@ echo $html;
                         id="navbarUserDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
                         <img src="<?php echo e($userPhotoUrl); ?>" alt="<?php echo e(Auth::user()->name); ?>" class="img-circle mr-2"
-                            style="width:32px;height:32px;object-fit:cover;">
+                            style="width:32px;height:32px;object-fit:cover;"
+                            onerror="this.onerror=null;this.src='<?php echo e(\App\Models\User::defaultPhotoUrl()); ?>';">
                         <span class="d-none d-md-inline font-weight-500 text-sm"><?php echo e(Auth::user()->name); ?></span>
                         <i class="fas fa-chevron-down ml-1 text-xs text-muted"></i>
                     </a>

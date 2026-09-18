@@ -1,17 +1,70 @@
-
-
 <?php $__env->startSection('seo_title', ($inmo->titulo ?? 'Portal Inmobiliario') . ' — ' . ($inmo->slogan ?? 'Encuentra tu hogar ideal')); ?>
 <?php $__env->startSection('seo_description',
     $inmo->metadescription ??
     'Encuentra las mejores propiedades en venta y alquiler. Tu nuevo
     hogar te espera.'); ?>
 
+<?php
+    $firstPortada = $portadas->first();
+    $heroPreloadRaw = trim((string) optional($firstPortada)->foto);
+
+    if ($heroPreloadRaw !== '' && \Illuminate\Support\Str::startsWith($heroPreloadRaw, ['http://', 'https://', '//', 'data:'])) {
+        $heroPreloadUrl = $heroPreloadRaw;
+    } elseif ($heroPreloadRaw !== '' && str_contains($heroPreloadRaw, '/')) {
+        $heroPreloadUrl = asset(ltrim($heroPreloadRaw, '/'));
+    } elseif ($heroPreloadRaw !== '') {
+        $heroPreloadUrl = asset('assets/' . ltrim($heroPreloadRaw, '/'));
+    } else {
+        $heroPreloadUrl = null;
+    }
+
+    $isBundledHero = basename((string) parse_url((string) $heroPreloadUrl, PHP_URL_PATH)) === 'portada-hero.jpg';
+    $heroMobileUrl = $isBundledHero ? asset('assets/portada-hero-640.webp') : null;
+    $heroDesktopUrl = $isBundledHero ? asset('assets/portada-hero-1280.webp') : null;
+?>
+
+<?php $__env->startSection('extra_styles'); ?>
+    <?php if($heroMobileUrl && $heroDesktopUrl): ?>
+        <link rel="preload" as="image" href="<?php echo e($heroMobileUrl); ?>" type="image/webp" media="(max-width: 767px)"
+            fetchpriority="high">
+        <link rel="preload" as="image" href="<?php echo e($heroDesktopUrl); ?>" type="image/webp" media="(min-width: 768px)"
+            fetchpriority="high">
+    <?php elseif($heroPreloadUrl): ?>
+        <link rel="preload" as="image" href="<?php echo e($heroPreloadUrl); ?>" fetchpriority="high">
+    <?php endif; ?>
+
+    <style>
+        /* Base mínimo para renderizar encabezado y hero antes del CSS diferido. */
+        *, *::before, *::after { box-sizing: border-box; }
+        .container { width: 100%; margin: 0 auto; padding-right: .75rem; padding-left: .75rem; }
+        .row { display: flex; flex-wrap: wrap; margin-right: -.75rem; margin-left: -.75rem; }
+        .row > * { width: 100%; max-width: 100%; padding-right: .75rem; padding-left: .75rem; }
+        .navbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+        .navbar > .container { display: flex; flex-wrap: inherit; align-items: center; justify-content: space-between; }
+        .navbar-brand { display: inline-flex; align-items: center; }
+        .navbar-toggler { display: block; }
+        .navbar-collapse { display: none; flex-basis: 100%; flex-grow: 1; }
+        .navbar-collapse.show { display: block; }
+        .hero-section { position: relative; isolation: isolate; min-height: 88vh; display: flex; align-items: center; overflow: hidden; background: var(--clr-dark); }
+        .hero-media, .hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-media img { object-fit: cover; object-position: center; }
+        .hero-section::before { position: absolute; z-index: 1; inset: 0; content: ''; background: linear-gradient(to right, rgba(28,28,46,.78) 40%, rgba(28,28,46,.2) 100%); }
+        .hero-container { position: relative; z-index: 2; padding-top: 4rem; padding-bottom: 4rem; }
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } .navbar-expand-lg .navbar-toggler { display: none; } .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; } .col-lg-8 { flex: 0 0 auto; width: 66.666667%; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+        @media (max-width: 575px) { .hero-section { min-height: auto; padding-top: 3rem; padding-bottom: 2rem; } }
+    </style>
+<?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('content'); ?>
 
     <?php
-        $portada = $portadas->first();
+        $portada = $firstPortada;
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = 'https://dummyimage.com/160x160/edf2f7/6b7280&text=Asesor';
+        $cardThumbnails = app(\App\Services\PropertyCardThumbnailService::class);
         $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
             $fallback ??= asset('assets/prop-apto-1.jpg');
 
@@ -39,27 +92,21 @@
 
             return $appendVersion(asset('assets/' . ltrim($value, '/')));
         };
-        $heroImgRaw = $portada && !empty($portada->foto) ? trim((string) $portada->foto) : '';
-        if (
-            $heroImgRaw !== '' &&
-            \Illuminate\Support\Str::startsWith($heroImgRaw, ['http://', 'https://', '//', 'data:'])
-        ) {
-            $heroImg = $heroImgRaw;
-        } elseif ($heroImgRaw !== '' && str_contains($heroImgRaw, '/')) {
-            $heroImg = asset(ltrim($heroImgRaw, '/'));
-        } elseif ($heroImgRaw !== '') {
-            $heroImg = asset('assets/' . ltrim($heroImgRaw, '/'));
-        } else {
-            $heroImg = $propertyPlaceholder;
-        }
+        $heroImg = $heroPreloadUrl ?: $propertyPlaceholder;
         $heroTitle = $portada ? $portada->titulo : $inmo->titulo ?? 'Encuentra el hogar que siempre soñaste';
         $heroSub = $portada ? $portada->minititulo : 'TU NUEVO COMIENZO, ESTÁ AQUÍ';
         $heroDesc = $portada ? strip_tags($portada->descripcion) : 'Explora miles de propiedades en venta y alquiler.';
     ?>
 
     <!-- HERO SECTION -->
-    <section class="hero-section" aria-label="Sección principal"
-        <?php if($heroImg): ?> style="background-image:linear-gradient(to right,rgba(28,28,46,.78) 40%,rgba(28,28,46,.2) 100%),url('<?php echo e($heroImg); ?>');background-size:cover;background-position:center" <?php endif; ?>>
+    <section class="hero-section" aria-label="Sección principal">
+        <picture class="hero-media" aria-hidden="true">
+            <?php if($heroMobileUrl && $heroDesktopUrl): ?>
+                <source media="(max-width: 767px)" srcset="<?php echo e($heroMobileUrl); ?>" type="image/webp">
+                <source media="(min-width: 768px)" srcset="<?php echo e($heroDesktopUrl); ?>" type="image/webp">
+            <?php endif; ?>
+            <img src="<?php echo e($heroImg); ?>" alt="" width="1600" height="1031" fetchpriority="high" decoding="async">
+        </picture>
         <div class="container hero-container">
             <div class="row align-items-center">
                 <div class="col-lg-8 hero-content">
@@ -71,50 +118,6 @@
                     ?>
                     <h1 class="hero-title"><?php echo e($rest); ?> <span class="text-accent"><?php echo e($last); ?></span></h1>
                     <p class="hero-desc"><?php echo e($heroDesc); ?></p>
-                    <!-- Búsqueda rápida: lleva al listado de propiedades -->
-                    <div class="hero-search-box mt-4">
-                        <div class="search-widget">
-                            <form method="GET" action="<?php echo e(route('listapropiedades')); ?>" role="search">
-                                <div class="row g-2 align-items-end">
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-provincia">Provincia</label>
-                                        <select name="provincia_id" id="hero-provincia" class="form-select">
-                                            <option value="">Selecciona provincia</option>
-                                            <?php $__currentLoopData = $provincias; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $provincia): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($provincia->id); ?>"><?php echo e($provincia->provincia); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-sector">Sector</label>
-                                        <select name="sector_id" id="hero-sector" class="form-select">
-                                            <option value="">Selecciona sector</option>
-                                            <?php $__currentLoopData = $sectores; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sector): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($sector->id); ?>"
-                                                    data-provincia="<?php echo e($sector->provincia_id); ?>"><?php echo e($sector->sector); ?>
-
-                                                </option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <label class="form-label" for="hero-tipo">Tipo de propiedad</label>
-                                        <select name="tipo_id" id="hero-tipo" class="form-select">
-                                            <option value="">Selecciona tipo</option>
-                                            <?php $__currentLoopData = $tipos_propiedades; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tipo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option value="<?php echo e($tipo->id); ?>"><?php echo e($tipo->tipo); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6 d-grid">
-                                        <button type="submit" class="btn-search">
-                                            <i class="fas fa-magnifying-glass"></i> Buscar
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -179,10 +182,20 @@
                             <article class="prop-card h-100">
                                 <div class="card-img-wrap">
                                     <a href="<?php echo e(route('propiedad', $pro->slug)); ?>" aria-label="<?php echo e($pro->titulo); ?>">
-                                        <img loading="lazy"
-                                            src="<?php echo e($resolvePropertyImage($pro->foto_portada, optional($pro)->updated_at, $propertyPlaceholder)); ?>"
-                                            onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
-                                            alt="<?php echo e($pro->titulo); ?>" title="<?php echo e($pro->titulo); ?>">
+                                        <?php
+                                            $propertyImage = $resolvePropertyImage($pro->foto_portada, optional($pro)->updated_at, $propertyPlaceholder);
+                                            $propertyThumbnail = $cardThumbnails->urlFor($pro->foto_portada);
+                                        ?>
+                                        <picture>
+                                            <?php if($propertyThumbnail): ?>
+                                                <source type="image/webp" srcset="<?php echo e($propertyThumbnail); ?>"
+                                                    sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw">
+                                            <?php endif; ?>
+                                            <img loading="lazy" width="640" height="480" decoding="async"
+                                                src="<?php echo e($propertyImage); ?>"
+                                                onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
+                                                alt="<?php echo e($pro->titulo); ?>" title="<?php echo e($pro->titulo); ?>">
+                                        </picture>
                                     </a>
                                     <?php $disp=strtolower($pro->disponible_para ?? ''); ?>
                                     <span
@@ -220,6 +233,7 @@
                                             $asesorFoto = $personPlaceholder;
                                         }
                                     ?>
+                                    <?php $asesorThumbnail = $cardThumbnails->urlFor($asesorFotoRaw, 96); ?>
                                     <h3 class="card-title mb-0">
                                         <a href="<?php echo e(route('propiedad', $pro->slug)); ?>"><?php echo e($pro->titulo); ?></a>
                                     </h3>
@@ -269,10 +283,15 @@
                                         <?php endif; ?>
                                     </div>
                                     <div class="d-flex align-items-center mt-3 pt-2 border-top">
-                                        <img src="<?php echo e($asesorFoto); ?>" alt="<?php echo e($asesorNombre); ?>" loading="lazy"
-                                            onerror="this.onerror=null;this.src='<?php echo e($personPlaceholder); ?>';"
-                                            style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
-                                            class="mr-2">
+                                        <picture>
+                                            <?php if($asesorThumbnail): ?>
+                                                <source type="image/webp" srcset="<?php echo e($asesorThumbnail); ?>" sizes="34px">
+                                            <?php endif; ?>
+                                            <img src="<?php echo e($asesorFoto); ?>" alt="<?php echo e($asesorNombre); ?>" width="34" height="34" loading="lazy"
+                                                onerror="this.onerror=null;this.src='<?php echo e($personPlaceholder); ?>';"
+                                                style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
+                                                class="mr-2">
+                                        </picture>
                                         <span class="small text-muted">Asesor: <?php echo e($asesorNombre); ?></span>
                                     </div>
                                 </div>
@@ -299,15 +318,15 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-propiedades-home')->html();
-} elseif ($_instance->childHasBeenRendered('YeDdHMV')) {
-    $componentId = $_instance->getRenderedChildComponentId('YeDdHMV');
-    $componentTag = $_instance->getRenderedChildComponentTagName('YeDdHMV');
+} elseif ($_instance->childHasBeenRendered('Zhny8ig')) {
+    $componentId = $_instance->getRenderedChildComponentId('Zhny8ig');
+    $componentTag = $_instance->getRenderedChildComponentTagName('Zhny8ig');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('YeDdHMV');
+    $_instance->preserveRenderedChild('Zhny8ig');
 } else {
     $response = \Livewire\Livewire::mount('buscar-propiedades-home');
     $html = $response->html();
-    $_instance->logRenderedChild('YeDdHMV', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('Zhny8ig', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -362,7 +381,7 @@ echo $html;
                                 <?php if($post->foto): ?>
                                     <a href="<?php echo e(route('post.show', $post->slug)); ?>" class="blog-card-img-wrap"
                                         aria-label="<?php echo e($post->titulo); ?>">
-                                        <img loading="lazy"
+                                        <img loading="lazy" width="640" height="480" decoding="async"
                                             src="<?php echo e(!empty($post->foto) ? asset('assets/' . $post->foto) : $propertyPlaceholder); ?>"
                                             onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
                                             alt="<?php echo e($post->titulo); ?>" title="<?php echo e($post->titulo); ?>">
@@ -375,7 +394,7 @@ echo $html;
                                             <?php echo e(\Carbon\Carbon::parse($post->created_at)->format('d M, Y')); ?></span>
                                     </div>
                                     <h3 class="blog-title"><a
-                                            href="<?php echo e(route('post.show', $post->slug)); ?>"><?php echo $post->titulo; ?></a></h3>
+                                            href="<?php echo e(route('post.show', $post->slug)); ?>"><?php echo e($post->titulo); ?></a></h3>
                                     <a href="<?php echo e(route('post.show', $post->slug)); ?>" class="blog-read-more">Leer más <i
                                             class="fas fa-arrow-right"></i></a>
                                 </div>
@@ -462,10 +481,6 @@ echo $html;
             color: rgba(255, 255, 255, .8);
             margin-bottom: 0;
             max-width: 460px
-        }
-
-        .hero-search-box .search-widget {
-            max-width: 560px
         }
 
         .benefits-section {
@@ -776,36 +791,6 @@ echo $html;
         }
     </style>
 
-<?php $__env->stopSection(); ?>
-
-<?php $__env->startSection('extra_scripts'); ?>
-    <script>
-        (function() {
-            var provSel = document.getElementById('hero-provincia');
-            var sectorSel = document.getElementById('hero-sector');
-            if (!provSel || !sectorSel) return;
-
-            var allOptions = Array.from(sectorSel.options);
-
-            function filterSectores() {
-                var val = provSel.value;
-                sectorSel.innerHTML = '';
-                var first = new Option('Selecciona sector', '');
-                sectorSel.appendChild(first);
-                allOptions.forEach(function(opt) {
-                    if (opt.value === '') return;
-                    if (!val || opt.dataset.provincia === val) {
-                        sectorSel.appendChild(opt.cloneNode(true));
-                    }
-                });
-                sectorSel.value = '';
-            }
-
-            provSel.addEventListener('change', filterSectores);
-
-            if (provSel.value) filterSectores();
-        })();
-    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layout.layout-landing', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\frontend\home.blade.php ENDPATH**/ ?>

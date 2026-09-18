@@ -15,6 +15,8 @@
         'theme_color_accent' => 'Acento',
         'theme_color_neutral' => 'Neutro',
     ];
+    $alternateHosts = old('seo_alternate_hosts', optional($company)->seo_alternate_hosts ?? []);
+    $alternateHostsText = implode("\n", is_array($alternateHosts) ? $alternateHosts : []);
 ?>
 
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
@@ -109,7 +111,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="quienessomos" name="quienessomos"
-                        rows="5"><?php echo e(old('quienessomos', optional($company)->quienessomos)); ?></textarea>
+                        rows="10"><?php echo e(old('quienessomos', optional($company)->quienessomos)); ?></textarea>
                 </div>
 
                 <div class="form-group mb-0">
@@ -123,6 +125,97 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="metadescription"
                         name="metadescription" rows="3"><?php echo e(old('metadescription', optional($company)->metadescription)); ?></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <h2 class="section-title">Dominio e indexacion SEO</h2>
+                <p class="brand-muted">Configura aqui la URL publica. No cambies <code>APP_URL</code>, rutas, canonicals ni el sitemap manualmente.</p>
+
+                <div class="form-group mb-3">
+                    <label for="seo_canonical_url" class="font-weight-bold">Dominio canonico</label>
+                    <input type="url" class="form-control <?php $__errorArgs = ['seo_canonical_url'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                        id="seo_canonical_url" name="seo_canonical_url" placeholder="https://www.ejemplo.com"
+                        value="<?php echo e(old('seo_canonical_url', optional($company)->seo_canonical_url ?: optional($company)->dominio)); ?>">
+                    <small class="form-text text-muted">Usa HTTPS y la unica version publica que debe aparecer en Google.</small>
+                    <?php $__errorArgs = ['seo_canonical_url'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <span class="invalid-feedback d-block"><?php echo e($message); ?></span>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="seo_alternate_hosts" class="font-weight-bold">Hosts alternos</label>
+                    <textarea class="form-control <?php $__errorArgs = ['seo_alternate_hosts'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="seo_alternate_hosts"
+                        name="seo_alternate_hosts" rows="3" placeholder="ejemplo.com"><?php echo e($alternateHostsText); ?></textarea>
+                    <small class="form-text text-muted">Un host por linea, sin protocolo ni rutas. Deben redirigir 301 al dominio canonico desde el servidor.</small>
+                    <?php $__errorArgs = ['seo_alternate_hosts'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <span class="invalid-feedback d-block"><?php echo e($message); ?></span>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    <?php $__errorArgs = ['seo_alternate_hosts.*'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <span class="invalid-feedback d-block"><?php echo e($message); ?></span>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="search_console_verification_token" class="font-weight-bold">Token de Google Search Console</label>
+                    <input type="text" class="form-control <?php $__errorArgs = ['search_console_verification_token'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                        id="search_console_verification_token" name="search_console_verification_token" maxlength="255"
+                        value="<?php echo e(old('search_console_verification_token', optional($company)->search_console_verification_token)); ?>">
+                    <small class="form-text text-muted">Copia solo el token entregado por Google; ALIS publica la etiqueta de verificacion.</small>
+                    <?php $__errorArgs = ['search_console_verification_token'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <span class="invalid-feedback d-block"><?php echo e($message); ?></span>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                 </div>
             </div>
         </div>
@@ -358,6 +451,37 @@ unset($__errorArgs, $__bag); ?>" type="file" id="favicon"
                     </div>
                 <?php endif; ?>
 
+                <div class="form-group mb-0">
+                    <label for="social_image" class="font-weight-bold">Imagen social predeterminada</label>
+                    <input class="form-control-file <?php $__errorArgs = ['social_image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" type="file" id="social_image"
+                        name="social_image" accept="image/jpeg,image/png,image/webp">
+                    <small class="form-text text-muted">Recomendada: 1200 x 630 px. Se usa en Open Graph cuando el contenido no tiene imagen propia.</small>
+                    <?php $__errorArgs = ['social_image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <span class="invalid-feedback d-block"><?php echo e($message); ?></span>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <?php if($companySocialImageUrl = optional($company)->publicSocialImageUrl()): ?>
+                    <div class="preview-box mt-3">
+                        <span class="preview-label">Imagen social actual</span>
+                        <img src="<?php echo e($companySocialImageUrl); ?>" class="img-fluid rounded" alt="Imagen social de empresa">
+                    </div>
+                <?php endif; ?>
+
                 <hr>
 
                 <h3 class="h6 font-weight-bold mb-3">Si subes un logo nuevo</h3>
@@ -409,6 +533,34 @@ unset($__errorArgs, $__bag); ?>" type="file" id="favicon"
 
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-body p-4">
+                <h2 class="section-title">Estado de indexacion</h2>
+                <p class="brand-muted">Activalo solo despues de validar dominio, SSL, redirecciones 301, robots, sitemap y las paginas publicas.</p>
+                <?php
+                    $seoIndexable = filter_var(
+                        old('seo_indexable', optional($company)->seo_indexable),
+                        FILTER_VALIDATE_BOOLEAN
+                    );
+                ?>
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <label for="seo_indexable" class="mb-0 font-weight-bold">Permitir indexacion</label>
+                        <small class="d-block <?php echo e($seoIndexable ? 'text-success' : 'text-muted'); ?>" id="seo-indexable-status">
+                            <?php echo e($seoIndexable ? 'Activo: Google puede rastrear el dominio canónico.' : 'Inactivo: el sitio envía noindex.'); ?>
+
+                        </small>
+                    </div>
+                    <div class="custom-control custom-switch mb-0">
+                        <input type="hidden" name="seo_indexable" value="0">
+                        <input type="checkbox" class="custom-control-input" name="seo_indexable" id="seo_indexable"
+                            value="1" aria-describedby="seo-indexable-status" <?php if($seoIndexable): ?> checked <?php endif; ?>>
+                        <label for="seo_indexable" class="custom-control-label"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
                 <h2 class="section-title">Publicacion</h2>
                 <div class="d-flex align-items-center justify-content-between">
                     <label for="aprobacion" class="mb-0 font-weight-bold">Requiere aprobacion</label>
@@ -434,7 +586,7 @@ unset($__errorArgs, $__bag); ?>" type="file" id="favicon"
     </div>
 </div>
 
-<?php if (! $__env->hasRenderedOnce('84df54e8-466f-441e-acbd-0b374cb9cd87')): $__env->markAsRenderedOnce('84df54e8-466f-441e-acbd-0b374cb9cd87'); ?>
+<?php if (! $__env->hasRenderedOnce('de90ed2a-a222-44db-97f4-f4dfd0fa4047')): $__env->markAsRenderedOnce('de90ed2a-a222-44db-97f4-f4dfd0fa4047'); ?>
     <?php $__env->startPush('scripts'); ?>
         <script>
             window.Dropzone = window.Dropzone || {};
@@ -511,6 +663,51 @@ unset($__errorArgs, $__bag); ?>" type="file" id="favicon"
 
                 bindDropzoneToInput('company-logo-dropzone', 'logo');
                 bindDropzoneToInput('company-favicon-dropzone', 'favicon');
+
+                const aboutField = document.getElementById('quienessomos');
+
+                if (aboutField && typeof ClassicEditor !== 'undefined') {
+                    ClassicEditor
+                        .create(aboutField, {
+                            toolbar: [
+                                'heading', '|', 'bold', 'italic', 'link',
+                                'bulletedList', 'numberedList', 'blockQuote'
+                            ],
+                            heading: {
+                                options: [
+                                    {
+                                        model: 'paragraph',
+                                        title: 'Párrafo',
+                                        class: 'ck-heading_paragraph'
+                                    },
+                                    {
+                                        model: 'heading1',
+                                        view: 'h1',
+                                        title: 'Encabezado 1',
+                                        class: 'ck-heading_heading1'
+                                    },
+                                    {
+                                        model: 'heading2',
+                                        view: 'h2',
+                                        title: 'Encabezado 2',
+                                        class: 'ck-heading_heading2'
+                                    }
+                                ]
+                            }
+                        })
+                        .then((editor) => {
+                            editor.editing.view.change((writer) => {
+                                writer.setStyle('min-height', '320px', editor.editing.view.document.getRoot());
+                            });
+
+                            aboutField.closest('form')?.addEventListener('submit', () => {
+                                editor.updateSourceElement();
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('CKEditor 5 error en Quienes somos:', error);
+                        });
+                }
 
                 document.querySelectorAll('[data-sync-color]').forEach((picker) => {
                     const targetId = picker.dataset.syncColor;

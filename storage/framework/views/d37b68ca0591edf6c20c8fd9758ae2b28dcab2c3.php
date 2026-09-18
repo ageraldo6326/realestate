@@ -2,18 +2,10 @@
     <?php
         $authUser = Auth::user();
         $isAdmin = $authUser && $authUser->hasAnyRole(['admin', 'superadmin']);
-        $userPhotoPath = Auth::user()->foto ?? null;
-        $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
-        
-        if ($userPhotoPath) {
-            if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-                $userPhotoUrl = $userPhotoPath;
-            } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-                $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-            } else {
-                $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-            }
-        }
+        $currentUser = Auth::user();
+        $userPhotoUrl = $currentUser
+            ? $currentUser->resolvePhotoUrl()
+            : \App\Models\User::defaultPhotoUrl();
 
         // Grupos de rutas para activar el estado del menú padre
         $sistemaRoutes = [
@@ -22,6 +14,7 @@
             'usuarios.edit',
             'inmobiliaria.index',
             'inmobiliaria.edit',
+            'seo-audit.index',
             'zonas.index',
             'zonas.create',
             'zonas.edit',
@@ -88,7 +81,8 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="<?php echo e($userPhotoUrl); ?>" class="img-circle elevation-2" alt="<?php echo e(Auth::user()->name); ?>"
-                    style="width:36px;height:36px;object-fit:cover;">
+                    style="width:36px;height:36px;object-fit:cover;"
+                    onerror="this.onerror=null;this.src='<?php echo e(\App\Models\User::defaultPhotoUrl()); ?>';">
             </div>
             <div class="info">
                 <a href="#" class="d-block text-white font-weight-500"><?php echo e(Auth::user()->name); ?></a>
@@ -116,8 +110,13 @@
                                 </a></li>
                             <li class="nav-item"><a href="<?php echo e(route('inmobiliaria.index')); ?>"
                                     class="nav-link <?php echo e(request()->routeIs('inmobiliaria.*') ? 'active' : ''); ?>"><i
-                                        class="nav-icon fas fa-building fa-fw"></i>
-                                    <p>Empresa</p>
+                                        class="nav-icon fas fa-globe fa-fw"></i>
+                                    <p>Configuración del sitio público</p>
+                                </a></li>
+                            <li class="nav-item"><a href="<?php echo e(route('seo-audit.index')); ?>"
+                                    class="nav-link <?php echo e(request()->routeIs('seo-audit.*') ? 'active' : ''); ?>"><i
+                                        class="nav-icon fas fa-search fa-fw"></i>
+                                    <p>SEO e indexación</p>
                                 </a></li>
                             <li class="nav-item"><a href="<?php echo e(route('zonas.index')); ?>"
                                     class="nav-link <?php echo e(request()->routeIs('zonas.*') ? 'active' : ''); ?>"><i

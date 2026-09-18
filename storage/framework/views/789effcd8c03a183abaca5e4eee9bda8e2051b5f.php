@@ -77,4 +77,4 @@
     </style>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('admin.layoutadmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views/admin/propiedades/revision.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layoutadmin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\admin\propiedades\revision.blade.php ENDPATH**/ ?>

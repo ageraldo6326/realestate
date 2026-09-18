@@ -1,20 +1,11 @@
 <?php
     $authUser = Auth::user();
     $isAdmin = $authUser && $authUser->hasAnyRole(['admin', 'superadmin']);
-    $userPhotoPath = $authUser->foto ?? null;
-    $userPhotoUrl = asset('vendor/adminlte/dist/img/AdminLTELogo.png');
+    $userPhotoUrl = $authUser
+        ? $authUser->resolvePhotoUrl()
+        : \App\Models\User::defaultPhotoUrl();
 
-    if ($userPhotoPath) {
-        if (\Illuminate\Support\Str::startsWith($userPhotoPath, ['http://', 'https://', '//', 'data:'])) {
-            $userPhotoUrl = $userPhotoPath;
-        } elseif (\Illuminate\Support\Str::startsWith($userPhotoPath, '/')) {
-            $userPhotoUrl = asset(ltrim($userPhotoPath, '/'));
-        } else {
-            $userPhotoUrl = asset('assets/' . ltrim($userPhotoPath, '/'));
-        }
-    }
-
-    $sistemaRoutes = ['usuarios.index', 'usuarios.create', 'usuarios.edit', 'inmobiliaria.index', 'inmobiliaria.edit', 'zonas.index', 'zonas.create', 'zonas.edit', 'tipopropiedades.index', 'tipopropiedades.create', 'tipopropiedades.edit', 'estados.index', 'estados.create', 'estados.edit', 'disponiblepara.index', 'disponiblepara.create', 'disponiblepara.edit', 'tipostareas.index', 'tipostareas.create', 'tipostareas.edit'];
+    $sistemaRoutes = ['usuarios.index', 'usuarios.create', 'usuarios.edit', 'inmobiliaria.index', 'inmobiliaria.edit', 'seo-audit.index', 'zonas.index', 'zonas.create', 'zonas.edit', 'tipopropiedades.index', 'tipopropiedades.create', 'tipopropiedades.edit', 'estados.index', 'estados.create', 'estados.edit', 'disponiblepara.index', 'disponiblepara.create', 'disponiblepara.edit', 'tipostareas.index', 'tipostareas.create', 'tipostareas.edit'];
     $websiteRoutes = ['portadas.index', 'portadas.create', 'portadas.edit', 'testimonios.index', 'testimonios.create', 'testimonios.edit', 'posts.index', 'posts.create', 'posts.edit', 'enfoques.index', 'enfoques.create', 'enfoques.edit'];
     $reportesRoutes = ['clientespotenciales', 'clientescerrados', 'fuenteclientes', 'tareasporcategorias', 'propiedadesclick', 'dashboardventas'];
     $crmRoutes = ['clientes.*', 'asignar', 'import.index', 'verificar', 'propiedades.*', 'mostrarinventario', 'todo.*', 'calendario', 'registrarventa'];
@@ -34,7 +25,8 @@
             'items' => [
                 $makeGroup('sistema', 'Sistema', 'fas fa-cog', [
                     $makeLink('usuarios', 'Usuarios', 'fas fa-users', route('usuarios.index'), request()->routeIs('usuarios.*'), ['equipo']),
-                    $makeLink('empresa', 'Empresa', 'fas fa-building', route('inmobiliaria.index'), request()->routeIs('inmobiliaria.*'), ['inmobiliaria']),
+                    $makeLink('sitio-publico', 'Configuración del sitio público', 'fas fa-globe', route('inmobiliaria.index'), request()->routeIs('inmobiliaria.*'), ['inmobiliaria', 'seo', 'dominio']),
+                    $makeLink('seo-audit', 'SEO e indexación', 'fas fa-search', route('seo-audit.index'), request()->routeIs('seo-audit.*'), ['sitemap', 'auditoría', 'indexación']),
                     $makeLink('zonas', 'Zonas', 'fas fa-map-marker-alt', route('zonas.index'), request()->routeIs('zonas.*'), ['ubicaciones']),
                     $makeLink('tipos-propiedad', 'Tipos de propiedad', 'fas fa-city', route('tipopropiedades.index'), request()->routeIs('tipopropiedades.*'), ['categorías']),
                     $makeLink('estados', 'Estados', 'fas fa-toggle-on', route('estados.index'), request()->routeIs('estados.*'), ['estatus']),
@@ -172,7 +164,8 @@
 
     <div class="app-modern-sidebar__profile">
         <div class="app-modern-sidebar__profile-main">
-            <img src="<?php echo e($userPhotoUrl); ?>" class="app-modern-sidebar__avatar" alt="<?php echo e($authUser->name); ?>">
+            <img src="<?php echo e($userPhotoUrl); ?>" class="app-modern-sidebar__avatar" alt="<?php echo e($authUser->name); ?>"
+                onerror="this.onerror=null;this.src='<?php echo e(\App\Models\User::defaultPhotoUrl()); ?>';">
             <div class="app-modern-sidebar__profile-copy">
                 <span><?php echo e($authUser->name); ?></span>
                 <small><?php echo e($isAdmin ? 'Administrador' : 'Asesor'); ?></small>

@@ -769,6 +769,8 @@
                                     
                                 </div>
                             </div>
+                        <?php endif; ?>
+
                             <button type="submit" class="btn btn-primary m-3" value="grabar"
                                 name="grabar">Grabar</button>
                 </form>

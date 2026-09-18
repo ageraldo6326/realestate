@@ -1,25 +1,16 @@
+<?php $__env->startSection('seo_title', 'Página no encontrada'); ?>
+<?php $__env->startSection('seo_description', 'La página solicitada no está disponible.'); ?>
+<?php $__env->startSection('seo_robots', 'noindex, nofollow'); ?>
 
-
-
-
-<?php $__env->startSection('galeria'); ?>
-<div class="ltn__breadcrumb-area text-left bg-overlay-white-30 bg-image "  data-bs-bg="img/bg/14.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ltn__breadcrumb-inner">
-                    <h1 class="page-title">404 Pagina no encontrada</h1>
-                    <div class="ltn__breadcrumb-list">
-                        <ul>
-                            <li><a href="<?php echo e(route('home')); ?>"><span class="ltn__secondary-color"><i class="fas fa-home"></i></span> Home</a></li>
-                            <li>404</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<?php $__env->startSection('content'); ?>
+    <section class="py-5 bg-light" aria-labelledby="not-found-title">
+        <div class="container py-5 text-center">
+            <div class="display-1 fw-bold text-primary mb-3" aria-hidden="true">404</div>
+            <h1 id="not-found-title" class="h2 mb-3">Página no encontrada</h1>
+            <p class="text-muted mb-4">El enlace puede haber cambiado o el contenido ya no está disponible.</p>
+            <a href="<?php echo e(route('home')); ?>" class="btn btn-primary px-4">Volver al inicio</a>
         </div>
-    </div>
-</div>
+    </section>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\errors\404.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.layout-landing', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\errors\404.blade.php ENDPATH**/ ?>

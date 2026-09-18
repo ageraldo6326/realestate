@@ -2,6 +2,7 @@
     <?php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
+        $cardThumbnails = app(\App\Services\PropertyCardThumbnailService::class);
         $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
             $fallback ??= asset('assets/prop-apto-1.jpg');
 
@@ -33,9 +34,15 @@
 
     <!-- FILTROS DE BÚSQUEDA -->
     <div class="lw-search-form mb-4">
-        <div class="row g-2 align-items-end flex-nowrap">
+        <div class="lw-search-grid">
+            <div class="lw-field lw-field-title">
+                <label class="form-label lw-label" for="lw-titulo">Título</label>
+                <input type="search" id="lw-titulo" class="form-control lw-input"
+                    placeholder="Ej. Apartamento en Piantini" wire:model.debounce.500ms="titulo_criterio"
+                    autocomplete="off">
+            </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-provincia">Provincia</label>
                 <select id="lw-provincia" class="form-select lw-select" wire:model="provincia_id_criterio">
                     <option value="">Todas las provincias</option>
@@ -45,17 +52,23 @@
                 </select>
             </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-sector-barrio">Sector</label>
-                <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio">
-                    <option value="">Todos los sectores</option>
-                    <?php $__currentLoopData = $sectores; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sector): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <option value="<?php echo e($sector->id); ?>"><?php echo e($sector->sector); ?></option>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio"
+                    <?php echo e(!filled($provincia_id_criterio) ? 'disabled' : ''); ?>>
+                    <option value="">
+                        <?php echo e(filled($provincia_id_criterio) ? 'Todos los sectores' : 'Primero selecciona una provincia'); ?>
+
+                    </option>
+                    <?php if(filled($provincia_id_criterio)): ?>
+                        <?php $__currentLoopData = $sectores; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sector): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($sector->id); ?>"><?php echo e($sector->sector); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
                 </select>
             </div>
 
-            <div class="col">
+            <div class="lw-field">
                 <label class="form-label lw-label" for="lw-tipo">Tipo de propiedad</label>
                 <select id="lw-tipo" class="form-select lw-select" wire:model="tipo_id_criterio">
                     <option value="">Todos los tipos</option>
@@ -65,9 +78,9 @@
                 </select>
             </div>
 
-            <div class="col" style="min-width:220px;">
+            <div class="lw-field lw-field-price">
                 <label class="form-label lw-label">Margen de precio</label>
-                <div class="d-flex gap-1">
+                <div class="lw-price-grid">
                     <input type="text" id="lw-precio-ini" class="form-control lw-input" placeholder="Mín"
                         wire:model.debounce.500ms="precio_inicial" aria-label="Precio mínimo">
                     <input type="text" id="lw-precio-fin" class="form-control lw-input" placeholder="Máx"
@@ -80,17 +93,17 @@
 
     <!-- INDICADOR DE CARGA: solo durante actualizaciones de filtros -->
     <div wire:loading.delay.shortest
-        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final,updatingProvinciaIdCriterio"
-        class="lw-loading">
-        <div class="spinner-border spinner-border-sm" role="status" style="color:var(--clr-accent)">
-            <span class="visually-hidden">Cargando...</span>
+        wire:target="titulo_criterio,provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final"
+        class="lw-loading" role="status" aria-live="polite">
+        <div class="lw-loading-content">
+            <div class="spinner-border spinner-border-sm" aria-hidden="true" style="color:var(--clr-accent)"></div>
+            <span>Buscando propiedades...</span>
         </div>
-        <span>Buscando propiedades...</span>
     </div>
 
     <!-- RESULTADOS -->
     <div wire:loading.class.delay.shortest="lw-results-loading"
-        wire:target="provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final">
+        wire:target="titulo_criterio,provincia_id_criterio,sector_barrio_criterio,tipo_id_criterio,precio_inicial,precio_final">
 
         <?php if($propiedades->count()): ?>
             <p class="lw-results-count">
@@ -102,15 +115,25 @@
 
             <div class="row g-4">
                 <?php $__currentLoopData = $propiedades; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $propiedad): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6" wire:key="property-card-<?php echo e($propiedad->id); ?>">
                         <article class="prop-card h-100">
                             <div class="card-img-wrap">
                                 <a href="<?php echo e(route('propiedad', $propiedad->slug)); ?>"
                                     aria-label="<?php echo e($propiedad->titulo); ?>">
-                                    <img loading="lazy"
-                                        src="<?php echo e($resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder)); ?>"
-                                        onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
-                                        alt="<?php echo e($propiedad->titulo); ?>" title="<?php echo e($propiedad->titulo); ?>">
+                                    <?php
+                                        $propertyImage = $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder);
+                                        $propertyThumbnail = $cardThumbnails->urlFor($propiedad->foto_portada);
+                                    ?>
+                                    <picture>
+                                        <?php if($propertyThumbnail): ?>
+                                            <source type="image/webp" srcset="<?php echo e($propertyThumbnail); ?>"
+                                                sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw">
+                                        <?php endif; ?>
+                                        <img loading="lazy" width="640" height="480" decoding="async"
+                                            src="<?php echo e($propertyImage); ?>"
+                                            onerror="this.onerror=null;this.src='<?php echo e($propertyPlaceholder); ?>';"
+                                            alt="<?php echo e($propiedad->titulo); ?>" title="<?php echo e($propiedad->titulo); ?>">
+                                    </picture>
                                 </a>
 
                                 <?php $disp = strtolower($propiedad->disponible_para ?? ''); ?>
@@ -155,6 +178,7 @@
                                         $asesorFoto = $personPlaceholder;
                                     }
                                 ?>
+                                <?php $asesorThumbnail = $cardThumbnails->urlFor($asesorFotoRaw, 96); ?>
                                 <h3 class="card-title mb-0">
                                     <a href="<?php echo e(route('propiedad', $propiedad->slug)); ?>"><?php echo e($propiedad->titulo); ?></a>
                                 </h3>
@@ -204,10 +228,15 @@
                                     <?php endif; ?>
                                 </div>
                                 <div class="d-flex align-items-center mt-3 pt-2 border-top">
-                                    <img src="<?php echo e($asesorFoto); ?>" alt="<?php echo e($asesorNombre); ?>" loading="lazy"
-                                        onerror="this.onerror=null;this.src='<?php echo e($personPlaceholder); ?>';"
-                                        style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
-                                        class="mr-2">
+                                    <picture>
+                                        <?php if($asesorThumbnail): ?>
+                                            <source type="image/webp" srcset="<?php echo e($asesorThumbnail); ?>" sizes="34px">
+                                        <?php endif; ?>
+                                        <img src="<?php echo e($asesorFoto); ?>" alt="<?php echo e($asesorNombre); ?>" width="34" height="34" loading="lazy"
+                                            onerror="this.onerror=null;this.src='<?php echo e($personPlaceholder); ?>';"
+                                            style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
+                                            class="mr-2">
+                                    </picture>
                                     <span class="small text-muted">Asesor: <?php echo e($asesorNombre); ?></span>
                                 </div>
                             </div>
@@ -240,6 +269,23 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .lw-search-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1rem;
+            align-items: end
+        }
+
+        .lw-field {
+            min-width: 0
+        }
+
+        .lw-price-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: .625rem
+        }
+
         .lw-label {
             font-size: .7rem;
             font-weight: 700;
@@ -252,6 +298,7 @@
 
         .lw-select,
         .lw-input {
+            width: 100%;
             border: 1.5px solid var(--clr-border);
             border-radius: var(--radius-sm);
             font-size: .875rem;
@@ -267,7 +314,7 @@
             outline: none
         }
 
-        .lw-loading {
+        .lw-loading-content {
             display: flex;
             align-items: center;
             gap: .75rem;
@@ -340,6 +387,33 @@
 
         .lw-empty p {
             font-size: .88rem
+        }
+
+        @media (min-width: 576px) {
+            .lw-price-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+        }
+
+        @media (min-width: 768px) {
+            .lw-search-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .lw-field-title {
+                grid-column: 1 / -1
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .lw-search-grid {
+                grid-template-columns: minmax(220px, 1.25fr) repeat(3, minmax(150px, 1fr)) minmax(260px, 1.2fr)
+            }
+
+            .lw-field-title,
+            .lw-field-price {
+                grid-column: auto
+            }
         }
     </style>
 

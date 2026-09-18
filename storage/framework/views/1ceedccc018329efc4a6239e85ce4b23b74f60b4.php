@@ -21,7 +21,7 @@
 
 <section class="page-hero" aria-label="Propiedades por Zona">
     <div class="container">
-        <h1 class="page-hero-title"><?php echo e($zona->zona ?? 'Propiedades'); ?></h1>
+        <h1 class="page-hero-title"><?php echo e($zona->seo_h1 ?: ($zona->zona ?? 'Propiedades')); ?></h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?php echo e(route('home')); ?>">Inicio</a></li>
@@ -34,18 +34,24 @@
 
 <section class="listings-section">
     <div class="container">
+        <?php if($zona->seo_description): ?>
+            <div class="bg-white border rounded-3 p-4 mb-4 lh-lg">
+                <?php echo app(\App\Services\HtmlContentSanitizer::class)->sanitize($zona->seo_description); ?>
+
+            </div>
+        <?php endif; ?>
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-propiedades-por-zonas', ['zona_id' => $zona_id, 'zona' => $zona])->html();
-} elseif ($_instance->childHasBeenRendered('iPYs0oz')) {
-    $componentId = $_instance->getRenderedChildComponentId('iPYs0oz');
-    $componentTag = $_instance->getRenderedChildComponentTagName('iPYs0oz');
+} elseif ($_instance->childHasBeenRendered('JdxQCvf')) {
+    $componentId = $_instance->getRenderedChildComponentId('JdxQCvf');
+    $componentTag = $_instance->getRenderedChildComponentTagName('JdxQCvf');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('iPYs0oz');
+    $_instance->preserveRenderedChild('JdxQCvf');
 } else {
     $response = \Livewire\Livewire::mount('buscar-propiedades-por-zonas', ['zona_id' => $zona_id, 'zona' => $zona]);
     $html = $response->html();
-    $_instance->logRenderedChild('iPYs0oz', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('JdxQCvf', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
@@ -53,4 +59,5 @@ echo $html;
 </section>
 
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layout.layout-landing', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp3\htdocs\realestate_dev\resources\views\frontend\PropiedadesPorZona.blade.php ENDPATH**/ ?>

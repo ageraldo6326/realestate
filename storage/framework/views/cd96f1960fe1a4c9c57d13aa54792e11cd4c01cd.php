@@ -76,7 +76,7 @@
                     <p class="text-muted mb-0">Usa nombres claros para mejorar busqueda, filtros y reportes del CRM.</p>
                 </div>
 
-                <form action="<?php echo e($action); ?>" method="POST" autocomplete="off" id="zona-form">
+                <form action="<?php echo e($action); ?>" method="POST" enctype="multipart/form-data" autocomplete="off" id="zona-form">
                     <?php echo csrf_field(); ?>
                     <?php if($isEdit): ?>
                         <?php echo method_field('PUT'); ?>
@@ -106,6 +106,67 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
+
+                    <hr class="my-4">
+                    <h3 class="h6 font-weight-bold mb-3">Publicación y SEO de la zona</h3>
+
+                    <?php if($isEdit && optional($zonaActual)->slug): ?>
+                        <div class="form-group">
+                            <label class="font-weight-semibold">URL pública</label>
+                            <input type="text" class="form-control" value="<?php echo e(route('propiedadesPorZona', $zonaActual->slug)); ?>" readonly>
+                            <small class="form-text text-muted">El slug se conserva para evitar enlaces rotos.</small>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="custom-control custom-switch mb-4">
+                        <input class="custom-control-input" type="checkbox" id="is_public" name="is_public" value="1"
+                            <?php echo e(old('is_public', optional($zonaActual)->is_public ?? true) ? 'checked' : ''); ?>>
+                        <label class="custom-control-label" for="is_public">Publicar esta página de zona</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group">
+                            <label for="seo_h1" class="font-weight-semibold">Encabezado H1</label>
+                            <input type="text" id="seo_h1" name="seo_h1" class="form-control"
+                                maxlength="120" value="<?php echo e(old('seo_h1', optional($zonaActual)->seo_h1)); ?>"
+                                placeholder="Apartamentos y casas en Piantini">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="seo_title" class="font-weight-semibold">Título SEO</label>
+                            <input type="text" id="seo_title" name="seo_title" class="form-control"
+                                maxlength="70" value="<?php echo e(old('seo_title', optional($zonaActual)->seo_title)); ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="meta_description" class="font-weight-semibold">Meta description</label>
+                        <textarea id="meta_description" name="meta_description" class="form-control" rows="3"
+                            maxlength="160"><?php echo e(old('meta_description', optional($zonaActual)->meta_description)); ?></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seo_description" class="font-weight-semibold">Contenido editorial</label>
+                        <textarea id="seo_description" name="seo_description" class="form-control" rows="7"
+                            maxlength="10000" placeholder="Describe la zona, sus ventajas y el tipo de propiedades disponible."><?php echo e(old('seo_description', optional($zonaActual)->seo_description)); ?></textarea>
+                        <small class="form-text text-muted">Este contenido permite publicar una página útil incluso cuando cambia el inventario.</small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 form-group">
+                            <label for="image" class="font-weight-semibold">Imagen de la zona</label>
+                            <input type="file" id="image" name="image" class="form-control-file" accept="image/jpeg,image/png,image/webp">
+                        </div>
+                        <div class="col-lg-6 form-group">
+                            <label for="image_alt" class="font-weight-semibold">Texto alternativo</label>
+                            <input type="text" id="image_alt" name="image_alt" class="form-control" maxlength="160"
+                                value="<?php echo e(old('image_alt', optional($zonaActual)->image_alt)); ?>">
+                        </div>
+                    </div>
+
+                    <?php if($isEdit && optional($zonaActual)->image): ?>
+                        <img src="<?php echo e(asset(ltrim($zonaActual->image, '/'))); ?>" alt="<?php echo e($zonaActual->image_alt ?: $zonaActual->zona); ?>"
+                            class="img-fluid rounded mb-4" style="max-height: 220px; object-fit: cover;" loading="lazy">
+                    <?php endif; ?>
 
                     <div class="d-flex flex-column flex-md-row align-items-md-center">
                         <button type="submit" class="btn btn-primary px-4 mr-md-2 mb-2 mb-md-0" id="btn-submit-zona">

@@ -37,15 +37,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-propiedades-por-tipos', ['tipo_id' => $tipo_id, 'tipo' => $tipo])->html();
-} elseif ($_instance->childHasBeenRendered('Yec5P31')) {
-    $componentId = $_instance->getRenderedChildComponentId('Yec5P31');
-    $componentTag = $_instance->getRenderedChildComponentTagName('Yec5P31');
+} elseif ($_instance->childHasBeenRendered('MS9Hird')) {
+    $componentId = $_instance->getRenderedChildComponentId('MS9Hird');
+    $componentTag = $_instance->getRenderedChildComponentTagName('MS9Hird');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('Yec5P31');
+    $_instance->preserveRenderedChild('MS9Hird');
 } else {
     $response = \Livewire\Livewire::mount('buscar-propiedades-por-tipos', ['tipo_id' => $tipo_id, 'tipo' => $tipo]);
     $html = $response->html();
-    $_instance->logRenderedChild('Yec5P31', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('MS9Hird', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

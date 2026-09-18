@@ -33,10 +33,25 @@
     $companyDescription = optional($inmo)->metadescription ?: '';
     $companyKeywords = optional($inmo)->palabrasclaves ?: '';
     $companyFaviconUrl = $resolvePublicAssetUrl(optional($inmo)->favicon);
-    $companyLogoUrl = $resolvePublicAssetUrl(optional($inmo)->logo);
+    // El logo del portal es un recurso local, versionado y optimizado. Evita descargar
+    // el PNG de 1.5 MB que estaba configurado previamente para una imagen de 48 px.
+    $companyLogoUrl = asset('img/brand/logo-home-192.webp');
     $companyLogoPlaceholder = asset('assets/inmobiliaria/logo.png');
     $themeVariables =
         $frontendTheme ?? app(\App\Services\Branding\CompanyBrandingService::class)->getDefaultCssVariables();
+    $seoData = $seo ?? [];
+    $sectionTitle = trim($__env->yieldContent('seo_title'));
+    $sectionDescription = trim($__env->yieldContent('seo_description'));
+    $sectionRobots = trim($__env->yieldContent('seo_robots'));
+    $seoTitle = $seoData['title'] ?? ($sectionTitle !== '' ? $sectionTitle : $companyTitle);
+    $seoDescription = $seoData['description'] ?? ($sectionDescription !== '' ? $sectionDescription : $companyDescription);
+    $seoCanonical = $seoData['canonical'] ?? app(\App\Services\SeoMetadataService::class)->canonicalForCurrentPath();
+    $seoImage = $seoData['image'] ?? $companyLogoUrl;
+    $seoType = $seoData['type'] ?? 'website';
+    $seoRobots = $seoData['robots'] ?? ($sectionRobots !== ''
+        ? $sectionRobots
+        : (\App\Services\InmobiliariaService::indexingEnabled($inmo) ? 'index, follow' : 'noindex, nofollow'));
+    $seoSchemas = $seoData['schema'] ?? [];
 ?>
 
 <head>
@@ -44,29 +59,56 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?php echo $__env->yieldContent('seo_title', $companyTitle); ?></title>
-    <meta name="description" content="<?php echo $__env->yieldContent('seo_description', $companyDescription); ?>">
+    <title><?php echo e($seoTitle); ?></title>
+    <meta name="description" content="<?php echo e($seoDescription); ?>">
+    <meta name="robots" content="<?php echo e($seoRobots); ?>">
     <meta name="keywords" content="<?php echo e($companyKeywords); ?>">
-    <link rel="canonical" href="<?php echo e(preg_replace('/^http:/i', 'https:', url()->current())); ?>" />
+    <link rel="canonical" href="<?php echo e($seoCanonical); ?>" />
+    <?php if($searchConsoleVerificationToken = \App\Services\InmobiliariaService::searchConsoleVerificationToken($inmo)): ?>
+        <meta name="google-site-verification" content="<?php echo e($searchConsoleVerificationToken); ?>">
+    <?php endif; ?>
 
     <?php if($companyFaviconUrl): ?>
         <link rel="shortcut icon" href="<?php echo e($companyFaviconUrl); ?>" type="image/x-icon" />
     <?php endif; ?>
 
     <!-- Open Graph -->
-    <meta property="og:title" content="<?php echo $__env->yieldContent('seo_title', $companyTitle); ?>">
-    <meta property="og:description" content="<?php echo $__env->yieldContent('seo_description', $companyDescription); ?>">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?php echo e(url()->current()); ?>">
+    <meta property="og:title" content="<?php echo e($seoTitle); ?>">
+    <meta property="og:description" content="<?php echo e($seoDescription); ?>">
+    <meta property="og:type" content="<?php echo e($seoType); ?>">
+    <meta property="og:url" content="<?php echo e($seoCanonical); ?>">
+    <meta property="og:site_name" content="<?php echo e($companyTitle); ?>">
+    <?php if($seoImage): ?>
+        <meta property="og:image" content="<?php echo e($seoImage); ?>">
+    <?php endif; ?>
+    <meta name="twitter:card" content="<?php echo e($seoImage ? 'summary_large_image' : 'summary'); ?>">
+    <meta name="twitter:title" content="<?php echo e($seoTitle); ?>">
+    <meta name="twitter:description" content="<?php echo e($seoDescription); ?>">
+    <?php if($seoImage): ?>
+        <meta name="twitter:image" content="<?php echo e($seoImage); ?>">
+    <?php endif; ?>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts: Playfair Display + Inter -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <?php $__currentLoopData = $seoSchemas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seoSchema): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <script type="application/ld+json"><?php echo json_encode($seoSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?></script>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Bootstrap define la estructura. Se sirve local para no retrasar el paint del hero por el CDN. -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>">
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=optional"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Los iconos no afectan la estructura inicial. Se reservan sus dimensiones para que al cargarlos no haya CLS. -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=optional">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    </noscript>
 
     <?php echo \Livewire\Livewire::styles(); ?>
 
@@ -90,7 +132,8 @@
             --shadow-lg: 0 8px 40px rgba(0, 0, 0, .14);
             --radius: 12px;
             --radius-sm: 8px;
-            --transition: all .25s ease;
+            --transition: color .25s ease, background-color .25s ease, border-color .25s ease,
+                box-shadow .25s ease, opacity .25s ease, transform .25s ease;
         }
 
         *,
@@ -108,8 +151,30 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        .skip-link {
+            position: fixed;
+            top: .75rem;
+            left: .75rem;
+            z-index: 10000;
+            padding: .7rem 1rem;
+            border-radius: .5rem;
+            color: #fff;
+            background: #111827;
+            transform: translateY(-160%);
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+        }
+
         img {
             max-width: 100%;
+        }
+
+        .fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands {
+            display: inline-block;
+            width: 1em;
+            text-align: center;
         }
 
         /* ===========================
@@ -490,6 +555,17 @@
             background: var(--clr-bg) !important;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+
         @media (max-width: 991px) {
             .navbar-landing .navbar-nav {
                 padding: 1rem 0;
@@ -508,6 +584,8 @@
 
 <body>
 
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
     <!-- ===================== NAVBAR ===================== -->
     <nav class="navbar navbar-expand-lg navbar-landing" aria-label="Navegación principal">
         <div class="container">
@@ -515,7 +593,8 @@
             <!-- Logo -->
             <a class="navbar-brand" href="<?php echo e(route('home')); ?>" aria-label="Inicio">
                 <?php if($companyLogoUrl): ?>
-                    <img src="<?php echo e($companyLogoUrl); ?>" alt="<?php echo e($companyTitle); ?>" height="48" loading="eager"
+                    <img src="<?php echo e($companyLogoUrl); ?>" alt="<?php echo e($companyTitle); ?>" width="48" height="48"
+                        loading="eager" fetchpriority="high" decoding="async"
                         onerror="this.onerror=null;this.src='<?php echo e($companyLogoPlaceholder); ?>';">
                 <?php else: ?>
                     <span class="brand-text"><?php echo e($companyTitle); ?></span>
@@ -525,7 +604,7 @@
             <!-- Mobile toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLanding"
                 aria-controls="navLanding" aria-expanded="false" aria-label="Abrir menú">
-                <i class="fas fa-bars" style="font-size:1.2rem; color:var(--clr-dark)"></i>
+                <span class="navbar-toggler-icon" aria-hidden="true"></span>
             </button>
 
             <!-- Links -->

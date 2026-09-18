@@ -1,13 +1,13 @@
 
 
-<?php $__env->startSection('title', 'Empresa'); ?>
+<?php $__env->startSection('title', 'Configuración del sitio público'); ?>
 
 <?php $__env->startSection('breadcrumb'); ?>
     <li class="breadcrumb-item">Configuración</li>
-    <li class="breadcrumb-item active">Empresa</li>
+    <li class="breadcrumb-item active">Configuración del sitio público</li>
 <?php $__env->stopSection(); ?>
 
-<?php $__env->startSection('page_title', 'Empresa'); ?>
+<?php $__env->startSection('page_title', 'Configuración del sitio público'); ?>
 
 <?php $__env->startSection('content'); ?>
     <?php echo $__env->make('admin.empresa._form', [

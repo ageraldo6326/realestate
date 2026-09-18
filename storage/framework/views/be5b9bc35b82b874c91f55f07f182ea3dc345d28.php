@@ -14,15 +14,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-disponible-para')->html();
-} elseif ($_instance->childHasBeenRendered('PbLB17l')) {
-    $componentId = $_instance->getRenderedChildComponentId('PbLB17l');
-    $componentTag = $_instance->getRenderedChildComponentTagName('PbLB17l');
+} elseif ($_instance->childHasBeenRendered('nojnuPc')) {
+    $componentId = $_instance->getRenderedChildComponentId('nojnuPc');
+    $componentTag = $_instance->getRenderedChildComponentTagName('nojnuPc');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('PbLB17l');
+    $_instance->preserveRenderedChild('nojnuPc');
 } else {
     $response = \Livewire\Livewire::mount('buscar-disponible-para');
     $html = $response->html();
-    $_instance->logRenderedChild('PbLB17l', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('nojnuPc', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

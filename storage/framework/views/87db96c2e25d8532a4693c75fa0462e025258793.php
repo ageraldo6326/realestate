@@ -29,15 +29,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('buscar-tipo-propiedad')->html();
-} elseif ($_instance->childHasBeenRendered('R55SfJU')) {
-    $componentId = $_instance->getRenderedChildComponentId('R55SfJU');
-    $componentTag = $_instance->getRenderedChildComponentTagName('R55SfJU');
+} elseif ($_instance->childHasBeenRendered('S5z1rn5')) {
+    $componentId = $_instance->getRenderedChildComponentId('S5z1rn5');
+    $componentTag = $_instance->getRenderedChildComponentTagName('S5z1rn5');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('R55SfJU');
+    $_instance->preserveRenderedChild('S5z1rn5');
 } else {
     $response = \Livewire\Livewire::mount('buscar-tipo-propiedad');
     $html = $response->html();
-    $_instance->logRenderedChild('R55SfJU', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('S5z1rn5', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
