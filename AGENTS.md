@@ -17,5 +17,7 @@ Reglas
 
 - Siempre entrega los gits tanto de desarrollo como de produccion
 - Usa codigo limpio y probado, las pruebas no deben borrar ningun dato de la base de datos, usa opciones como sqlite paa pruebas
+- Realizar pruebas de funcionalidad, evitando pantallas de error, tanto en desarrollo como en produccion.
+- Refactorizar el codigo si es necesario, para un mejor rendimiento.
 - las pruebas siempre deben confirmar el renderizado correcto de frontend
 - SIEMPRE DEBES ENTREGAR EL CODIGO GIT PARA DESARROLLO CON EL MENSAJE DE COMMIT DESCRITIVO Y LOS COMANDOS GIT PARA DESPLEGAR EN PRODUCCION, EVITANDO SIEMPRE LA PERDIDA DE DATOS Y LOS COMANDOS PARA ACTUALIZAR LA CACHE EN PRODUCCION.

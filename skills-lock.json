@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "audit-speed": {
+      "source": "calm-north/seojuice-skills",
+      "sourceType": "github",
+      "skillPath": "skills/audit-speed/SKILL.md",
+      "computedHash": "25715a6d5a270760fa8b1b9eb22209a19b90d17656f3cc9c84a709d28a904f1b"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
@@ -24,6 +30,12 @@
       "sourceType": "github",
       "skillPath": ".claude/skills/livewire-development/SKILL.md",
       "computedHash": "2797330b4840a67852cbf5459bb3bcb188a5c4ffa695d09d327c5b255d3a4b1b"
+    },
+    "pagespeed-insights": {
+      "source": "enderpuentes/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "pagespeed-insights/SKILL.md",
+      "computedHash": "80a9e00c680f7341b442efae1e9d05572681dbf57db1cee0db8cc8d920b14a7c"
     },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
