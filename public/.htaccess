@@ -50,6 +50,9 @@
     <Files "bootstrap-5.3.2.min.css">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </Files>
+    <Files "home-non-critical-v1.min.css">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </Files>
 </IfModule>
 
 # Conserva el tamaño transferido de los assets locales equivalente al CDN.
