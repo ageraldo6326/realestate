@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use App\Services\CatalogoService;
 use App\Services\InmobiliariaService;
+use App\Services\PropertyCardThumbnailService;
 use App\Services\SitemapService;
 
 class PropiedadesController extends Controller
@@ -1367,6 +1368,9 @@ class PropiedadesController extends Controller
         $uploadedFile->move($directory, $filename);
 
         $propiedad->{$field} = '/img/propiedades/img/' . $propiedad->referencia . '/' . $filename;
+
+        // La miniatura es un derivado para las tarjetas publicas; el original se conserva intacto.
+        app(PropertyCardThumbnailService::class)->create($propiedad->{$field});
     }
 
     protected function deletePropertyImage(Propiedad $propiedad, string $field): void

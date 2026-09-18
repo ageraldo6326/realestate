@@ -23,6 +23,11 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('width="48" height="48"', $header);
         $this->assertStringContainsString('rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"', $header);
         $this->assertStringContainsString('display=optional', $header);
+        $this->assertStringContainsString('rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"', $header);
+        $this->assertStringContainsString('Los iconos no afectan la estructura inicial', $header);
+        $this->assertStringContainsString('navbar-toggler-icon', $header);
+        $this->assertStringContainsString('PropertyCardThumbnailService', $home);
+        $this->assertStringContainsString('sizes="(max-width: 767px) 100vw', $home);
         $this->assertFileExists($root . '/public/img/brand/logo-home-192.webp');
         $this->assertFileExists($root . '/public/assets/portada-hero-640.webp');
         $this->assertFileExists($root . '/public/assets/portada-hero-1280.webp');

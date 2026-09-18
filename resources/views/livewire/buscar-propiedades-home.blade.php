@@ -2,6 +2,7 @@
     @php
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = asset('vendor/adminlte/dist/img/user2-160x160.jpg');
+        $cardThumbnails = app(\App\Services\PropertyCardThumbnailService::class);
         $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
             $fallback ??= asset('assets/prop-apto-1.jpg');
 
@@ -111,10 +112,20 @@
                             <div class="card-img-wrap">
                                 <a href="{{ route('propiedad', $propiedad->slug) }}"
                                     aria-label="{{ $propiedad->titulo }}">
-                                    <img loading="lazy" width="640" height="480" decoding="async"
-                                        src="{{ $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder) }}"
-                                        onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
-                                        alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
+                                    @php
+                                        $propertyImage = $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder);
+                                        $propertyThumbnail = $cardThumbnails->urlFor($propiedad->foto_portada);
+                                    @endphp
+                                    <picture>
+                                        @if ($propertyThumbnail)
+                                            <source type="image/webp" srcset="{{ $propertyThumbnail }}"
+                                                sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw">
+                                        @endif
+                                        <img loading="lazy" width="640" height="480" decoding="async"
+                                            src="{{ $propertyImage }}"
+                                            onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
+                                            alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">
+                                    </picture>
                                 </a>
 
                                 @php $disp = strtolower($propiedad->disponible_para ?? ''); @endphp
@@ -157,6 +168,7 @@
                                         $asesorFoto = $personPlaceholder;
                                     }
                                 @endphp
+                                @php $asesorThumbnail = $cardThumbnails->urlFor($asesorFotoRaw, 96); @endphp
                                 <h3 class="card-title mb-0">
                                     <a href="{{ route('propiedad', $propiedad->slug) }}">{{ $propiedad->titulo }}</a>
                                 </h3>
@@ -204,10 +216,15 @@
                                     @endif
                                 </div>
                                 <div class="d-flex align-items-center mt-3 pt-2 border-top">
-                                    <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" width="34" height="34" loading="lazy"
-                                        onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
-                                        style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
-                                        class="mr-2">
+                                    <picture>
+                                        @if ($asesorThumbnail)
+                                            <source type="image/webp" srcset="{{ $asesorThumbnail }}" sizes="34px">
+                                        @endif
+                                        <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" width="34" height="34" loading="lazy"
+                                            onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
+                                            style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
+                                            class="mr-2">
+                                    </picture>
                                     <span class="small text-muted">Asesor: {{ $asesorNombre }}</span>
                                 </div>
                             </div>
