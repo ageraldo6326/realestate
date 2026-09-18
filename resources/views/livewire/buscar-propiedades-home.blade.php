@@ -54,11 +54,16 @@
 
             <div class="lw-field">
                 <label class="form-label lw-label" for="lw-sector-barrio">Sector</label>
-                <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio">
-                    <option value="">Todos los sectores</option>
-                    @foreach ($sectores as $sector)
-                        <option value="{{ $sector->id }}">{{ $sector->sector }}</option>
-                    @endforeach
+                <select id="lw-sector-barrio" class="form-select lw-select" wire:model="sector_barrio_criterio"
+                    {{ !filled($provincia_id_criterio) ? 'disabled' : '' }}>
+                    <option value="">
+                        {{ filled($provincia_id_criterio) ? 'Todos los sectores' : 'Primero selecciona una provincia' }}
+                    </option>
+                    @if (filled($provincia_id_criterio))
+                        @foreach ($sectores as $sector)
+                            <option value="{{ $sector->id }}">{{ $sector->sector }}</option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
 

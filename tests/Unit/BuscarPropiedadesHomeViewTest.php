@@ -31,6 +31,9 @@ class BuscarPropiedadesHomeViewTest extends TestCase
 
         $this->assertNotFalse($view);
         $this->assertStringContainsString('wire:model.debounce.500ms="titulo_criterio"', $view);
+        $this->assertStringContainsString("!filled(\$provincia_id_criterio) ? 'disabled' : ''", $view);
+        $this->assertStringContainsString('Primero selecciona una provincia', $view);
+        $this->assertStringContainsString('@if (filled($provincia_id_criterio))', $view);
         $this->assertStringContainsString('class="lw-search-grid"', $view);
         $this->assertMatchesRegularExpression(
             '/\\.lw-search-grid\\s*\\{[^}]*grid-template-columns\\s*:\\s*minmax\\(0, 1fr\\)/s',
@@ -52,5 +55,6 @@ class BuscarPropiedadesHomeViewTest extends TestCase
         $this->assertStringNotContainsString('id="hero-provincia"', $home);
         $this->assertStringContainsString('public $titulo_criterio = \'\';', $component);
         $this->assertStringContainsString("where('propiedads.titulo', 'like'", $component);
+        $this->assertStringContainsString(': collect();', $component);
     }
 }

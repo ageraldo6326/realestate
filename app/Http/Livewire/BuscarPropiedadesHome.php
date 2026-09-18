@@ -55,8 +55,13 @@ class BuscarPropiedadesHome extends Component
     public function render()
     {
         $provincias = CatalogoService::provincias();
-        $sectores = CatalogoService::sectores()
-            ->when(filled($this->provincia_id_criterio), fn($col) => $col->where('provincia_id', $this->provincia_id_criterio));
+        // El catálogo completo contiene miles de sectores. No se incluye en el HTML
+        // inicial: se carga cuando el visitante ha elegido una provincia.
+        $sectores = filled($this->provincia_id_criterio)
+            ? CatalogoService::sectores()
+                ->where('provincia_id', $this->provincia_id_criterio)
+                ->values()
+            : collect();
         $tipos = CatalogoService::tipos();
 
         $propiedades = Propiedad::query()->publiclyVisible();
