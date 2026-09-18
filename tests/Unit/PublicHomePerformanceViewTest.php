@@ -15,11 +15,18 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertNotFalse($home);
         $this->assertNotFalse($header);
         $this->assertStringContainsString('rel="preload" as="image"', $home);
+        $this->assertStringContainsString('type="image/webp" media="(max-width: 767px)"', $home);
+        $this->assertStringContainsString('<picture class="hero-media"', $home);
         $this->assertStringContainsString('fetchpriority="high"', $home);
         $this->assertStringContainsString('width="640" height="480" decoding="async"', $home);
         $this->assertStringContainsString("asset('img/brand/logo-home-192.webp')", $header);
         $this->assertStringContainsString('width="48" height="48"', $header);
+        $this->assertStringContainsString('rel="preload" as="style"', $header);
         $this->assertFileExists($root . '/public/img/brand/logo-home-192.webp');
+        $this->assertFileExists($root . '/public/assets/portada-hero-640.webp');
+        $this->assertFileExists($root . '/public/assets/portada-hero-1280.webp');
+        $this->assertSame(640, getimagesize($root . '/public/assets/portada-hero-640.webp')[0]);
+        $this->assertSame(1280, getimagesize($root . '/public/assets/portada-hero-1280.webp')[0]);
     }
 
     public function test_static_assets_receive_safe_cache_lifetimes(): void

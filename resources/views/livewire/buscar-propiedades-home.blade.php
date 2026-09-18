@@ -204,7 +204,7 @@
                                     @endif
                                 </div>
                                 <div class="d-flex align-items-center mt-3 pt-2 border-top">
-                                    <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" loading="lazy"
+                                    <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" width="34" height="34" loading="lazy"
                                         onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
                                         style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
                                         class="mr-2">

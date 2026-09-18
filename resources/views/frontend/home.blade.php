@@ -19,12 +19,45 @@
     } else {
         $heroPreloadUrl = null;
     }
+
+    $isBundledHero = basename((string) parse_url((string) $heroPreloadUrl, PHP_URL_PATH)) === 'portada-hero.jpg';
+    $heroMobileUrl = $isBundledHero ? asset('assets/portada-hero-640.webp') : null;
+    $heroDesktopUrl = $isBundledHero ? asset('assets/portada-hero-1280.webp') : null;
 @endphp
 
 @section('extra_styles')
-    @if ($heroPreloadUrl)
+    @if ($heroMobileUrl && $heroDesktopUrl)
+        <link rel="preload" as="image" href="{{ $heroMobileUrl }}" type="image/webp" media="(max-width: 767px)"
+            fetchpriority="high">
+        <link rel="preload" as="image" href="{{ $heroDesktopUrl }}" type="image/webp" media="(min-width: 768px)"
+            fetchpriority="high">
+    @elseif ($heroPreloadUrl)
         <link rel="preload" as="image" href="{{ $heroPreloadUrl }}" fetchpriority="high">
     @endif
+
+    <style>
+        /* Base mínimo para renderizar encabezado y hero antes del CSS diferido. */
+        *, *::before, *::after { box-sizing: border-box; }
+        .container { width: 100%; margin: 0 auto; padding-right: .75rem; padding-left: .75rem; }
+        .row { display: flex; flex-wrap: wrap; margin-right: -.75rem; margin-left: -.75rem; }
+        .row > * { width: 100%; max-width: 100%; padding-right: .75rem; padding-left: .75rem; }
+        .navbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+        .navbar > .container { display: flex; flex-wrap: inherit; align-items: center; justify-content: space-between; }
+        .navbar-brand { display: inline-flex; align-items: center; }
+        .navbar-toggler { display: block; }
+        .navbar-collapse { display: none; flex-basis: 100%; flex-grow: 1; }
+        .navbar-collapse.show { display: block; }
+        .hero-section { position: relative; isolation: isolate; min-height: 88vh; display: flex; align-items: center; overflow: hidden; background: var(--clr-dark); }
+        .hero-media, .hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .hero-media img { object-fit: cover; object-position: center; }
+        .hero-section::before { position: absolute; z-index: 1; inset: 0; content: ''; background: linear-gradient(to right, rgba(28,28,46,.78) 40%, rgba(28,28,46,.2) 100%); }
+        .hero-container { position: relative; z-index: 2; padding-top: 4rem; padding-bottom: 4rem; }
+        @media (min-width: 576px) { .container { max-width: 540px; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } .navbar-expand-lg .navbar-toggler { display: none; } .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; } .col-lg-8 { flex: 0 0 auto; width: 66.666667%; } }
+        @media (min-width: 1200px) { .container { max-width: 1140px; } }
+        @media (max-width: 575px) { .hero-section { min-height: auto; padding-top: 3rem; padding-bottom: 2rem; } }
+    </style>
 @endsection
 
 @section('content')
@@ -60,27 +93,21 @@
 
             return $appendVersion(asset('assets/' . ltrim($value, '/')));
         };
-        $heroImgRaw = $portada && !empty($portada->foto) ? trim((string) $portada->foto) : '';
-        if (
-            $heroImgRaw !== '' &&
-            \Illuminate\Support\Str::startsWith($heroImgRaw, ['http://', 'https://', '//', 'data:'])
-        ) {
-            $heroImg = $heroImgRaw;
-        } elseif ($heroImgRaw !== '' && str_contains($heroImgRaw, '/')) {
-            $heroImg = asset(ltrim($heroImgRaw, '/'));
-        } elseif ($heroImgRaw !== '') {
-            $heroImg = asset('assets/' . ltrim($heroImgRaw, '/'));
-        } else {
-            $heroImg = $propertyPlaceholder;
-        }
+        $heroImg = $heroPreloadUrl ?: $propertyPlaceholder;
         $heroTitle = $portada ? $portada->titulo : $inmo->titulo ?? 'Encuentra el hogar que siempre soñaste';
         $heroSub = $portada ? $portada->minititulo : 'TU NUEVO COMIENZO, ESTÁ AQUÍ';
         $heroDesc = $portada ? strip_tags($portada->descripcion) : 'Explora miles de propiedades en venta y alquiler.';
     @endphp
 
     <!-- HERO SECTION -->
-    <section class="hero-section" aria-label="Sección principal"
-        @if ($heroImg) style="background-image:linear-gradient(to right,rgba(28,28,46,.78) 40%,rgba(28,28,46,.2) 100%),url('{{ $heroImg }}');background-size:cover;background-position:center" @endif>
+    <section class="hero-section" aria-label="Sección principal">
+        <picture class="hero-media" aria-hidden="true">
+            @if ($heroMobileUrl && $heroDesktopUrl)
+                <source media="(max-width: 767px)" srcset="{{ $heroMobileUrl }}" type="image/webp">
+                <source media="(min-width: 768px)" srcset="{{ $heroDesktopUrl }}" type="image/webp">
+            @endif
+            <img src="{{ $heroImg }}" alt="" width="1600" height="1031" fetchpriority="high" decoding="async">
+        </picture>
         <div class="container hero-container">
             <div class="row align-items-center">
                 <div class="col-lg-8 hero-content">
@@ -246,7 +273,7 @@
                                         @endif
                                     </div>
                                     <div class="d-flex align-items-center mt-3 pt-2 border-top">
-                                        <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" loading="lazy"
+                                        <img src="{{ $asesorFoto }}" alt="{{ $asesorNombre }}" width="34" height="34" loading="lazy"
                                             onerror="this.onerror=null;this.src='{{ $personPlaceholder }}';"
                                             style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;"
                                             class="mr-2">
