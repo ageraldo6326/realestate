@@ -102,10 +102,13 @@
     <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=optional"
         onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Los iconos no afectan la estructura inicial. Se reservan sus dimensiones para que al cargarlos no haya CLS. -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=optional">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </noscript>
 
     <?php echo \Livewire\Livewire::styles(); ?>
@@ -167,6 +170,12 @@
 
         img {
             max-width: 100%;
+        }
+
+        .fa, .fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands {
+            display: inline-block;
+            width: 1em;
+            text-align: center;
         }
 
         /* ===========================
@@ -596,7 +605,7 @@
             <!-- Mobile toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLanding"
                 aria-controls="navLanding" aria-expanded="false" aria-label="Abrir menú">
-                <i class="fas fa-bars" style="font-size:1.2rem; color:var(--clr-dark)"></i>
+                <span class="navbar-toggler-icon" aria-hidden="true"></span>
             </button>
 
             <!-- Links -->
