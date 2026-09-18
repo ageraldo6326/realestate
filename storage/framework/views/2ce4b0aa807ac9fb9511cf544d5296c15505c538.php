@@ -99,6 +99,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    <?php echo $__env->yieldContent('critical_preloads'); ?>
+
     <!-- Bootstrap no forma parte de la ruta de estilos de la home. -->
     <?php if (! ($deferLandingBootstrap)): ?>
         <link rel="stylesheet" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>">
@@ -291,7 +293,7 @@
             <a class="navbar-brand" href="<?php echo e(route('home')); ?>" aria-label="Inicio">
                 <?php if($companyLogoUrl): ?>
                     <img src="<?php echo e($companyLogoUrl); ?>" alt="<?php echo e($companyTitle); ?>" width="48" height="48"
-                        loading="eager" fetchpriority="high" decoding="async"
+                        loading="eager" decoding="async"
                         onerror="this.onerror=null;this.src='<?php echo e($companyLogoPlaceholder); ?>';">
                 <?php else: ?>
                     <span class="brand-text"><?php echo e($companyTitle); ?></span>
