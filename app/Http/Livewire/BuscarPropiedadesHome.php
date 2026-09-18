@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Propiedad;
 use Livewire\WithPagination;
 use App\Services\CatalogoService;
-use App\Services\InmobiliariaService;
 use Illuminate\Support\Facades\DB;
 
 class BuscarPropiedadesHome extends Component
@@ -55,17 +54,10 @@ class BuscarPropiedadesHome extends Component
 
     public function render()
     {
-        $inmobiliaria = InmobiliariaService::get();
-
-        $portadas = CatalogoService::portadas();
         $provincias = CatalogoService::provincias();
         $sectores = CatalogoService::sectores()
             ->when(filled($this->provincia_id_criterio), fn($col) => $col->where('provincia_id', $this->provincia_id_criterio));
         $tipos = CatalogoService::tipos();
-        $disponibles_para = CatalogoService::disponiblePara();
-        $testimonios = CatalogoService::testimonios();
-        $enfoques = CatalogoService::enfoques();
-        $posts = CatalogoService::posts();
 
         $propiedades = Propiedad::query()->publiclyVisible();
 
@@ -75,74 +67,17 @@ class BuscarPropiedadesHome extends Component
             'foto_portada',
             'slug',
             'referencia',
-            'propiedads.provincia',
             'propiedads.ciudad',
-            'propiedads.sector_id',
-            'propiedads.barrio_id',
             'sectores.sector as sector_nombre',
             'barrios.barrio as barrio_nombre',
             'provincias.provincia as provincia_nombre',
-            'direccion',
-            'precio',
+            'propiedads.precio',
             'propiedads.titulo',
-            'descripcion_corta',
-            'propiedads.descripcion',
-            'propiedads.metadescripcion',
-            'habitaciones',
-            'banos',
-            'parqueos',
-            'metraje',
-            'metraje_construccion',
-            'asignada_a',
-            'captada_por',
-            'tipo',
-            'foto_vendedor',
-            'destacada',
-            'foto1',
-            'foto2',
-            'foto3',
-            'foto4',
-            'foto5',
-            'foto6',
-            'foto7',
-            'foto8',
-            'video1',
-            'video2',
-            'video3',
-            'video4',
-            'Moneda',
-            'vendida',
-            'lobby',
-            'plantaelectrica',
-            'camaravigilancia',
-            'escaleraemergencia',
-            'maderapreciosa',
-            'balcon',
-            'walkincloset',
-            'jacuzzi',
-            'areainfantil',
-            'banovisitas',
-            'cisterna',
-            'inversorareacomun',
-            'gascomun',
-            'gazebo',
-            'pozo',
-            'piscina',
-            'familyroom',
-            'cuartodeservicio',
-            'patio',
-            'portonelectrico',
-            'seguridad24horas',
-            'ascensor',
-            'parqueostechados',
-            'preinstalacionairetinacoinversor',
-            'terraza',
-            'estudio',
-            'gimnasio',
-            'controldeacceso',
-            'clicks',
-            'propiedads.metadescription',
-            'propiedads.created_at',
+            'propiedads.descripcion_corta',
+            'propiedads.habitaciones',
+            'propiedads.banos',
+            'propiedads.metraje',
+            'propiedads.Moneda',
             'propiedads.updated_at',
             DB::raw('COALESCE(assigned_user.name, creator_user.name) as asesor_nombre'),
             DB::raw('COALESCE(assigned_user.telefono, creator_user.telefono) as asesor_telefono'),
@@ -172,7 +107,6 @@ class BuscarPropiedadesHome extends Component
         $propiedades->leftJoin('provincias', 'propiedads.provincia', '=', 'provincias.id');
         $propiedades->leftJoin('sectores', 'propiedads.sector_id', '=', 'sectores.id');
         $propiedades->leftJoin('barrios', 'propiedads.barrio_id', '=', 'barrios.id');
-        $propiedades->leftJoin('estados', 'propiedads.estado_id', '=', 'estados.id');
         $propiedades->leftJoin('users as assigned_user', 'propiedads.asignada_a_id', '=', 'assigned_user.id');
         $propiedades->leftJoin('users as creator_user', 'propiedads.captada_por', '=', 'creator_user.id');
         $propiedades->leftJoin('disponible_paras', 'propiedads.disponible_para', '=', 'disponible_paras.id');
@@ -181,6 +115,6 @@ class BuscarPropiedadesHome extends Component
 
         $propiedades = $propiedades->paginate(3);
 
-        return view('livewire.buscar-propiedades-home', compact('portadas', 'provincias', 'sectores', 'disponibles_para', 'tipos', 'propiedades', 'testimonios', 'inmobiliaria', 'enfoques', 'posts'));
+        return view('livewire.buscar-propiedades-home', compact('provincias', 'sectores', 'tipos', 'propiedades'));
     }
 }

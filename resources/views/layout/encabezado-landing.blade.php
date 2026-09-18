@@ -33,7 +33,9 @@
     $companyDescription = optional($inmo)->metadescription ?: '';
     $companyKeywords = optional($inmo)->palabrasclaves ?: '';
     $companyFaviconUrl = $resolvePublicAssetUrl(optional($inmo)->favicon);
-    $companyLogoUrl = $resolvePublicAssetUrl(optional($inmo)->logo);
+    // El logo del portal es un recurso local, versionado y optimizado. Evita descargar
+    // el PNG de 1.5 MB que estaba configurado previamente para una imagen de 48 px.
+    $companyLogoUrl = asset('img/brand/logo-home-192.webp');
     $companyLogoPlaceholder = asset('assets/inmobiliaria/logo.png');
     $themeVariables =
         $frontendTheme ?? app(\App\Services\Branding\CompanyBrandingService::class)->getDefaultCssVariables();
@@ -120,7 +122,8 @@
             --shadow-lg: 0 8px 40px rgba(0, 0, 0, .14);
             --radius: 12px;
             --radius-sm: 8px;
-            --transition: all .25s ease;
+            --transition: color .25s ease, background-color .25s ease, border-color .25s ease,
+                box-shadow .25s ease, opacity .25s ease, transform .25s ease;
         }
 
         *,
@@ -536,6 +539,17 @@
             background: var(--clr-bg) !important;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+
         @media (max-width: 991px) {
             .navbar-landing .navbar-nav {
                 padding: 1rem 0;
@@ -563,7 +577,8 @@
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}" aria-label="Inicio">
                 @if ($companyLogoUrl)
-                    <img src="{{ $companyLogoUrl }}" alt="{{ $companyTitle }}" height="48" loading="eager"
+                    <img src="{{ $companyLogoUrl }}" alt="{{ $companyTitle }}" width="48" height="48"
+                        loading="eager" fetchpriority="high" decoding="async"
                         onerror="this.onerror=null;this.src='{{ $companyLogoPlaceholder }}';">
                 @else
                     <span class="brand-text">{{ $companyTitle }}</span>

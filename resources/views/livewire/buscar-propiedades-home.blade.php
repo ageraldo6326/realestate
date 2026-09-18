@@ -106,12 +106,12 @@
 
             <div class="row g-4">
                 @foreach ($propiedades as $propiedad)
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6" wire:key="property-card-{{ $propiedad->id }}">
                         <article class="prop-card h-100">
                             <div class="card-img-wrap">
                                 <a href="{{ route('propiedad', $propiedad->slug) }}"
                                     aria-label="{{ $propiedad->titulo }}">
-                                    <img loading="lazy"
+                                    <img loading="lazy" width="640" height="480" decoding="async"
                                         src="{{ $resolvePropertyImage($propiedad->foto_portada, data_get($propiedad, 'updated_at'), $propertyPlaceholder) }}"
                                         onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                         alt="{{ $propiedad->titulo }}" title="{{ $propiedad->titulo }}">

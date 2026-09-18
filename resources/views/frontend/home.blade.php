@@ -6,10 +6,31 @@
     'Encuentra las mejores propiedades en venta y alquiler. Tu nuevo
     hogar te espera.')
 
+@php
+    $firstPortada = $portadas->first();
+    $heroPreloadRaw = trim((string) optional($firstPortada)->foto);
+
+    if ($heroPreloadRaw !== '' && \Illuminate\Support\Str::startsWith($heroPreloadRaw, ['http://', 'https://', '//', 'data:'])) {
+        $heroPreloadUrl = $heroPreloadRaw;
+    } elseif ($heroPreloadRaw !== '' && str_contains($heroPreloadRaw, '/')) {
+        $heroPreloadUrl = asset(ltrim($heroPreloadRaw, '/'));
+    } elseif ($heroPreloadRaw !== '') {
+        $heroPreloadUrl = asset('assets/' . ltrim($heroPreloadRaw, '/'));
+    } else {
+        $heroPreloadUrl = null;
+    }
+@endphp
+
+@section('extra_styles')
+    @if ($heroPreloadUrl)
+        <link rel="preload" as="image" href="{{ $heroPreloadUrl }}" fetchpriority="high">
+    @endif
+@endsection
+
 @section('content')
 
     @php
-        $portada = $portadas->first();
+        $portada = $firstPortada;
         $propertyPlaceholder = asset('assets/prop-apto-1.jpg');
         $personPlaceholder = 'https://dummyimage.com/160x160/edf2f7/6b7280&text=Asesor';
         $resolvePropertyImage = function ($value, $version = null, $fallback = null) {
@@ -135,7 +156,7 @@
                             <article class="prop-card h-100">
                                 <div class="card-img-wrap">
                                     <a href="{{ route('propiedad', $pro->slug) }}" aria-label="{{ $pro->titulo }}">
-                                        <img loading="lazy"
+                                        <img loading="lazy" width="640" height="480" decoding="async"
                                             src="{{ $resolvePropertyImage($pro->foto_portada, optional($pro)->updated_at, $propertyPlaceholder) }}"
                                             onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $pro->titulo }}" title="{{ $pro->titulo }}">
@@ -304,7 +325,7 @@
                                 @if ($post->foto)
                                     <a href="{{ route('post.show', $post->slug) }}" class="blog-card-img-wrap"
                                         aria-label="{{ $post->titulo }}">
-                                        <img loading="lazy"
+                                        <img loading="lazy" width="640" height="480" decoding="async"
                                             src="{{ !empty($post->foto) ? asset('assets/' . $post->foto) : $propertyPlaceholder }}"
                                             onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $post->titulo }}" title="{{ $post->titulo }}">
