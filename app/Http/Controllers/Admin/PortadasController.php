@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\UpdatePortadaRequest;
 use App\Models\Portada;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\ContentMediaService;
+use App\Services\Images\ImageUploadService;
 use App\Services\CatalogoService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,14 +46,14 @@ class PortadasController extends Controller
         return view('admin.portadas.create');
     }
 
-    public function store(StorePortadaRequest $request, ContentMediaService $mediaService): RedirectResponse
+    public function store(StorePortadaRequest $request, ContentMediaService $mediaService, ImageUploadService $images): RedirectResponse
     {
         $validated = $request->validated();
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService): void {
-                Portada::query()->create([
+            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $images, $request): void {
+                $portada = Portada::query()->create([
                     'minititulo' => $validated['minititulo'],
                     'titulo' => $validated['titulo'],
                     'descripcion' => $validated['descripcion'] ?? null,
@@ -61,8 +62,11 @@ class PortadasController extends Controller
                     'enlace1' => $validated['enlace1'] ?? null,
                     'enlace2' => $validated['enlace2'] ?? null,
                     'video' => $mediaService->extractYoutubeVideoId($validated['video'] ?? null) ?? ($validated['video'] ?? null),
-                    'foto' => $uploadedPhoto ? $mediaService->storeImageAsWebp($uploadedPhoto, 'portada', 1600, 900) : null,
+                    'foto' => null,
                 ]);
+                if ($uploadedPhoto) {
+                    $images->store($uploadedPhoto, 'home_hero', $portada, optional($request->user())->id, $validated['titulo'], 'foto');
+                }
             });
 
             CatalogoService::forgetAll();
@@ -114,13 +118,13 @@ class PortadasController extends Controller
         return view('admin.portadas.edit', compact('portada'));
     }
 
-    public function update(UpdatePortadaRequest $request, Portada $portada, ContentMediaService $mediaService): RedirectResponse
+    public function update(UpdatePortadaRequest $request, Portada $portada, ContentMediaService $mediaService, ImageUploadService $images): RedirectResponse
     {
         $validated = $request->validated();
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $portada, $mediaService): void {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $portada, $mediaService, $images, $request): void {
                 $payload = [
                     'minititulo' => $validated['minititulo'],
                     'titulo' => $validated['titulo'],
@@ -133,7 +137,7 @@ class PortadasController extends Controller
                 ];
 
                 if ($uploadedPhoto) {
-                    $payload['foto'] = $mediaService->storeImageAsWebp($uploadedPhoto, 'portada', 1600, 900);
+                    $images->store($uploadedPhoto, 'home_hero', $portada, optional($request->user())->id, $validated['titulo'], 'foto');
                 }
 
                 $portada->update($payload);

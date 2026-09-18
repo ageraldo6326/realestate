@@ -51,7 +51,10 @@ class MediaImagePipelineTest extends TestCase
         $file = UploadedFile::fake()->image('casa.jpg', 1000, 750)->size(300);
         $image = app(ImageUploadService::class)->store($file, 'home_card');
 
-        (new ProcessMediaImage($image->id, 'home_card'))->handle(app(\App\Services\Images\ImageProcessingService::class));
+        (new ProcessMediaImage($image->id, 'home_card'))->handle(
+            app(\App\Services\Images\ImageProcessingService::class),
+            app(\App\Services\Images\MediaImagePublicationService::class)
+        );
 
         $this->assertSame(MediaImage::STATUS_READY, $image->fresh()->status);
         $this->assertSame(8, MediaImageVariant::where('media_image_id', $image->id)->count());

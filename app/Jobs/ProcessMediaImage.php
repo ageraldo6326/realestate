@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\MediaImage;
 use App\Services\Images\ImageProcessingService;
 use App\Services\Images\ImageProfile;
+use App\Services\Images\MediaImagePublicationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -24,7 +25,7 @@ class ProcessMediaImage implements ShouldQueue
     {
     }
 
-    public function handle(ImageProcessingService $processor): void
+    public function handle(ImageProcessingService $processor, MediaImagePublicationService $publisher): void
     {
         $mediaImage = MediaImage::find($this->mediaImageId);
 
@@ -40,6 +41,7 @@ class ProcessMediaImage implements ShouldQueue
         $profiles = $this->profile === null ? array_keys(ImageProfile::all()) : [$this->profile];
         foreach ($profiles as $profile) {
             $processor->process($mediaImage, $profile);
+            $publisher->publishWebp($mediaImage, $profile);
         }
 
         $mediaImage->update(['status' => MediaImage::STATUS_READY]);

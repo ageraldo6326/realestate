@@ -11,6 +11,7 @@ use App\Services\Branding\CompanyBrandingService;
 use App\Services\Branding\LogoPaletteExtractor;
 use App\Services\InmobiliariaService;
 use App\Services\SitemapService;
+use App\Services\Images\ImageUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -24,17 +25,20 @@ class EmpresaController extends Controller
     private LogoPaletteExtractor $logoPaletteExtractor;
 
     private SitemapService $sitemapService;
+    private ImageUploadService $images;
 
     public function __construct(
         CompanyBrandingService $brandingService,
         LogoPaletteExtractor $logoPaletteExtractor,
-        SitemapService $sitemapService
+        SitemapService $sitemapService,
+        ImageUploadService $images
     )
     {
         $this->middleware('auth');
         $this->brandingService = $brandingService;
         $this->logoPaletteExtractor = $logoPaletteExtractor;
         $this->sitemapService = $sitemapService;
+        $this->images = $images;
     }
 
     /**
@@ -89,6 +93,9 @@ class EmpresaController extends Controller
                     $request->file('social_image')
                 );
                 $company->save();
+                if ($request->hasFile('logo')) {
+                    $this->images->store($request->file('logo'), 'brand_logo', $company, optional($request->user())->id, $company->nombre, 'logo');
+                }
 
                 return $company;
             });
@@ -124,6 +131,9 @@ class EmpresaController extends Controller
                     $request->file('social_image')
                 );
                 $inmobiliaria->save();
+                if ($request->hasFile('logo')) {
+                    $this->images->store($request->file('logo'), 'brand_logo', $inmobiliaria, optional($request->user())->id, $inmobiliaria->nombre, 'logo');
+                }
             });
         } catch (\Throwable $exception) {
             Log::error('No se pudo actualizar la configuracion de empresa.', [
@@ -243,7 +253,6 @@ class EmpresaController extends Controller
 
             $this->brandingService->storeLogoPalette($company, $suggestedPalette);
             $company->theme_last_logo_hash = hash_file('sha256', $logoFile->getRealPath()) ?: null;
-            $company->logo = $this->storePublicImage($logoFile, 'logo');
         }
 
         if ($faviconFile) {

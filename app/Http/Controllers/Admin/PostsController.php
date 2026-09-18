@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePostRequest;
 use App\Http\Requests\Admin\UpdatePostRequest;
 use App\Services\Admin\ContentMediaService;
+use App\Services\Images\ImageUploadService;
 use App\Services\CatalogoService;
 use App\Services\HtmlContentSanitizer;
 use App\Services\SitemapService;
@@ -52,6 +53,7 @@ class PostsController extends Controller
     public function store(
         StorePostRequest $request,
         ContentMediaService $mediaService,
+        ImageUploadService $images,
         HtmlContentSanitizer $sanitizer,
         SitemapService $sitemapService
     ): RedirectResponse
@@ -60,9 +62,9 @@ class PostsController extends Controller
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $request, $sanitizer): void {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $mediaService, $request, $sanitizer, $images): void {
                 $isPublished = (bool) ($validated['activo'] ?? false);
-                Post::query()->create([
+                $post = Post::query()->create([
                     'titulo' => $validated['titulo'],
                     'slug' => $this->generateUniqueSlug($validated['titulo']),
                     'contenido' => $sanitizer->sanitizePreservingLineBreaks($validated['contenido']),
@@ -74,8 +76,11 @@ class PostsController extends Controller
                     'published_at' => $isPublished ? ($validated['published_at'] ?? now()) : null,
                     'image_alt' => $validated['image_alt'] ?? null,
                     'image_credit' => $validated['image_credit'] ?? null,
-                    'foto' => $uploadedPhoto ? $mediaService->storeImageAsWebp($uploadedPhoto, 'post', 1400, 900) : null,
+                    'foto' => null,
                 ]);
+                if ($uploadedPhoto) {
+                    $images->store($uploadedPhoto, 'home_card', $post, optional($request->user())->id, $validated['image_alt'] ?? $validated['titulo'], 'foto');
+                }
             });
 
             CatalogoService::forgetAll();
@@ -112,6 +117,7 @@ class PostsController extends Controller
         UpdatePostRequest $request,
         Post $post,
         ContentMediaService $mediaService,
+        ImageUploadService $images,
         HtmlContentSanitizer $sanitizer,
         SitemapService $sitemapService
     ): RedirectResponse
@@ -120,7 +126,7 @@ class PostsController extends Controller
         $uploadedPhoto = $request->file('foto');
 
         try {
-            DB::transaction(function () use ($validated, $uploadedPhoto, $post, $mediaService, $sanitizer): void {
+            DB::transaction(function () use ($validated, $uploadedPhoto, $post, $mediaService, $sanitizer, $images, $request): void {
                 $isPublished = (bool) ($validated['activo'] ?? false);
                 $payload = [
                     'titulo' => $validated['titulo'],
@@ -137,7 +143,7 @@ class PostsController extends Controller
                 ];
 
                 if ($uploadedPhoto) {
-                    $payload['foto'] = $mediaService->storeImageAsWebp($uploadedPhoto, 'post', 1400, 900);
+                    $images->store($uploadedPhoto, 'home_card', $post, optional($request->user())->id, $validated['image_alt'] ?? $validated['titulo'], 'foto');
                 }
 
                 $post->update($payload);
