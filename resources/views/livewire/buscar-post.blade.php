@@ -82,7 +82,7 @@
                             @forelse ($posts as $post)
                                 <tr>
                                     <td class="font-weight-semibold">{{ $post->id }}</td>
-                                    <td>@if ($post->foto)<img src="{{ asset('assets/' . $post->foto) }}" class="content-thumb" alt="{{ $post->titulo }}">@endif</td>
+                                    <td>@if ($post->foto)<img src="{{ \Illuminate\Support\Str::startsWith($post->foto, ['http://', 'https://', '//', '/media/', 'media/']) ? $post->foto : asset('assets/' . $post->foto) }}" class="content-thumb" alt="{{ $post->titulo }}">@endif</td>
                                     <td>{{ $post->titulo }}</td>
                                     <td class="d-none d-md-table-cell text-muted small">{{ $post->created_at }}</td>
                                     <td class="text-right">

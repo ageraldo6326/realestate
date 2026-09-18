@@ -129,6 +129,21 @@
 
             return $appendVersion(asset('assets/' . ltrim($value, '/')));
         };
+        $resolveContentImage = function ($value, $fallback) {
+            if (empty($value)) {
+                return $fallback;
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) {
+                return $value;
+            }
+
+            if (\Illuminate\Support\Str::startsWith($value, ['/media/', '/img/', '/assets/', 'media/', 'img/', 'assets/'])) {
+                return asset(ltrim($value, '/'));
+            }
+
+            return asset('assets/' . ltrim($value, '/'));
+        };
         $heroImg = $heroPreloadUrl ?: $propertyPlaceholder;
         $heroTitle = $portada ? $portada->titulo : $inmo->titulo ?? 'Encuentra el hogar que siempre soñaste';
         $heroSub = $portada ? $portada->minititulo : 'TU NUEVO COMIENZO, ESTÁ AQUÍ';
@@ -405,7 +420,7 @@
                                     <a href="{{ route('post.show', $post->slug) }}" class="blog-card-img-wrap"
                                         aria-label="{{ $post->titulo }}">
                                         <img loading="lazy" width="640" height="480" decoding="async"
-                                            src="{{ !empty($post->foto) ? asset('assets/' . $post->foto) : $propertyPlaceholder }}"
+                                            src="{{ $resolveContentImage($post->foto, $propertyPlaceholder) }}"
                                             onerror="this.onerror=null;this.src='{{ $propertyPlaceholder }}';"
                                             alt="{{ $post->titulo }}" title="{{ $post->titulo }}">
                                     </a>
