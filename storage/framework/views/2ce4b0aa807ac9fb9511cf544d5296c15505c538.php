@@ -40,6 +40,7 @@
     $themeVariables =
         $frontendTheme ?? app(\App\Services\Branding\CompanyBrandingService::class)->getDefaultCssVariables();
     $seoData = $seo ?? [];
+    $deferLandingBootstrap = trim($__env->yieldContent('defer_bootstrap')) === 'true';
     $sectionTitle = trim($__env->yieldContent('seo_title'));
     $sectionDescription = trim($__env->yieldContent('seo_description'));
     $sectionRobots = trim($__env->yieldContent('seo_robots'));
@@ -96,8 +97,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Bootstrap define la estructura. Se sirve local para no retrasar el paint del hero por el CDN. -->
-    <link rel="stylesheet" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>">
+    <!-- La home aporta una base crítica propia; las demás páginas conservan Bootstrap bloqueante. -->
+    <?php if($deferLandingBootstrap): ?>
+        <link rel="preload" as="style" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>"
+            onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>"></noscript>
+    <?php else: ?>
+        <link rel="stylesheet" href="<?php echo e(asset('css/bootstrap-5.3.2.min.css')); ?>">
+    <?php endif; ?>
     <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=optional"
         onload="this.onload=null;this.rel='stylesheet'">
