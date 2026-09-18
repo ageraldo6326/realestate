@@ -10,7 +10,9 @@ return new class extends Migration
    */
   public function up(): void
   {
-    DB::statement('ALTER TABLE users MODIFY rol INT NOT NULL DEFAULT 0');
+    if (DB::connection()->getDriverName() === 'mysql') {
+      DB::statement('ALTER TABLE users MODIFY rol INT NOT NULL DEFAULT 0');
+    }
   }
 
   /**
@@ -18,6 +20,8 @@ return new class extends Migration
    */
   public function down(): void
   {
-    DB::statement('ALTER TABLE users MODIFY rol INT NOT NULL DEFAULT 1');
+    if (DB::connection()->getDriverName() === 'mysql') {
+      DB::statement('ALTER TABLE users MODIFY rol INT NOT NULL DEFAULT 1');
+    }
   }
 };

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 
@@ -208,5 +209,10 @@ class Propiedad extends Model
     public function captador(): BelongsTo
     {
         return $this->belongsTo(User::class, 'captada_por');
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(MediaImage::class, 'imageable');
     }
 }

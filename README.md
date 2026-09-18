@@ -17,10 +17,12 @@ sudo install -d -o www-data -g www-data -m 2775 \
   storage/logs \
   bootstrap/cache \
   public/img \
-  public/assets/usuario
-sudo chown -R www-data:www-data storage bootstrap/cache public/img public/assets/usuario
-sudo find storage bootstrap/cache public/img public/assets/usuario -type d -exec chmod 2775 {} +
-sudo find storage bootstrap/cache public/img public/assets/usuario -type f -exec chmod 664 {} +
+  public/assets/usuario \
+  public/media \
+  storage/app/media/originals
+sudo chown -R www-data:www-data storage bootstrap/cache public/img public/assets/usuario public/media
+sudo find storage bootstrap/cache public/img public/assets/usuario public/media -type d -exec chmod 2775 {} +
+sudo find storage bootstrap/cache public/img public/assets/usuario public/media -type f -exec chmod 664 {} +
 
 COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --optimize-autoloader
 
@@ -35,6 +37,60 @@ sudo -u www-data php artisan optimize
 sudo -u www-data php artisan queue:restart
 sudo systemctl reload apache2
 ```
+
+## Procesamiento centralizado de imágenes y colas
+
+Las nuevas imágenes integradas con `ImageUploadService` guardan el original privado en `storage/app/media/originals` y publican solo variantes optimizadas bajo `public/media`. No se eliminan ni migran automáticamente imágenes antiguas.
+
+En producción, configura estas variables en `.env` antes de desplegar. AVIF debe permanecer desactivado hasta confirmar que el PHP de producción tiene GD con `imageavif` o Imagick con soporte AVIF.
+
+```dotenv
+QUEUE_CONNECTION=database
+QUEUE_FAILED_DRIVER=database-uuids
+IMAGE_ORIGINAL_DISK=local
+IMAGE_DELIVERY_DISK=real_public
+IMAGE_QUEUE=images
+IMAGE_AVIF_ENABLED=false
+```
+
+Después de ejecutar las migraciones, deja un worker supervisado en ejecución. Crea `/etc/supervisor/conf.d/realestate-images.conf` con la ruta de producción real:
+
+```ini
+[program:realestate-images]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/html/realestate/artisan queue:work database --queue=images,default --sleep=3 --tries=3 --timeout=180 --memory=512 --max-time=3600
+directory=/var/www/html/realestate
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/www/html/realestate/storage/logs/images-worker.log
+stopwaitsecs=200
+```
+
+Activa y verifica el worker:
+
+```bash
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start realestate-images:*
+sudo supervisorctl status realestate-images:*
+
+sudo -u www-data php artisan queue:failed
+sudo -u www-data php artisan queue:restart
+```
+
+Para regenerar variantes de imágenes ya registradas, sin eliminar sus originales, usa:
+
+```bash
+sudo -u www-data php artisan media:images:regenerate
+sudo -u www-data php artisan media:images:regenerate 42 --profile=property_gallery
+```
+
+No uses `queue:flush` ni `queue:clear` en producción: eliminarían trabajos pendientes. Para reintentar un error concreto, primero revisa `php artisan queue:failed` y después ejecuta `php artisan queue:retry <uuid>`.
 
 Si `git status --short` muestra archivos modificados, no ejecutar `git pull` hasta revisar esos cambios. No ejecutar `php artisan key:generate` si `APP_KEY` ya está definido en el archivo `.env` de producción. En servidores donde PHP-FPM/Apache no utiliza `www-data`, sustituye `www-data` por el usuario real del proceso PHP. No uses `chmod 777`.
 

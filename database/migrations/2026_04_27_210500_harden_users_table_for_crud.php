@@ -11,7 +11,9 @@ return new class extends Migration
     {
         if (Schema::hasTable('users')) {
             // Evita truncamientos al guardar biografias desde CKEditor.
-            DB::statement('ALTER TABLE users MODIFY descripcion TEXT NULL');
+            if (DB::connection()->getDriverName() === 'mysql') {
+                DB::statement('ALTER TABLE users MODIFY descripcion TEXT NULL');
+            }
 
             Schema::table('users', function (Blueprint $table) {
                 $table->index(['rol', 'activo'], 'users_rol_activo_index');
@@ -24,7 +26,9 @@ return new class extends Migration
     public function down(): void
     {
         if (Schema::hasTable('users')) {
-            DB::statement('ALTER TABLE users MODIFY descripcion VARCHAR(255) NULL');
+            if (DB::connection()->getDriverName() === 'mysql') {
+                DB::statement('ALTER TABLE users MODIFY descripcion VARCHAR(255) NULL');
+            }
 
             Schema::table('users', function (Blueprint $table) {
                 $table->dropIndex('users_rol_activo_index');
