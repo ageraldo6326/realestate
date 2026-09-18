@@ -27,7 +27,7 @@
     $heroDesktopUrl = $isBundledHero ? asset('assets/portada-hero-1280.webp') : null;
 @endphp
 
-@section('extra_styles')
+@section('critical_preloads')
     @if ($heroMobileUrl && $heroDesktopUrl)
         <link rel="preload" as="image" href="{{ $heroMobileUrl }}" type="image/webp" media="(max-width: 767px)"
             fetchpriority="high">
@@ -36,7 +36,9 @@
     @elseif ($heroPreloadUrl)
         <link rel="preload" as="image" href="{{ $heroPreloadUrl }}" fetchpriority="high">
     @endif
+@endsection
 
+@section('extra_styles')
     <style>
         /* Base mínimo para renderizar encabezado y hero antes del CSS diferido. */
         *, *::before, *::after { box-sizing: border-box; }
@@ -65,14 +67,28 @@
         .hero-eyebrow { margin-bottom: 1rem; color: var(--clr-accent); font-size: .7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
         .hero-title { margin-bottom: 1rem; color: var(--clr-white); font-family: var(--ff-head); font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.15; }
         .hero-desc { max-width: 460px; margin-bottom: 0; color: rgba(255, 255, 255, .8); font-size: 1rem; line-height: 1.7; }
-        /* Evita calcular las secciones que quedan fuera de la primera ventana. */
-        .benefits-section { content-visibility: auto; contain-intrinsic-size: auto 310px; }
-        .featured-section, .search-results-section, .how-section, .blog-section, .testimonials-section { content-visibility: auto; contain-intrinsic-size: auto 800px; }
+        /* Geometría de las secciones que rozan el primer viewport: evita CLS al cargar el CSS diferido. */
+        .row.g-3 { margin-top: -1rem; margin-right: -.5rem; margin-left: -.5rem; }
+        .row.g-3 > * { margin-top: 1rem; padding-right: .5rem; padding-left: .5rem; }
+        .row.g-4 { margin-top: -1.5rem; margin-right: -.75rem; margin-left: -.75rem; }
+        .row.g-4 > * { margin-top: 1.5rem; padding-right: .75rem; padding-left: .75rem; }
+        .benefits-section { padding: 2.5rem 0; background: var(--clr-white); border-bottom: 1px solid var(--clr-border); }
+        .benefit-card { display: flex; align-items: flex-start; gap: .9rem; padding: 1rem .75rem; }
+        .benefit-icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 50px; height: 50px; }
+        .benefit-title { margin-bottom: .3rem; font-size: .9rem; font-weight: 700; line-height: 1.3; }
+        .benefit-desc { margin: 0; font-size: .78rem; line-height: 1.5; }
+        .featured-section { padding: 5rem 0; background: var(--clr-white); }
+        .section-badge { display: inline-block; margin-bottom: .75rem; font-size: .7rem; font-weight: 700; line-height: normal; letter-spacing: 2px; text-transform: uppercase; }
+        .section-title { margin-bottom: .75rem; font-family: var(--ff-head); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.2; }
+        .section-subtitle { max-width: 520px; margin: 0 auto; font-size: 1rem; line-height: 1.7; }
+        .text-center { text-align: center !important; } .mb-5 { margin-bottom: 3rem !important; }
+        /* Las secciones profundas sí pueden omitirse del layout inicial. */
+        .search-results-section, .how-section, .blog-section, .testimonials-section { content-visibility: auto; contain-intrinsic-size: auto 800px; }
         .cta-banner { content-visibility: auto; contain-intrinsic-size: auto 340px; }
         .site-footer { content-visibility: auto; contain-intrinsic-size: auto 600px; }
-        @media (min-width: 576px) { .container { max-width: 540px; } }
-        @media (min-width: 768px) { .container { max-width: 720px; } }
-        @media (min-width: 992px) { .container { max-width: 960px; } .navbar-expand-lg .navbar-toggler { display: none; } .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-lg .navbar-nav { flex-direction: row; } .col-lg-8 { flex: 0 0 auto; width: 66.666667%; } }
+        @media (min-width: 576px) { .container { max-width: 540px; } .col-sm-6 { flex: 0 0 auto; width: 50%; } }
+        @media (min-width: 768px) { .container { max-width: 720px; } .col-md-6 { flex: 0 0 auto; width: 50%; } }
+        @media (min-width: 992px) { .container { max-width: 960px; } .navbar-expand-lg .navbar-toggler { display: none; } .navbar-expand-lg .navbar-collapse { display: flex !important; flex-basis: auto; } .navbar-expand-lg .navbar-nav { flex-direction: row; } .col-lg-3 { flex: 0 0 auto; width: 25%; } .col-lg-4 { flex: 0 0 auto; width: 33.333333%; } .col-lg-8 { flex: 0 0 auto; width: 66.666667%; } }
         @media (min-width: 1200px) { .container { max-width: 1140px; } }
         @media (max-width: 575px) { .hero-section { min-height: auto; padding-top: 3rem; padding-bottom: 2rem; } .hero-title { font-size: 2rem; } }
     </style>

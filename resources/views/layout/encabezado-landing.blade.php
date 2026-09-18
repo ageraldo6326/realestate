@@ -99,6 +99,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    @yield('critical_preloads')
+
     <!-- Bootstrap no forma parte de la ruta de estilos de la home. -->
     @unless ($deferLandingBootstrap)
         <link rel="stylesheet" href="{{ asset('css/bootstrap-5.3.2.min.css') }}">
@@ -290,7 +292,7 @@
             <a class="navbar-brand" href="{{ route('home') }}" aria-label="Inicio">
                 @if ($companyLogoUrl)
                     <img src="{{ $companyLogoUrl }}" alt="{{ $companyTitle }}" width="48" height="48"
-                        loading="eager" fetchpriority="high" decoding="async"
+                        loading="eager" decoding="async"
                         onerror="this.onerror=null;this.src='{{ $companyLogoPlaceholder }}';">
                 @else
                     <span class="brand-text">{{ $companyTitle }}</span>

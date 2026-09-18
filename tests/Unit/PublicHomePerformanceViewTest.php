@@ -16,6 +16,12 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertNotFalse($home);
         $this->assertNotFalse($header);
         $this->assertNotFalse($footer);
+        $this->assertStringContainsString("@section('critical_preloads')", $home);
+        $this->assertLessThan(
+            strpos($header, "asset('css/bootstrap-5.3.2.min.css')"),
+            strpos($header, "@yield('critical_preloads')"),
+            'El preload del hero debe emitirse antes de cualquier CSS del layout.',
+        );
         $this->assertStringContainsString('rel="preload" as="image"', $home);
         $this->assertStringContainsString('type="image/webp" media="(max-width: 767px)"', $home);
         $this->assertStringContainsString('<picture class="hero-media"', $home);
@@ -27,6 +33,7 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('contain-intrinsic-size: auto 800px', $home);
         $this->assertStringContainsString("asset('img/brand/logo-home-192.webp')", $header);
         $this->assertStringContainsString('width="48" height="48"', $header);
+        $this->assertStringNotContainsString('fetchpriority="high" decoding="async"', $header);
         $this->assertStringContainsString("asset('css/bootstrap-5.3.2.min.css')", $header);
         $this->assertStringContainsString('$deferLandingBootstrap', $header);
         $this->assertStringContainsString('@unless ($deferLandingBootstrap)', $header);
