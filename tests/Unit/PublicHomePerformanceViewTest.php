@@ -21,7 +21,7 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('width="640" height="480" decoding="async"', $home);
         $this->assertStringContainsString("asset('img/brand/logo-home-192.webp')", $header);
         $this->assertStringContainsString('width="48" height="48"', $header);
-        $this->assertStringContainsString('rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"', $header);
+        $this->assertStringContainsString("asset('css/bootstrap-5.3.2.min.css')", $header);
         $this->assertStringContainsString('display=optional', $header);
         $this->assertStringContainsString('rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"', $header);
         $this->assertStringContainsString('Los iconos no afectan la estructura inicial', $header);
@@ -29,6 +29,7 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('PropertyCardThumbnailService', $home);
         $this->assertStringContainsString('sizes="(max-width: 767px) 100vw', $home);
         $this->assertFileExists($root . '/public/img/brand/logo-home-192.webp');
+        $this->assertFileExists($root . '/public/css/bootstrap-5.3.2.min.css');
         $this->assertFileExists($root . '/public/assets/portada-hero-640.webp');
         $this->assertFileExists($root . '/public/assets/portada-hero-1280.webp');
         $this->assertSame(640, getimagesize($root . '/public/assets/portada-hero-640.webp')[0]);
@@ -44,5 +45,8 @@ class PublicHomePerformanceViewTest extends TestCase
         $this->assertStringContainsString('ExpiresByType image/webp "access plus 30 days"', $htaccess);
         $this->assertStringContainsString('Header set Cache-Control "public, max-age=2592000"', $htaccess);
         $this->assertStringContainsString('Header set Cache-Control "public, max-age=31536000, immutable"', $htaccess);
+        $this->assertStringContainsString('<Files "bootstrap-5.3.2.min.css">', $htaccess);
+        $this->assertStringContainsString('<IfModule mod_deflate.c>', $htaccess);
+        $this->assertStringContainsString('AddOutputFilterByType DEFLATE text/css', $htaccess);
     }
 }
