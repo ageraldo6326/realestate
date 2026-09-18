@@ -20,7 +20,8 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         \App\Events\PropertySaved::class => [
-            \App\Listeners\ImagePropertyOptimizer::class
+            \App\Listeners\ImagePropertyOptimizer::class,
+            \App\Listeners\ProcessPendingPropertyMediaImages::class,
         ]
     ];
 

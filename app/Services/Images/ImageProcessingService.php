@@ -19,10 +19,12 @@ class ImageProcessingService
             throw new RuntimeException('El original privado no está disponible para procesar la imagen.');
         }
 
-        foreach ($profile['widths'] as $targetWidth) {
-            if ($targetWidth > $mediaImage->original_width) {
-                continue;
-            }
+        $widths = array_values(array_filter($profile['widths'], fn (int $width): bool => $width <= $mediaImage->original_width));
+        if ($widths === []) {
+            $widths = [$mediaImage->original_width];
+        }
+
+        foreach ($widths as $targetWidth) {
 
             $image = Image::make($source)->orientate();
             if ($profile['crop']) {

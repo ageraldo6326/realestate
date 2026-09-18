@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
 
 class ImageUploadService
 {
-    public function store(UploadedFile $file, string $profile, ?Model $imageable = null, ?int $createdBy = null, ?string $altText = null): MediaImage
+    public function store(UploadedFile $file, string $profile, ?Model $imageable = null, ?int $createdBy = null, ?string $altText = null, ?string $slot = null, bool $dispatch = true): MediaImage
     {
         ImageProfile::get($profile);
         $details = $this->validate($file);
@@ -24,7 +24,7 @@ class ImageUploadService
         Storage::disk($disk)->putFileAs(dirname($path), $file, basename($path));
 
         try {
-            $mediaImage = DB::transaction(function () use ($details, $disk, $path, $imageable, $createdBy, $altText): MediaImage {
+            $mediaImage = DB::transaction(function () use ($details, $disk, $path, $imageable, $createdBy, $altText, $slot): MediaImage {
                 $attributes = [
                     'disk' => $disk,
                     'original_path' => $path,
@@ -34,6 +34,7 @@ class ImageUploadService
                     'original_bytes' => $details['bytes'],
                     'checksum' => $details['checksum'],
                     'alt_text' => $altText,
+                    'slot' => $slot,
                     'status' => MediaImage::STATUS_PENDING,
                     'created_by' => $createdBy,
                 ];
@@ -48,9 +49,11 @@ class ImageUploadService
             throw $exception;
         }
 
-        ProcessMediaImage::dispatch($mediaImage->id, $profile)
-            ->onQueue((string) config('images.queue'))
-            ->afterCommit();
+        if ($dispatch) {
+            ProcessMediaImage::dispatch($mediaImage->id, $profile)
+                ->onQueue((string) config('images.queue'))
+                ->afterCommit();
+        }
 
         return $mediaImage;
     }

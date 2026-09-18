@@ -28,6 +28,10 @@ class ImagePropertyOptimizer implements ShouldQueue
      */
     public function handle(PropertySaved $event)
     {
+        if ($event->propiedad->images()->where('status', 'pending')->exists()) {
+            return;
+        }
+
         try {
             $withWatermark = (bool) $event->propiedad->marcadeagua;
 

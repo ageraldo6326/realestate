@@ -88,6 +88,7 @@ Para regenerar variantes de imágenes ya registradas, sin eliminar sus originale
 ```bash
 sudo -u www-data php artisan media:images:regenerate
 sudo -u www-data php artisan media:images:regenerate 42 --profile=property_gallery
+sudo -u www-data php artisan media:properties:import-legacy 12
 ```
 
 No uses `queue:flush` ni `queue:clear` en producción: eliminarían trabajos pendientes. Para reintentar un error concreto, primero revisa `php artisan queue:failed` y después ejecuta `php artisan queue:retry <uuid>`.

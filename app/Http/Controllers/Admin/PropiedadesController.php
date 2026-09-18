@@ -19,6 +19,7 @@ use Intervention\Image\Facades\Image;
 use App\Services\CatalogoService;
 use App\Services\InmobiliariaService;
 use App\Services\PropertyCardThumbnailService;
+use App\Services\Images\PropertyImageService;
 use App\Services\SitemapService;
 
 class PropiedadesController extends Controller
@@ -1358,19 +1359,8 @@ class PropiedadesController extends Controller
             return;
         }
 
-        $directory = $this->ensurePropertyImageDirectory($propiedad);
-        $this->deletePropertyImageArtifacts($directory, $basename, (string) data_get($propiedad, $field));
-
         $uploadedFile = $request->file($field);
-        $extension = strtolower((string) ($uploadedFile->getClientOriginalExtension() ?: $uploadedFile->extension() ?: 'jpg'));
-        $filename = sprintf('%s-%s-%s.%s', $basename, now()->format('YmdHis'), Str::lower(Str::random(8)), $extension);
-
-        $uploadedFile->move($directory, $filename);
-
-        $propiedad->{$field} = '/img/propiedades/img/' . $propiedad->referencia . '/' . $filename;
-
-        // La miniatura es un derivado para las tarjetas publicas; el original se conserva intacto.
-        app(PropertyCardThumbnailService::class)->create($propiedad->{$field});
+        app(PropertyImageService::class)->store($uploadedFile, $propiedad, $field, Auth::id());
     }
 
     protected function deletePropertyImage(Propiedad $propiedad, string $field): void

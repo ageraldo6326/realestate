@@ -20,7 +20,7 @@ class MediaImage extends Model
     protected $fillable = [
         'disk', 'original_path', 'original_mime_type', 'original_width',
         'original_height', 'original_bytes', 'checksum', 'alt_text', 'status',
-        'processing_error', 'created_by',
+        'processing_error', 'created_by', 'slot',
     ];
 
     protected $casts = [

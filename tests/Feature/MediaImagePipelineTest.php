@@ -6,6 +6,8 @@ use App\Jobs\ProcessMediaImage;
 use App\Models\MediaImage;
 use App\Models\MediaImageVariant;
 use App\Services\Images\ImageUploadService;
+use App\Services\Images\PropertyImageService;
+use App\Models\Propiedad;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
@@ -78,5 +80,31 @@ class MediaImagePipelineTest extends TestCase
             ->assertSee('height="360"', false)
             ->assertSee('loading="lazy"', false)
             ->assertSee('alt="Propiedad de prueba"', false);
+    }
+
+    public function test_property_upload_is_kept_private_until_the_webp_variant_is_ready(): void
+    {
+        Queue::fake();
+        $property = Propiedad::create([
+            'referencia' => 'PROP-TEST-0001',
+            'titulo' => 'Propiedad con imagen centralizada',
+            'foto_portada' => '',
+        ]);
+        $media = app(PropertyImageService::class)->store(
+            UploadedFile::fake()->image('portada.jpg', 1000, 750)->size(300),
+            $property,
+            'foto_portada'
+        );
+
+        Storage::disk('local')->assertExists($media->original_path);
+        $this->assertSame('', $property->fresh()->foto_portada);
+
+        (new \App\Jobs\ProcessPropertyMediaImage($media->id))->handle(
+            app(\App\Services\Images\ImageProcessingService::class),
+            app(PropertyImageService::class)
+        );
+
+        $this->assertSame(MediaImage::STATUS_READY, $media->fresh()->status);
+        $this->assertStringContainsString('/media/images/', $property->fresh()->foto_portada);
     }
 }
