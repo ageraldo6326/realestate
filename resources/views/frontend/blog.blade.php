@@ -67,6 +67,22 @@
             flex-direction: column;
         }
 
+        .blog-card-image {
+            display: block;
+            aspect-ratio: 4 / 3;
+            background: var(--clr-bg);
+            overflow: hidden;
+        }
+
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .35s ease;
+        }
+
+        .blog-card:hover .blog-card-image img { transform: scale(1.04); }
+
         .blog-date {
             font-size: .75rem;
             color: var(--clr-gray-lt);
@@ -174,6 +190,15 @@
 
     <section class="blog-section">
         <div class="container">
+            @php
+                $postPlaceholder = asset('assets/post-1.jpg');
+                $resolvePostImage = function ($value) use ($postPlaceholder) {
+                    if (empty($value)) return $postPlaceholder;
+                    if (\Illuminate\Support\Str::startsWith($value, ['http://', 'https://', '//', 'data:'])) return $value;
+                    if (\Illuminate\Support\Str::startsWith($value, ['/media/', '/img/', '/assets/', 'media/', 'img/', 'assets/'])) return asset(ltrim($value, '/'));
+                    return asset('assets/' . ltrim($value, '/'));
+                };
+            @endphp
             <div class="text-center mb-5">
                 <span class="section-badge">BLOG</span>
                 <h2 class="section-title">Últimas Noticias</h2>
@@ -184,6 +209,12 @@
                 @forelse ($posts as $post)
                     <div class="col-lg-4 col-md-6">
                         <article class="blog-card">
+                            <a href="{{ route('post.show', $post->slug) }}" class="blog-card-image" aria-label="{{ $post->titulo }}">
+                                <img loading="lazy" decoding="async" width="640" height="480"
+                                    src="{{ $resolvePostImage($post->foto) }}"
+                                    onerror="this.onerror=null;this.src='{{ $postPlaceholder }}';"
+                                    alt="{{ $post->image_alt ?: $post->titulo }}">
+                            </a>
                             <div class="blog-body">
                                 <div class="blog-date">
                                     <i class="far fa-calendar-alt"></i>
